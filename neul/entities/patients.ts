@@ -8,12 +8,10 @@ export class Patients {
 
   // 가족
   @ManyToOne(()=> Users, (user) => user.familyPatients, {cascade: true, onDelete: 'CASCADE'})
-  @JoinColumn({ name: 'user_id' }) // FK 명시
   user: Users;
 
   // 도우미
   @ManyToOne(() => Users, (user) => user.carePatients, {cascade: true, onDelete: 'CASCADE'})
-  @JoinColumn({ name: 'admin_id' }) // FK 명시
   admin: Users;
 
   @Column('varchar', { comment: '성별' })

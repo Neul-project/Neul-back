@@ -25,7 +25,7 @@ export class Users {
   provider?: string;
 
   @Column('enum', {enum: ['user', 'admin'], comment:'역할', default: 'user'})
-  role: 'user' | 'admin';
+  role: string;
 
   // 가족이 연결한 환자
   @OneToMany(() => Patients, (patient) => patient.user)
