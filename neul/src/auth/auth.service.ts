@@ -1,4 +1,67 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
+import { Users } from 'entities/users';
+import { Patients } from 'entities/patients';
+import { SingupUserDto } from 'src/user/dto/signup-user.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
-export class AuthService {}
+export class AuthService {
+    constructor(
+        private jwtService : JwtService,
+        @InjectRepository(Users)
+        private userRepository: Repository<Users>,
+        @InjectRepository(Patients)
+        private patientRepository: Repository<Patients>,
+    ) {}
+
+    // 회원가입
+    async signup(dto: SingupUserDto){
+        const { email, password, name, phone, role, patientName } = dto;
+
+        const existingUser = await this.userRepository.findOne({
+            where: { email },
+        });
+        if (existingUser) {
+            throw new Error('이미 존재하는 이메일입니다.');
+        } 
+
+        const hashPW = await bcrypt.hash(password, 10);
+        const newUser = this.userRepository.create({                        
+            email,
+            password: hashPW,
+            name,
+            phone,
+            role,
+        });
+        const savedUser = await this.userRepository.save(newUser);
+
+        const patient = this.patientRepository.create({
+            name: patientName,
+            user: role === 'user' ? savedUser : null,
+            admin: role === 'admin' ? savedUser : null,
+        })
+        await this.patientRepository.save(patient);
+    }
+
+    // 로컬로그인
+    async localLogin(email: string, password: string){
+        const user = await this.userRepository.findOne({where: { email }});
+        if(!user){
+            throw new UnauthorizedException('등록되지 않은 사용자입니다.')
+        }
+
+        const match = await bcrypt.compare(password, user.password);
+        if (!match){
+            throw new UnauthorizedException('비밀번호가 일치하지 않습니다.')
+        }
+
+        // 토큰 발급
+        const payload = { id: user.id, email: user.email };
+        const newToken = this.jwtService.sign(payload);
+
+        return { payload, newToken };
+    }
+}

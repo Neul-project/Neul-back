@@ -14,14 +14,14 @@ export class Patients {
   @ManyToOne(() => Users, (user) => user.carePatients, {cascade: true, onDelete: 'CASCADE'})
   admin: Users;
 
-  @Column('varchar', { comment: '성별' })
-  gender: string;
+  @Column('varchar', { comment: '성별', nullable: true })
+  gender?: string;
 
-  @Column('varchar', { comment: '이름' })
-  name: string;
+  @Column('varchar', { comment: '이름', nullable: true })
+  name?: string;
 
-  @Column('int', { comment: '나이' })
-  age: number;
+  @Column('int', { comment: '나이', nullable: true })
+  age?: number;
 
   @Column('text', { comment: '특이사항', nullable: true })
   note?: string;
