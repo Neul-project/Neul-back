@@ -19,7 +19,7 @@ export class AuthService {
 
     // 회원가입
     async signup(dto: SingupUserDto){
-        const { email, password, name, phone, role, patientName } = dto;
+        const { email, password, name, phone, role, wardName } = dto;
 
         const existingUser = await this.userRepository.findOne({
             where: { email },
@@ -39,7 +39,7 @@ export class AuthService {
         const savedUser = await this.userRepository.save(newUser);
 
         const patient = this.patientRepository.create({
-            name: patientName,
+            name: wardName,
             user: role === 'user' ? savedUser : null,
             admin: role === 'admin' ? savedUser : null,
         })

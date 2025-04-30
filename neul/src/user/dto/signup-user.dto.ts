@@ -22,6 +22,6 @@ export class SingupUserDto {
   @ApiProperty({ example: 'user', enum: ['user', 'admin'], description: '사용자 역할'})
   role: string;
 
-  @ApiProperty({ example: '김환자', description: '환자 이름' })
-  patientName: string;
+  @ApiProperty({ example: '김보호', description: '피보호자 이름' })
+  wardName: string;
 }
