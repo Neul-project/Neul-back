@@ -3,8 +3,16 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
+import { PatientModule } from './patient/patient.module';
+import { ActivityModule } from './activity/activity.module';
+import { StatusModule } from './status/status.module';
+import { ProgramModule } from './program/program.module';
+import { ChatModule } from './chat/chat.module';
+import { ShiftModule } from './shift/shift.module';
+import { BannerModule } from './banner/banner.module';
 
 import { Users } from 'entities/users';
 import { Patients } from 'entities/patients';
@@ -39,6 +47,13 @@ import { Banners } from 'entities/banners';
     }),
     AuthModule,
     UserModule,
+    PatientModule,
+    ActivityModule,
+    StatusModule,
+    ProgramModule,
+    ChatModule,
+    ShiftModule,
+    BannerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
