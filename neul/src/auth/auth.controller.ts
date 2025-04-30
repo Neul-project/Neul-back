@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SingupUserDto } from 'src/user/dto/signup-user.dto';
 import { LocalAuthGuard } from './auth.guard';
@@ -20,6 +20,18 @@ export class AuthController {
     async localLogin(@Req() req){
         const user = req.user;
         return { user: user.payload, token: user.newToken }
+    }
+
+    // 이메일 중복확인
+    @Get('/check_email')
+    async checkEmail(@Query('email') email: string){
+        return this.authService.checkEmail(email);
+    }
+
+    // 핸드폰번호 중복확인
+    @Get('/check_phone')
+    async checkPhone(@Query('phone') phone: string){
+        return this.authService.checkPhone(phone);
     }
 
     // 카카오 로그인 API

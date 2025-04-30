@@ -64,4 +64,16 @@ export class AuthService {
 
         return { payload, newToken };
     }
+
+    // 이메일 중복확인
+    async checkEmail(email: string){
+        const user = await this.userRepository.findOne({ where: {email}});
+        return { isDuplicate: !!user };
+    }
+
+    // 비밀번호 중복확인
+    async checkPhone(phone: string){
+        const user = await this.userRepository.findOne({ where: {phone}}); 
+        return { isDuplicate: !!user };
+    }
 }
