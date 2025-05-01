@@ -1,7 +1,8 @@
 import { Body, Controller, Get, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { SingupUserDto } from 'src/user/dto/signup-user.dto';
+import { SingupUserDto } from 'src/auth/dto/signup-user.dto';
 import { LocalAuthGuard } from './auth.guard';
+import { CheckDuplicateDto } from './dto/check-duplicate.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -22,16 +23,16 @@ export class AuthController {
         return { user: user.payload, token: user.newToken }
     }
 
-    // 이메일 중복확인
-    @Get('/check_email')
-    async checkEmail(@Query('email') email: string){
-        return this.authService.checkEmail(email);
-    }
+    // 이메일 핸드폰번호 중복확인
+    @Get('/check')
+    async checkDuplicate(@Query() query: CheckDuplicateDto){
+        if(query.email){
+            return this.authService.checkEmail(query.email);
+        }
 
-    // 핸드폰번호 중복확인
-    @Get('/check_phone')
-    async checkPhone(@Query('phone') phone: string){
-        return this.authService.checkPhone(phone);
+        if(query.phone){
+            return this.authService.checkPhone(query.phone);
+        }
     }
 
     // 카카오 로그인 API
