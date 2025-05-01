@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { Users } from './users';
+import { Activities } from './activities';
 
 @Entity('patients')
 export class Patients {
@@ -25,4 +26,8 @@ export class Patients {
 
   @Column('text', { comment: '특이사항', nullable: true })
   note?: string;
+
+  // 활동기록이 연결한 환자
+  @OneToMany(() => Activities, (activity) => activity.patient)
+  activities: Activities[];
 }
