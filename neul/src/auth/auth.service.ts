@@ -96,14 +96,30 @@ export class AuthService {
 
     // 카카오 로그인
     async kakaoUser(snsUser: any){
-        console.log('카카오로그인', snsUser);
-        const { email, provider } = snsUser;
+        const { email } = snsUser;
 
         let user = await this.userRepository.findOne({ where: {email}});
         if(!user){
             user = this.userRepository.create({
                 email,
                 provider: 'kakao',
+            });
+            await this.userRepository.save(user);
+        }
+
+        return this.snsToken(user);
+    }
+
+    // 네이버 로그인
+    async naverUser(snsUser: any){
+        console.log('네이버로그인', snsUser);
+        const { email } = snsUser;
+
+        let user = await this.userRepository.findOne({ where: {email}});
+        if(!user){
+            user = this.userRepository.create({
+                email,
+                provider: 'naver',
             });
             await this.userRepository.save(user);
         }

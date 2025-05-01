@@ -1,9 +1,8 @@
 import { Body, Controller, Get, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SingupUserDto } from 'src/auth/dto/signup-user.dto';
-import { KakaoAuthGuard, LocalAuthGuard } from './auth.guard';
+import { KakaoAuthGuard, LocalAuthGuard, NaverAuthGuard } from './auth.guard';
 import { CheckDuplicateDto } from './dto/check-duplicate.dto';
-import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
@@ -51,6 +50,15 @@ export class AuthController {
 
     // 네이버 로그인 요청
     @Get('/naver')
-    @UseGuards(AuthGuard('naver'))
+    @UseGuards(NaverAuthGuard)
     async naverLogin() {}
+
+    // 네이버 콜백처리
+    @Get('/naver/callback')
+    @UseGuards(NaverAuthGuard)
+    async naverCallback(@Req() req, @Res() res){
+        const user = req.user;
+        const {snsAccess, snsRefresh} = await this.authService.naverUser(user);
+        return res.redirect(`http://localhost:3000?snsAccess=${snsAccess}&snsRefresh=${snsRefresh}`);
+    }
 }
