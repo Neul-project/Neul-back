@@ -109,14 +109,12 @@ export class AuthService {
 
     // 네이버 로그인
     async naverUser(snsUser: any){
-        const { email, name, phone } = snsUser;
+        const { email } = snsUser;
 
         let user = await this.userRepository.findOne({ where: {email}});
         if(!user){
             user = this.userRepository.create({
                 email,
-                name,
-                phone,
                 provider: 'naver',
             });
             await this.userRepository.save(user);

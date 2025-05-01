@@ -21,12 +21,9 @@ export class NaverStrategy extends PassportStrategy(Strategy, 'naver'){
         done: (error: any, user?: any, info?: any) => void
     ){
         try{
-            console.log(profile, '네이버 전략 콘솔')
             const { _json } = profile
             const user = {
                 email: _json.email,
-                name: _json.name ?? "네이버 사용자",
-                phone: _json.mobile ?? "01012341234",
                 provider: 'naver'
             };
             done(null, user);
