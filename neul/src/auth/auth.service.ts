@@ -88,9 +88,6 @@ export class AuthService {
         const snsAccess = this.jwtService.sign(payload);
         const snsRefresh = this.jwtService.sign(payload, {expiresIn: '7d'})
 
-        console.log(snsAccess, '토큰1');
-        console.log(snsRefresh, '토큰2');
-
         return { snsAccess, snsRefresh };
     }
 
@@ -112,13 +109,14 @@ export class AuthService {
 
     // 네이버 로그인
     async naverUser(snsUser: any){
-        console.log('네이버로그인', snsUser);
-        const { email } = snsUser;
+        const { email, name, phone } = snsUser;
 
         let user = await this.userRepository.findOne({ where: {email}});
         if(!user){
             user = this.userRepository.create({
                 email,
+                name,
+                phone,
                 provider: 'naver',
             });
             await this.userRepository.save(user);
