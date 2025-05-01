@@ -76,4 +76,38 @@ export class AuthService {
         const user = await this.userRepository.findOne({ where: {phone}}); 
         return { isDuplicate: !!user };
     }
+
+    // 소셜 토큰 생성
+    async snsToken(user: any){
+        const payload = {
+            id: user.id,
+            email: user.email,
+            provider: user.provider,
+        }
+
+        const snsAccess = this.jwtService.sign(payload);
+        const snsRefresh = this.jwtService.sign(payload, {expiresIn: '7d'})
+
+        console.log(snsAccess, '토큰1');
+        console.log(snsRefresh, '토큰2');
+
+        return { snsAccess, snsRefresh };
+    }
+
+    // 카카오 로그인
+    async kakaoUser(snsUser: any){
+        console.log('카카오로그인', snsUser);
+        const { email, provider } = snsUser;
+
+        let user = await this.userRepository.findOne({ where: {email}});
+        if(!user){
+            user = this.userRepository.create({
+                email,
+                provider: 'kakao',
+            });
+            await this.userRepository.save(user);
+        }
+
+        return this.snsToken(user);
+    }
 }

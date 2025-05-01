@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SingupUserDto } from 'src/auth/dto/signup-user.dto';
-import { LocalAuthGuard } from './auth.guard';
+import { KakaoAuthGuard, LocalAuthGuard } from './auth.guard';
 import { CheckDuplicateDto } from './dto/check-duplicate.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
@@ -11,7 +12,6 @@ export class AuthController {
     // 회원가입
     @Post('/signup')
     async signup(@Body() dto: SingupUserDto) {
-        console.log(dto, '회원가입 전달받은 값');
         return this.authService.signup(dto);
     }
 
@@ -35,13 +35,22 @@ export class AuthController {
         }
     }
 
-    // 카카오 로그인 API
+    // 카카오 로그인 요청
     @Get('/kakao')
-    // @UseGuards(AuthGuard('kakao'))
+    @UseGuards(KakaoAuthGuard)
     async kakaoLogin() {}
 
-    // 네이버 로그인 API
+    // 카카오 콜백처리
+    @Get('/kakao/callback')
+    @UseGuards(KakaoAuthGuard)
+    async kakaoCallback(@Req() req, @Res() res){
+        const user = req.user;
+        const {snsAccess, snsRefresh} = await this.authService.kakaoUser(user);
+        return res.redirect(`http://localhost:3000?snsAccess=${snsAccess}&snsRefresh=${snsRefresh}`);
+    }
+
+    // 네이버 로그인 요청
     @Get('/naver')
-    // @UseGuards(AuthGuard('naver'))
+    @UseGuards(AuthGuard('naver'))
     async naverLogin() {}
 }
