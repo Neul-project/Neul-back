@@ -3,6 +3,8 @@ import { AuthService } from './auth.service';
 import { SingupUserDto } from 'src/auth/dto/signup-user.dto';
 import { KakaoAuthGuard, LocalAuthGuard, NaverAuthGuard } from './auth.guard';
 import { CheckDuplicateDto } from './dto/check-duplicate.dto';
+import { ApiQuery, ApiResponse } from '@nestjs/swagger';
+import { DuplicateCheckDto } from './dto/res/duplicate-check';
 
 @Controller('auth')
 export class AuthController {
@@ -24,6 +26,9 @@ export class AuthController {
 
     // 이메일 핸드폰번호 중복확인
     @Get('/check')
+    @ApiQuery({name: 'email', required: false})
+    @ApiQuery({name: 'phone', required: false})
+    @ApiResponse({type: DuplicateCheckDto})
     async checkDuplicate(@Query() query: CheckDuplicateDto){
         if(query.email){
             return this.authService.checkEmail(query.email);

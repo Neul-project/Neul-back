@@ -18,10 +18,10 @@ export class ActivityService {
     ) {}
 
     // 활동기록 등록
-    async writeAct(userId: string, dto: CreateActivityDto, files: Express.Multer.File[],){
+    async writeAct(userId: number, dto: CreateActivityDto, files: Express.Multer.File[],){
         const filename = files.map((file) => file.filename).join(',');
 
-        const user = await this.userRepository.findOne({where: {id: Number(userId)}})
+        const user = await this.userRepository.findOne({where: {id: userId}})
         if(!user){
             throw new UnauthorizedException('유저 없음');
         }
@@ -41,5 +41,16 @@ export class ActivityService {
             img: filename
         });
         return await this.activityRepository.save(activity);
+    }
+
+    // 활동기록 제공
+    async listAct(userId: number){
+        const activities = await this.activityRepository.find({
+            where: {admin: {id: userId}},
+            select: ['id', 'title', 'recorded_at'],
+            order: {recorded_at: 'DESC'}
+        });
+
+        return activities;
     }
 }
