@@ -39,4 +39,30 @@ export class StatusService {
 
         return await this.statusRepository.save(status);
     }
+
+    // 상태기록 수정
+    async updateSta(id: number, dto: CreateStatusDto){
+        const updateStatus = {
+            patient: {id: dto.patient_id},
+            admin: {id: dto.adminId},
+            meal: (dto.meal ?? []).join(','),
+            condition: dto.condition,
+            medication: dto.medication,
+            sleep: dto.sleep,
+            pain: dto.pain,
+            note: dto.note,
+        }
+        
+        return await this.statusRepository.update(id, updateStatus);
+    }
+
+    // 담당 피보호자 전달
+    async contectPat(adminId: number){
+        const patients = await this.patientRepository.find({
+            where: { admin: {id: adminId}},
+            relations: ['admin']
+        });
+
+        return patients;
+    }
 }
