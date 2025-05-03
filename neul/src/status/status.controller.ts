@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { StatusService } from './status.service';
 import { CreateStatusDto } from './dto/create-status.dto';
 import { ApiBody, ApiResponse } from '@nestjs/swagger';
 import { ContectPatientDto } from './dto/res/contect-patient.dto';
 import { ListStatusDto } from './dto/res/list-status.dto';
+import { DeleteStatusDto } from './dto/delete-status.dto';
 
 @Controller('status')
 export class StatusController {
@@ -44,5 +45,12 @@ export class StatusController {
     @ApiResponse({type: ContectPatientDto})
     async contectPatient(@Query('adminId') adminId: number){
         return this.statusService.contectPat(adminId);
+    }
+
+    // 선택한 상태기록 삭제
+    @Delete('/delete')
+    @ApiBody({type: DeleteStatusDto})
+    async listDelete(@Body() body: number[]){
+        return this.statusService.listDel(body);
     }
 }

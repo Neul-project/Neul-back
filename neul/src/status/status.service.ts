@@ -88,4 +88,12 @@ export class StatusService {
 
         return patients;
     }
+
+    // 선택한 상태기록 삭제
+    async listDel(ids: number[]){
+        if (!ids || ids.length === 0){
+            throw new Error('선택한 상태기록이 존재하지 않습니다.');
+        }
+        return await this.statusRepository.delete(ids);
+    }
 }
