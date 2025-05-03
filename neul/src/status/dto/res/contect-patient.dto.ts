@@ -1,6 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { AdminInfoDto } from '../admin-info.dto';
 
 export class ContectPatientDto {
+  @ApiProperty({ type: AdminInfoDto, description: '기록 작성 관리자 정보' })
+  admin: AdminInfoDto;
+
   @ApiProperty({ example: 1, description: '환자 ID' })
   id: number;
 

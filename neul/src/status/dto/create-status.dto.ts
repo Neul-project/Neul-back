@@ -7,13 +7,13 @@ export class CreateStatusDto {
   @ApiProperty({ example: 1, description: '기록 작성 관리자 ID' })
   adminId: number;
 
-  @ApiProperty({ example: ['완식', '대부분 섭취', '식사 거부'] })
+  @ApiProperty({ example: ['완식', '대부분 섭취', '식사 거부'], description: '식사량' })
   meal: string[];
 
   @ApiProperty({ example: '아주 좋음', description: '컨디션' })
   condition: string;
 
-  @ApiProperty({ example: 'none', description: '식사량', enum: ['yes', 'no', 'none'] })
+  @ApiProperty({ example: 'none', description: '약 복용 여부', enum: ['yes', 'no', 'none'] })
   medication: string;
 
   @ApiProperty({ example: '13시간', description: '수면 시간' })

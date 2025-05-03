@@ -3,6 +3,7 @@ import { StatusService } from './status.service';
 import { CreateStatusDto } from './dto/create-status.dto';
 import { ApiBody, ApiResponse } from '@nestjs/swagger';
 import { ContectPatientDto } from './dto/res/contect-patient.dto';
+import { ListStatusDto } from './dto/res/list-status.dto';
 
 @Controller('status')
 export class StatusController {
@@ -24,11 +25,24 @@ export class StatusController {
         return this.statusService.updateSta(id, dto);
     }
 
+    // 전체 상태기록 전달
+    @Get('/allList')
+    @ApiResponse({type: ListStatusDto})
+    async allList(@Query('adminId') adminId: number){
+        return this.statusService.getAllList(adminId);
+    }
+
+    // 선택한 피보호자 상태기록 전달
+    @Get('/selectList')
+    @ApiResponse({type: ListStatusDto})
+    async selectList(@Query('adminId') adminId: number, @Query('patientId') patientId: number){
+        return this.statusService.getSelectList(adminId, patientId);
+    }
+
     // 담당 피보호자 목록
     @Get('/patient')
     @ApiResponse({type: ContectPatientDto})
     async contectPatient(@Query('adminId') adminId: number){
-        console.log('담당자 아이디', adminId)
         return this.statusService.contectPat(adminId);
     }
 }

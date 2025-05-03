@@ -51,9 +51,32 @@ export class StatusService {
             sleep: dto.sleep,
             pain: dto.pain,
             note: dto.note,
-        }
-        
+        };
+
         return await this.statusRepository.update(id, updateStatus);
+    }
+
+    // 전체 상태기록 전달
+    async getAllList(adminId: number){
+        const status = await this.statusRepository.find({
+            where: { admin: {id: adminId}},
+            relations: ['patient', 'admin'],
+        });
+        
+        return status;
+    }
+
+    // 선택한 피보호자 상태기록 전달
+    async getSelectList(adminId: number, patientId: number){
+        const status = await this.statusRepository.find({
+            where: {
+                admin: {id: adminId},
+                patient: {id: patientId}
+            },
+            relations: ['patient', 'admin']
+        });
+
+        return status;
     }
 
     // 담당 피보호자 전달

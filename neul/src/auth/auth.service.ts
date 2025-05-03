@@ -43,7 +43,7 @@ export class AuthService {
             user: role === 'user' ? savedUser : null,
             admin: role === 'admin' ? savedUser : null,
         })
-        await this.patientRepository.save(patient);
+        return await this.patientRepository.save(patient);
     }
 
     // 로컬로그인
