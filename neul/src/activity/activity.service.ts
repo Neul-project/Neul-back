@@ -99,4 +99,10 @@ export class ActivityService {
     }
 
     // 전체 피드백 전달
+    async allFeed(){
+        return await this.feedbackRepository.find({
+            relations: ['activity'],
+            order: { recorded_at: 'DESC' }
+        });
+    }
 }

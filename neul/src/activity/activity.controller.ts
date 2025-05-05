@@ -10,6 +10,7 @@ import { ApiResponse } from '@nestjs/swagger';
 import { ContectPatientDto } from 'src/status/dto/res/contect-patient.dto';
 import { SelectActivityDto } from './dto/res/select-activity.dto';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
+import { AllFeedbackDto } from './dto/res/all-feedback.dto';
 
 @Controller('activity')
 export class ActivityController {
@@ -59,8 +60,14 @@ export class ActivityController {
     // 피드백 저장
     @Post('/feedback')
     async postFeedback(@Body() dto: CreateFeedbackDto){
-        console.log(dto);
         return this.activityService.postFeed(dto);
+    }
+
+    // 전체 피드백 전달
+    @Get('/feedback/views')
+    @ApiResponse({type: AllFeedbackDto})
+    async allFeedback(){
+        return this.activityService.allFeed();
     }
 }
 
