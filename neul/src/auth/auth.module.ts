@@ -9,6 +9,7 @@ import { LocalStrategy } from './strategy/local';
 import { ConfigModule } from '@nestjs/config';
 import { KakaoStrategy } from './strategy/kakao';
 import { NaverStrategy } from './strategy/naver';
+import { JwtStrategy } from './strategy/jwt';
 
 @Module({
   imports: [
@@ -21,8 +22,8 @@ import { NaverStrategy } from './strategy/naver';
     }),
     TypeOrmModule.forFeature([Users, Patients])
   ],
-  providers: [AuthService, LocalStrategy, KakaoStrategy, NaverStrategy],
+  providers: [AuthService, LocalStrategy, KakaoStrategy, NaverStrategy, JwtStrategy],
   controllers: [AuthController],
-  exports: [JwtModule]
+  exports: [AuthModule, JwtStrategy]
 })
 export class AuthModule {}
