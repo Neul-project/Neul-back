@@ -73,7 +73,7 @@ export class StatusService {
                 admin: {id: adminId},
                 patient: {id: patientId}
             },
-            relations: ['patient', 'admin']
+            relations: ['patient']
         });
 
         return status;

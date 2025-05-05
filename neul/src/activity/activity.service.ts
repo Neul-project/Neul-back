@@ -53,4 +53,27 @@ export class ActivityService {
         
         return activities;
     }
+
+    // 담당 피보호자 전달 (관리자)
+    async targetPat(adminId: number){
+        const patients = await this.patientRepository.find({
+            where: {admin: {id: adminId}},
+            relations: ['admin']
+        });
+
+        return patients;
+    }
+
+    // 선택한 피보호자 전달 (관리자)
+    async selectList(adminId: number, patientId: number){
+        const activity = await this.activityRepository.find({
+            where: {
+                admin: {id: adminId},
+                patient: {id: patientId}
+            },
+            relations: ['patient']
+        });
+
+        return activity;
+    }
 }

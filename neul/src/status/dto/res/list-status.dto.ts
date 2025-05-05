@@ -9,9 +9,6 @@ export class ListStatusDto {
   @ApiProperty({ type: ContectPatientDto, description: '담당 환자 정보' })
   patient: ContectPatientDto;
 
-  @ApiProperty({ type: AdminInfoDto, description: '기록 작성 관리자 정보' })
-  admin: AdminInfoDto;
-
   @ApiProperty({ example: '완식, 대부분 섭취, 식사 거부', description: '식사량' })
   meal: string;
 

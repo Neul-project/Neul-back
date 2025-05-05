@@ -1,12 +1,14 @@
-import { Body, ClassSerializerInterceptor, Controller, Get, Param, Post, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Get, Param, Post, Query, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { ActivityService } from './activity.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { join } from 'path';
 import { CreateActivityDto } from './dto/create-activity.dto';
 import { diskStorage } from 'multer';
-import { ListActivityDto } from './dto/res/listActivity.dto';
+import { ListActivityDto } from './dto/res/list-activity.dto';
 import { plainToInstance } from 'class-transformer';
 import { ApiResponse } from '@nestjs/swagger';
+import { ContectPatientDto } from 'src/status/dto/res/contect-patient.dto';
+import { SelectActivityDto } from './dto/res/select-activity.dto';
 
 @Controller('activity')
 export class ActivityController {
@@ -37,6 +39,20 @@ export class ActivityController {
         const list = await this.activityService.listAct(userid);
 
         return plainToInstance(ListActivityDto, list);
+    }
+
+    // 담당 피보호자 목록
+    @Get('/targetlist')
+    @ApiResponse({type: ContectPatientDto})
+    async targetPatient(@Query('adminId') adminId: number){
+        return this.activityService.targetPat(adminId);
+    }
+
+    // 선택한 피보호자 활동기록 전달
+    @Get('/selectlist')
+    @ApiResponse({type: SelectActivityDto})
+    async selectList(@Query('adminId') adminId: number, @Query('patientId') patientId: number){
+        return this.activityService.selectList(adminId, patientId);
     }
 }
 
