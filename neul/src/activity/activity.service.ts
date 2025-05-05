@@ -5,6 +5,8 @@ import { Activities } from 'entities/activities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from 'entities/users';
 import { Patients } from 'entities/patients';
+import { CreateFeedbackDto } from './dto/create-feedback.dto';
+import { Feedback } from 'entities/feedback';
 
 @Injectable()
 export class ActivityService {
@@ -14,7 +16,9 @@ export class ActivityService {
         @InjectRepository(Users)
         private userRepository: Repository<Users>,
         @InjectRepository(Patients)
-        private patientRepository: Repository<Patients>
+        private patientRepository: Repository<Patients>,
+        @InjectRepository(Feedback)
+        private feedbackRepository: Repository<Feedback>
     ) {}
 
     // 활동기록 등록
@@ -75,5 +79,22 @@ export class ActivityService {
         });
 
         return activity;
+    }
+
+    // 피드백 저장
+    async postFeed(dto: CreateFeedbackDto){
+        const user = await this.userRepository.findOne({ where: {id: dto.userId}});
+        const activity = await this.activityRepository.findOne({ where: {id: Number(dto.activityid)}});
+        if(!user || !activity){
+            throw new UnauthorizedException('유저/활동기록을 찾을 수 없습니다.');
+        }
+
+        const feedback = this.feedbackRepository.create({
+            user,
+            activity,
+            message: dto.message
+        });
+
+        return await this.feedbackRepository.save(feedback);
     }
 }

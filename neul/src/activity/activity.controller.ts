@@ -9,6 +9,7 @@ import { plainToInstance } from 'class-transformer';
 import { ApiResponse } from '@nestjs/swagger';
 import { ContectPatientDto } from 'src/status/dto/res/contect-patient.dto';
 import { SelectActivityDto } from './dto/res/select-activity.dto';
+import { CreateFeedbackDto } from './dto/create-feedback.dto';
 
 @Controller('activity')
 export class ActivityController {
@@ -53,6 +54,13 @@ export class ActivityController {
     @ApiResponse({type: SelectActivityDto})
     async selectList(@Query('adminId') adminId: number, @Query('patientId') patientId: number){
         return this.activityService.selectList(adminId, patientId);
+    }
+
+    // 피드백 저장
+    @Post('/feedback')
+    async postFeedback(@Body() dto: CreateFeedbackDto){
+        console.log(dto);
+        return this.activityService.postFeed(dto);
     }
 }
 

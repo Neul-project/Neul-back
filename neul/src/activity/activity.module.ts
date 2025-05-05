@@ -5,10 +5,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Users } from 'entities/users';
 import { Patients } from 'entities/patients';
 import { Activities } from 'entities/activities';
+import { Feedback } from 'entities/feedback';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Users, Patients, Activities])
+    TypeOrmModule.forFeature([Users, Patients, Activities, Feedback])
   ],
   controllers: [ActivityController],
   providers: [ActivityService]
