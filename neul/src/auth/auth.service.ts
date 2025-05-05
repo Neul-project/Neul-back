@@ -6,6 +6,7 @@ import { Users } from 'entities/users';
 import { Patients } from 'entities/patients';
 import { SingupUserDto } from 'src/auth/dto/signup-user.dto';
 import { JwtService } from '@nestjs/jwt';
+import { UserCheck } from 'entities/user_check';
 
 @Injectable()
 export class AuthService {
@@ -15,15 +16,15 @@ export class AuthService {
         private userRepository: Repository<Users>,
         @InjectRepository(Patients)
         private patientRepository: Repository<Patients>,
+        @InjectRepository(UserCheck)
+        private userCheckRepository: Repository<UserCheck>
     ) {}
 
     // 회원가입
     async signup(dto: SingupUserDto){
         const { email, password, name, phone, role, wardName } = dto;
 
-        const existingUser = await this.userRepository.findOne({
-            where: { email },
-        });
+        const existingUser = await this.userRepository.findOne({ where: { email } });
         if (existingUser) {
             throw new Error('이미 존재하는 이메일입니다.');
         } 
@@ -121,5 +122,20 @@ export class AuthService {
         }
 
         return this.snsToken(user);
+    }
+
+    // 이용약관 저장
+    async userAgree(userId: number, term: string[]){
+        const user = await this.userRepository.findOne({ where: {id: userId}});
+        if(!user){
+            throw new UnauthorizedException('등록되지 않은 사용자입니다.')
+        }
+
+        const userCheck = this.userCheckRepository.create({
+            user: user,
+            term: JSON.stringify(term)
+        });
+
+        return await this.userCheckRepository.save(userCheck);
     }
 }

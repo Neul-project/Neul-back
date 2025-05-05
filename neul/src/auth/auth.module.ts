@@ -10,6 +10,7 @@ import { ConfigModule } from '@nestjs/config';
 import { KakaoStrategy } from './strategy/kakao';
 import { NaverStrategy } from './strategy/naver';
 import { JwtStrategy } from './strategy/jwt';
+import { UserCheck } from 'entities/user_check';
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { JwtStrategy } from './strategy/jwt';
       secret: process.env.JWT_SECRET,
       signOptions: {expiresIn: '1d'},
     }),
-    TypeOrmModule.forFeature([Users, Patients])
+    TypeOrmModule.forFeature([Users, Patients, UserCheck])
   ],
   providers: [AuthService, LocalStrategy, KakaoStrategy, NaverStrategy, JwtStrategy],
   controllers: [AuthController],

@@ -5,6 +5,7 @@ import { KakaoAuthGuard, LocalAuthGuard, NaverAuthGuard } from './auth.guard';
 import { CheckDuplicateDto } from './dto/check-duplicate.dto';
 import { ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { DuplicateCheckDto } from './dto/res/duplicate-check';
+import { AgreeCheckDto } from './dto/agree-check.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -65,5 +66,11 @@ export class AuthController {
         const user = req.user;
         const {snsAccess, snsRefresh} = await this.authService.naverUser(user);
         return res.redirect(`http://localhost:3000?snsAccess=${snsAccess}&snsRefresh=${snsRefresh}`);
+    }
+
+    // 이용약관 동의
+    @Post('/agreements')
+    async userAgreements(@Body() body: AgreeCheckDto){
+        return await this.authService.userAgree(body.id, body.term);
     }
 }
