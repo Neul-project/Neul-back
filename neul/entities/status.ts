@@ -10,8 +10,13 @@ export class Status {
     @ManyToOne(() => Patients, (patient) => patient.id, { cascade: true, onDelete: "CASCADE" })
     patient: Patients;
   
-    @ManyToOne(() => Users, (user) => user.id, { cascade: true, onDelete: "CASCADE" })
-    admin: Users;
+    // 가족
+    @ManyToOne(()=> Users, (user) => user.familyPatients, {cascade: true, onDelete: 'CASCADE'})
+    user: Users;
+
+    // 도우미
+    @ManyToOne(() => Users, (user) => user.carePatients, {cascade: true, onDelete: 'CASCADE'})
+    admin: Users
   
     @Column('varchar', {comment:'식사량'})
     meal: string;
