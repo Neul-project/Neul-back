@@ -9,6 +9,6 @@ export class ListActivityDto {
   title: string;
 
   @ApiProperty({ example: '2025-05-01', description: '기록 날짜 (YYYY-MM-DD)' })
-  @Transform(({ value }) => value.toISOString().split('T')[0])
+  @Transform(({ value }) => new Date(value).toISOString().split('T')[0])
   recorded_at: string;
 }

@@ -50,7 +50,7 @@ export class ActivityService {
             select: ['id', 'title', 'recorded_at'],
             order: {recorded_at: 'DESC'}
         });
-
+        
         return activities;
     }
 }

@@ -33,7 +33,7 @@ export class ActivityController {
     @Get('list/:userid')
     @UseInterceptors(ClassSerializerInterceptor)
     @ApiResponse({type: ListActivityDto})
-    async listActivity(@Param('userid') userid: number): Promise<ListActivityDto[]>{
+    async listActivity(@Param('userid') userid: number){
         const list = await this.activityService.listAct(userid);
 
         return plainToInstance(ListActivityDto, list);
