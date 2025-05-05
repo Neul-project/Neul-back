@@ -84,7 +84,7 @@ export class ActivityService {
     // 피드백 저장
     async postFeed(dto: CreateFeedbackDto){
         const user = await this.userRepository.findOne({ where: {id: dto.userId}});
-        const activity = await this.activityRepository.findOne({ where: {id: Number(dto.activityid)}});
+        const activity = await this.activityRepository.findOne({ where: {id: dto.activityid}});
         if(!user || !activity){
             throw new UnauthorizedException('유저/활동기록을 찾을 수 없습니다.');
         }
@@ -97,4 +97,6 @@ export class ActivityService {
 
         return await this.feedbackRepository.save(feedback);
     }
+
+    // 전체 피드백 전달
 }

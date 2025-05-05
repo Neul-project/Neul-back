@@ -5,7 +5,7 @@ export class CreateFeedbackDto {
   message: string;
 
   @ApiProperty({ example: 3, description: '활동 ID' })
-  activityid: string;
+  activityid: number;
 
   @ApiProperty({ example: 1, description: '사용자 ID' })
   userId: number;
