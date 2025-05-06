@@ -22,7 +22,7 @@ export class AuthService {
 
     // 회원가입
     async signup(dto: SingupUserDto){
-        const { email, password, name, phone, role, wardName } = dto;
+        const { email, password, name, phone, role } = dto;
 
         const existingUser = await this.userRepository.findOne({ where: { email } });
         if (existingUser) {
@@ -38,13 +38,9 @@ export class AuthService {
             role,
         });
         const savedUser = await this.userRepository.save(newUser);
+        const userId = savedUser.id;
 
-        const patient = this.patientRepository.create({
-            name: wardName,
-            user: role === 'user' ? savedUser : null,
-            admin: role === 'admin' ? savedUser : null,
-        })
-        return await this.patientRepository.save(patient);
+        return userId;
     }
 
     // 로컬로그인
@@ -135,7 +131,6 @@ export class AuthService {
             user: user,
             term: JSON.stringify(term)
         });
-
         return await this.userCheckRepository.save(userCheck);
     }
 }

@@ -70,7 +70,7 @@ export class AuthController {
 
     // 이용약관 동의
     @Post('/agreements')
-    async userAgreements(@Body() body: AgreeCheckDto){
-        return await this.authService.userAgree(body.userId, body.term);
+    async userAgreements(@Body() dto: AgreeCheckDto){
+        return await this.authService.userAgree(dto.userId, dto.term);
     }
 }
