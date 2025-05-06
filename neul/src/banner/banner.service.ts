@@ -19,4 +19,10 @@ export class BannerService {
         });
         return await this.bannerRepository.save(banner);
     }
+
+    // 배너 제공
+    async bannerList(){
+        const banners = await this.bannerRepository.find({ select: ['img'] });
+        return banners;
+    }
 }
