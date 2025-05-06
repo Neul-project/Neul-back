@@ -27,6 +27,8 @@ import { Chats } from 'entities/chats';
 import { Shifts } from 'entities/shifts';
 import { Match } from 'entities/match';
 import { Banners } from 'entities/banners';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -45,6 +47,12 @@ import { Banners } from 'entities/banners';
       charset: 'utf8mb4',
       synchronize: true,
     }),
+
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'uploads'),
+      serveRoot: '/uploads',
+    }),
+    
     AuthModule,
     UserModule,
     PatientModule,

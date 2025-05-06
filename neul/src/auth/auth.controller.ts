@@ -6,6 +6,7 @@ import { CheckDuplicateDto } from './dto/check-duplicate.dto';
 import { ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { DuplicateCheckDto } from './dto/res/duplicate-check';
 import { AgreeCheckDto } from './dto/agree-check.dto';
+import { UserIdDto } from './dto/res/user-id.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -13,6 +14,7 @@ export class AuthController {
 
     // 회원가입
     @Post('/signup')
+    @ApiResponse({type: UserIdDto})
     async signup(@Body() dto: SingupUserDto) {
         return this.authService.signup(dto);
     }

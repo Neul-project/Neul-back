@@ -21,7 +21,7 @@ export class ActivityController {
     @UseInterceptors(
         FilesInterceptor('img', 5, {
             storage: diskStorage({
-                destination: join(__dirname, '../../uploads'), // 저장할 경로
+                destination: join(process.cwd(), 'uploads'),
                 filename: (req, file, callback) => {
                     const filename = `${file.originalname}`;
                     callback(null, filename);

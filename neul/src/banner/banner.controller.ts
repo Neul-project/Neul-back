@@ -13,15 +13,15 @@ export class BannerController {
     @UseInterceptors(
         FilesInterceptor('img', 2, {
           storage: diskStorage({
-            destination: join(__dirname, '../../uploads'), // 저장할 경로
+            destination: join(process.cwd(), 'uploads'),
             filename: (req, file, callback) => {
-              const filename = `${Date.now()}_${file.originalname}`;
+              const filename = `${file.originalname}`;
               callback(null, filename);
             },
           }),
         }),
       )
     async bannerRegister(@UploadedFiles() files: Express.Multer.File[]){
-        return await this.bannerService.bannerRegi(files);
+      return await this.bannerService.bannerRegi(files);
     }
 }
