@@ -69,5 +69,12 @@ export class ActivityController {
     async allFeedback(){
         return this.activityService.allFeed();
     }
+
+    // 관리자 별 피드백 전달
+    @Get('/feedback/view')
+    @ApiResponse({type: SelectActivityDto})
+    async selectFeedback(@Query('adminId') adminId: number){
+        return this.activityService.selectFeed(adminId);
+    }
 }
 

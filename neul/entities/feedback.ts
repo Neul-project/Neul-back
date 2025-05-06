@@ -7,8 +7,13 @@ export class Feedback {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Users, (user) => user.id, { cascade: true, onDelete: "CASCADE" })
+  // 가족
+  @ManyToOne(()=> Users, (user) => user.familyPatients, {cascade: true, onDelete: 'CASCADE'})
   user: Users;
+
+  // 도우미
+  @ManyToOne(() => Users, (user) => user.carePatients, {cascade: true, onDelete: 'CASCADE'})
+  admin: Users;
 
   @ManyToOne(() => Activities, (activities) => activities.id, { cascade: true, onDelete: "CASCADE" })
   activity: Activities;

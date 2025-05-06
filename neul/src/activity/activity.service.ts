@@ -84,13 +84,18 @@ export class ActivityService {
     // 피드백 저장
     async postFeed(dto: CreateFeedbackDto){
         const user = await this.userRepository.findOne({ where: {id: dto.userId}});
-        const activity = await this.activityRepository.findOne({ where: {id: dto.activityid}});
+        const activity = await this.activityRepository.findOne({ 
+            where: {id: dto.activityid},
+            relations: ['patient', 'patient.admin']
+        });
+
         if(!user || !activity){
             throw new UnauthorizedException('유저/활동기록을 찾을 수 없습니다.');
         }
 
         const feedback = this.feedbackRepository.create({
             user,
+            admin: activity.patient.admin,
             activity,
             message: dto.message
         });
@@ -100,9 +105,22 @@ export class ActivityService {
 
     // 전체 피드백 전달
     async allFeed(){
-        return await this.feedbackRepository.find({
+        const feedback = await this.feedbackRepository.find({
             relations: ['activity'],
-            order: { recorded_at: 'DESC' }
+            order: {recorded_at: 'DESC'}
         });
+
+        return feedback;
+    }
+
+    // 관리자 별 피드백 전달
+    async selectFeed(adminId: number){
+        const feedback = await this.feedbackRepository.find({
+            where: {admin: {id: adminId}},
+            relations: ['activity'],
+            order: {recorded_at: 'DESC'}
+        });
+
+        return feedback;
     }
 }
