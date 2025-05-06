@@ -6,7 +6,7 @@ import { CreateActivityDto } from './dto/create-activity.dto';
 import { diskStorage } from 'multer';
 import { ListActivityDto } from './dto/res/list-activity.dto';
 import { plainToInstance } from 'class-transformer';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiConsumes, ApiResponse } from '@nestjs/swagger';
 import { ContectPatientDto } from 'src/status/dto/res/contect-patient.dto';
 import { SelectActivityDto } from './dto/res/select-activity.dto';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
@@ -29,6 +29,7 @@ export class ActivityController {
             }),
         }),
     )
+    // @ApiConsumes('multipart/form-data')
     async writeActivity(@Param('userid') userid: number, @Body() dto: CreateActivityDto, @UploadedFiles() files: Express.Multer.File[]){
         return await this.activityService.writeAct(userid, dto, files);
     }

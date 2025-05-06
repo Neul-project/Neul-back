@@ -5,9 +5,6 @@ export class Banners {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column('varchar', { comment: '배너 제목' })
-    title: string;
-    
     @Column('varchar', { comment: '배너 이미지' })
     img: string;
 }

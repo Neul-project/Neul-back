@@ -22,7 +22,7 @@ export class ActivityService {
     ) {}
 
     // 활동기록 등록
-    async writeAct(userId: number, dto: CreateActivityDto, files: Express.Multer.File[],){
+    async writeAct(userId: number, dto: CreateActivityDto, files: Express.Multer.File[]){
         const filename = files.map((file) => file.filename).join(',');
 
         const user = await this.userRepository.findOne({where: {id: userId}})
