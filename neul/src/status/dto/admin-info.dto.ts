@@ -2,7 +2,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class AdminInfoDto {
-  @ApiProperty({ example: 2, description: '관리자 ID' })
+  @ApiProperty({ example: 2, description: '사용자 ID' })
   id: number;
 
   @ApiProperty({ example: 'test@example.com', description: '이메일' })

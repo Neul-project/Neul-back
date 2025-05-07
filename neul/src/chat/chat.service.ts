@@ -29,4 +29,15 @@ export class ChatService {
         });
         return await this.chatRepository.save(chat);
     }
+
+    // 채팅목록 전달
+    async getChatList(userId: number){
+        const chat = await this.chatRepository.find({
+            where: {user: {id: userId}},
+            order: {created_at: 'ASC'},
+            relations: ['user', 'admin'],
+        });
+        
+        return chat;
+    }
 }
