@@ -29,6 +29,7 @@ import { Chats } from 'entities/chats';
 import { Shifts } from 'entities/shifts';
 import { Match } from 'entities/match';
 import { Banners } from 'entities/banners';
+import { ChatRoom } from 'entities/chat_room';
 
 
 @Module({
@@ -44,7 +45,7 @@ import { Banners } from 'entities/banners';
       username: process.env.DB_USER,
       password: process.env.DB_PASS,
       database: process.env.DB_NAME,
-      entities: [Users, Patients, UserCheck, Activities, Feedback, Programs, Pay, Refund, Status, Chats, Shifts, Match, Banners],
+      entities: [Users, Patients, UserCheck, Activities, Feedback, Programs, Pay, Refund, Status, Chats, Shifts, Match, Banners, ChatRoom],
       charset: 'utf8mb4',
       synchronize: true,
     }),
