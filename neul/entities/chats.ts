@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn } from 'typeorm';
 import { Users } from './users';
+import { ChatRoom } from './chat_room';
   
 @Entity('chats')
 export class Chats {
@@ -16,6 +17,12 @@ export class Chats {
   
     @Column('text', { comment: '채팅내용' })
     message: string;
+
+    @Column('boolean', {comment: '읽음여부', default: false})
+    read: boolean
+
+    @ManyToOne(() => ChatRoom, (room) => room.chats, {cascade: true, onDelete: 'CASCADE'})
+    room: ChatRoom;
   
     @CreateDateColumn({ type: 'timestamp' })
     created_at: Date;

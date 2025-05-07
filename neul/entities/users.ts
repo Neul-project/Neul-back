@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Patients } from './patients';
+import { ChatRoom } from './chat_room';
 
 @Entity('users')
 export class Users {
@@ -27,11 +28,19 @@ export class Users {
   @Column('enum', {enum: ['user', 'admin'], comment:'역할', default: 'user'})
   role: string;
 
-  // 가족이 연결한 환자
+  // 보호자가 연결한 환자
   @OneToMany(() => Patients, (patient) => patient.user)
   familyPatients: Patients[];
 
-  // 도우미가 담당한 환자
+  // 관리자가 담당한 환자
   @OneToMany(() => Patients, (patient) => patient.admin)
   carePatients: Patients[];
+
+  // 보호자가 참여한 채팅방들
+  @OneToMany(() => ChatRoom, (room) => room.user)
+  chatRoomUser: ChatRoom[];
+
+  // 관리자가 참여한 채팅방들
+  @OneToMany(() => ChatRoom, (room) => room.admin)
+  chatRoomAdmin: ChatRoom[];
 }
