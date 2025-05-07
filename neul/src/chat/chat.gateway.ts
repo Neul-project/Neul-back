@@ -2,7 +2,12 @@ import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSo
 import { Server, Socket } from 'socket.io';
 import { ChatService } from "./chat.service";
 
-@WebSocketGateway() //게이트웨이 설정
+@WebSocketGateway({ //게이트웨이 설정
+    cors: {
+      origin: ['http://localhost:3000', 'http://localhost:4000'], // 허용할 프론트엔드 주소
+      credentials: true,
+    },
+})
 export class ChatGateway{
     constructor(private readonly chatService: ChatService) {}
 
@@ -12,7 +17,6 @@ export class ChatGateway{
     handleConnection(client: Socket){
         console.log(`✅ Client 연결: ${client.id}`)
     }
-
     handleDisconnect(client: Socket) {
         console.log(`❌ Client 연결 종료: ${client.id}`);
     }
@@ -22,9 +26,7 @@ export class ChatGateway{
         @MessageBody() data: { userId: number; adminId: number; message: string },
         @ConnectedSocket() client: Socket,
     ){
-        console.log('채팅 확인하즈으아아아앙');
         const saved = await this.chatService.saveChat(data); // db 저장
-
         this.server.emit('receive_message', saved); // 저장된 메시지 브로드캐스트
     }
 }
