@@ -29,12 +29,12 @@ export class ActivityController {
             }),
         }),
     )
-    // @ApiConsumes('multipart/form-data')
+    @ApiConsumes('multipart/form-data')
     async writeActivity(@Param('userid') userid: number, @Body() dto: CreateActivityDto, @UploadedFiles() files: Express.Multer.File[]){
         return await this.activityService.writeAct(userid, dto, files);
     }
 
-    // 활동기록 제공
+    // 활동기록 제공 (사용자)
     @Get('list/:userid')
     @UseInterceptors(ClassSerializerInterceptor)
     @ApiResponse({type: ListActivityDto})
@@ -56,6 +56,21 @@ export class ActivityController {
     @ApiResponse({type: SelectActivityDto})
     async selectList(@Query('adminId') adminId: number, @Query('patientId') patientId: number){
         return this.activityService.selectList(adminId, patientId);
+    }
+
+    // 전체 활동기록 전달 (관리자)
+    @Get('/selectlistall')
+    @ApiResponse({type: SelectActivityDto})
+    async allListActivity(@Query('adminId') adminId: number){
+        return this.activityService.getAllListAct(adminId);
+    }
+
+    // 해당 활동기록 정보 전달 (사용자)
+    @Get('/detail')
+    @ApiResponse({type: SelectActivityDto})
+    async detailActivity(@Query('userId') userId: number, @Query('id') id: number){
+        console.log(userId, '사용자정보', id, '활동기록정보')
+        return this.activityService.detailAct(userId, id);
     }
 
     // 피드백 저장

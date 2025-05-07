@@ -81,6 +81,29 @@ export class ActivityService {
         return activity;
     }
 
+    // 전체 상태기록 전달 (관리자)
+    async getAllListAct(adminId: number){
+        const activities = await this.activityRepository.find({
+            where: {admin: {id: adminId}},
+            relations: ['patient']
+        });
+
+        return activities;
+    }
+
+    // 해당 활동기록 정보 전달 (사용자)
+    async detailAct(userId: number, activityId: number){
+        const activity = await this.activityRepository.findOne({
+            where: {
+                id: activityId,
+                user: {id: userId}
+            },
+            relations: ['patient']
+        });
+
+        return activity;
+    }
+
     // 피드백 저장
     async postFeed(dto: CreateFeedbackDto){
         const user = await this.userRepository.findOne({ where: {id: dto.userId}});
