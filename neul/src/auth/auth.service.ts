@@ -62,6 +62,15 @@ export class AuthService {
         return { payload, newToken };
     }
 
+    // 로그인한 유저 정보 전달
+    async loginMe(userId: number){
+        const user = await this.userRepository.findOne({ 
+            where: {id: userId},
+            select: ['id', 'name'],
+        });
+        return user;
+    }
+
     // 이메일 중복확인
     async checkEmail(email: string){
         const user = await this.userRepository.findOne({ where: {email}});

@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SingupUserDto } from 'src/auth/dto/signup-user.dto';
-import { KakaoAuthGuard, LocalAuthGuard, NaverAuthGuard } from './auth.guard';
+import { JwtAuthGuard, KakaoAuthGuard, LocalAuthGuard, NaverAuthGuard } from './auth.guard';
 import { CheckDuplicateDto } from './dto/check-duplicate.dto';
 import { ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { DuplicateCheckDto } from './dto/res/duplicate-check';
@@ -25,6 +25,14 @@ export class AuthController {
     async localLogin(@Req() req){
         const user = req.user;
         return { user: user.payload, token: user.newToken }
+    }
+
+    // 로그인한 유저 정보 전달
+    @Get('/me')
+    @UseGuards(JwtAuthGuard)
+    async loginMe(@Req() req){
+        const userId = req.user.id;
+        return this.authService.loginMe(userId);
     }
 
     // 이메일 핸드폰번호 중복확인

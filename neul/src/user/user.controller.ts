@@ -12,7 +12,7 @@ export class UserController {
     @Post('/info')
     @UseGuards(JwtAuthGuard)
     async addUser(@Body() dto: AddUserDto, @Req() req){
-        const userId = req.user.id
+        const userId = req.user.id;
         return await this.userService.addUser(userId, dto);
     }
 
@@ -27,7 +27,7 @@ export class UserController {
     @Delete('/withdraw')
     @UseGuards(JwtAuthGuard)
     async userDelete(@Req() req){
-        const userId = req.user.id
+        const userId = req.user.id;
         return await this.userService.userDel(userId);
     }
 }
