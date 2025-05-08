@@ -111,7 +111,7 @@ export class StatusService {
             order: { recorded_at: 'DESC'}
         });
 
-        console.log(day);
+        console.log(day, '상태기록 전달');
         return day;
     }
 }

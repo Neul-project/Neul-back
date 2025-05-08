@@ -2,6 +2,7 @@ import { Controller, Get, Query } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { ApiResponse } from '@nestjs/swagger';
 import { ChatListDTO } from './dto/res/chat-list.dto';
+import { ChatRoomListDto } from './dto/res/chatroom-list.dto';
 
 @Controller('chat')
 export class ChatController {
@@ -12,5 +13,12 @@ export class ChatController {
     @ApiResponse({type: ChatListDTO})
     async chatList(@Query('userId') userId: number){
         return this.chatService.getChatList(userId);
+    }
+
+    // 채팅방목록 전달
+    @Get('/rooms')
+    @ApiResponse({type: ChatRoomListDto})
+    async chatroomList(@Query('adminId') adminId: number){
+        return this.chatService.getChatroomList(adminId);
     }
 }

@@ -69,7 +69,6 @@ export class ActivityController {
     @Get('/detail')
     @ApiResponse({type: SelectActivityDto})
     async detailActivity(@Query('userId') userId: number, @Query('id') id: number){
-        console.log(userId, '사용자정보', id, '활동기록정보')
         return this.activityService.detailAct(userId, id);
     }
 
