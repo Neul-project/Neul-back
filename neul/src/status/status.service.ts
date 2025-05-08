@@ -114,16 +114,4 @@ export class StatusService {
         console.log(day);
         return day;
     }
-
-    // 피보호자 이름 전달 (사용자)
-    async nameSta(userId: number){
-        const patient = await this.statusRepository.find({
-            where: { user: {id: userId} },
-            relations: ['patient']
-        })
-
-        // 중복 제거 > 같은 환자에게 여러 개의 상태 기록이 있을 수 있으므로!
-        const name = [...new Set(patient.map( x=> x.patient.name ))];
-        return name;
-    }
 }

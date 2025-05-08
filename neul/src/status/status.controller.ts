@@ -59,10 +59,4 @@ export class StatusController {
     async dateStatus(@Query('userId') userId: number, @Query('date') date: string){
         return this.statusService.dateSta(userId, date);
     }
-
-    // 피보호자 이름 전달 (사용자)
-    @Get('/name')
-    async nameStatus(@Query('userId') userId: number){
-        return this.statusService.nameSta(userId);
-    }
 }

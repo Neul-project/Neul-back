@@ -53,4 +53,14 @@ export class PatientService {
 
         return await this.patientRepository.save(patient);
     }
+
+    // 피보호자 이름 전달
+    async namePat(userId: number){
+        const patient = await this.patientRepository.findOne({
+            where:{user: {id: userId}},
+            relations: ['user']
+        });
+
+        return { name: patient?.name };
+    }
 }

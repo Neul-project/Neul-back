@@ -1,8 +1,9 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { PatientService } from './patient.service';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { AddPatientDto } from './dto/add-patient.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @Controller('patient')
 export class PatientController {
@@ -20,5 +21,12 @@ export class PatientController {
     async addPatient(@Body() dto: AddPatientDto, @Req() req){
         const userId = req.user.id
         return await this.patientService.addPat(userId, dto);
+    }
+
+    // 피보호자 이름 전달
+    @Get('/name')
+    @ApiResponse({schema: {example: {name: '홍길동'}}})
+    async namePatient(@Query('userId') userId: number){
+        return this.patientService.namePat(userId);
     }
 }
