@@ -29,4 +29,12 @@ export class PatientController {
     async namePatient(@Query('userId') userId: number){
         return this.patientService.namePat(userId);
     }
+
+    // 피보호자 정보 전달
+    @Get('/info')
+    @UseGuards(JwtAuthGuard)
+    async patientInfo(@Req() req){
+        const userId = req.user.id;
+        return this.patientService.patientInfo(userId);
+    }
 }

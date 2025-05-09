@@ -63,4 +63,27 @@ export class PatientService {
 
         return { name: patient?.name };
     }
+
+    // 피보호자 정보 전달
+    async patientInfo(userId: number){
+        const user = await this.userRepository.findOne({
+            where: { id: userId },
+            relations: ['familyPatients']
+        });
+
+        const patient = user.familyPatients[0];
+
+        return {
+            name: user.name,
+            email: user.email,
+            phone: user.phone,
+            address: user.address,
+            ward: patient ? {
+                name: patient.name,
+                gender: patient.gender,
+                birth: patient.birth,
+                note: patient.note
+            } : null
+        };
+    }
 }
