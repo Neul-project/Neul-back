@@ -8,11 +8,11 @@ export class Patients {
   id: number;
 
   // 가족
-  @ManyToOne(()=> Users, (user) => user.familyPatients, {cascade: true, onDelete: 'CASCADE'})
+  @ManyToOne(()=> Users, (user) => user.familyPatients, {onDelete: 'CASCADE'})
   user: Users;
 
   // 도우미
-  @ManyToOne(() => Users, (user) => user.carePatients, {cascade: true, onDelete: 'CASCADE'})
+  @ManyToOne(() => Users, (user) => user.carePatients, {onDelete: 'CASCADE'})
   admin: Users;
 
   @Column('varchar', { comment: '성별', nullable: true })
@@ -28,6 +28,6 @@ export class Patients {
   note?: string;
 
   // 활동기록이 연결한 환자
-  @OneToMany(() => Activities, (activity) => activity.patient)
+  @OneToMany(() => Activities, (activity) => activity.patient, {cascade: true, onDelete: 'CASCADE'})
   activities: Activities[];
 }

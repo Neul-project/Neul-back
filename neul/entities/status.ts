@@ -11,11 +11,11 @@ export class Status {
     patient: Patients;
   
     // 가족
-    @ManyToOne(()=> Users, (user) => user.familyPatients, {cascade: true, onDelete: 'CASCADE'})
+    @ManyToOne(()=> Users, (user) => user.familyPatients, {onDelete: 'CASCADE'})
     user: Users;
 
     // 도우미
-    @ManyToOne(() => Users, (user) => user.carePatients, {cascade: true, onDelete: 'CASCADE'})
+    @ManyToOne(() => Users, (user) => user.carePatients, {onDelete: 'CASCADE'})
     admin: Users
   
     @Column('varchar', {comment:'식사량'})

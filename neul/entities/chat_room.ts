@@ -8,14 +8,14 @@ export class ChatRoom {
   id: number;
 
   // 보호자
-  @ManyToOne(() => Users, (user) => user.chatRoomUser)
+  @ManyToOne(() => Users, (user) => user.chatRoomUser, {onDelete: 'CASCADE'})
   user: Users;
 
   // 관리자
-  @ManyToOne(() => Users, (user) => user.chatRoomAdmin)
+  @ManyToOne(() => Users, (user) => user.chatRoomAdmin, {onDelete: 'CASCADE'})
   admin: Users;
 
   // 채팅 목록
-  @OneToMany(() => Chats, (chat) => chat.room)
+  @OneToMany(() => Chats, (chat) => chat.room, {cascade: true, onDelete: 'CASCADE'})
   chats: Chats[];   
 }

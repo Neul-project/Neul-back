@@ -29,18 +29,18 @@ export class Users {
   role: string;
 
   // 보호자가 연결한 환자
-  @OneToMany(() => Patients, (patient) => patient.user)
+  @OneToMany(() => Patients, (patient) => patient.user, { cascade: true, onDelete: "CASCADE" })
   familyPatients: Patients[];
 
   // 관리자가 담당한 환자
-  @OneToMany(() => Patients, (patient) => patient.admin)
+  @OneToMany(() => Patients, (patient) => patient.admin, { cascade: true, onDelete: "CASCADE" })
   carePatients: Patients[];
 
   // 보호자가 참여한 채팅방들
-  @OneToMany(() => ChatRoom, (room) => room.user)
+  @OneToMany(() => ChatRoom, (room) => room.user, { cascade: true, onDelete: "CASCADE" })
   chatRoomUser: ChatRoom[];
 
   // 관리자가 참여한 채팅방들
-  @OneToMany(() => ChatRoom, (room) => room.admin)
+  @OneToMany(() => ChatRoom, (room) => room.admin, { cascade: true, onDelete: "CASCADE" })
   chatRoomAdmin: ChatRoom[];
 }

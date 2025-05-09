@@ -8,11 +8,11 @@ export class Feedback {
   id: number;
 
   // 가족
-  @ManyToOne(()=> Users, (user) => user.familyPatients, {cascade: true, onDelete: 'CASCADE'})
+  @ManyToOne(()=> Users, (user) => user.familyPatients, {onDelete: 'CASCADE'})
   user: Users;
 
   // 도우미
-  @ManyToOne(() => Users, (user) => user.carePatients, {cascade: true, onDelete: 'CASCADE'})
+  @ManyToOne(() => Users, (user) => user.carePatients, {onDelete: 'CASCADE'})
   admin: Users;
 
   @ManyToOne(() => Activities, (activities) => activities.id, { cascade: true, onDelete: "CASCADE" })
