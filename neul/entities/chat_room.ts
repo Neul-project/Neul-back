@@ -15,12 +15,6 @@ export class ChatRoom {
   @ManyToOne(() => Users, (user) => user.chatRoomAdmin)
   admin: Users;
 
-  @Column({ default: false, comment: '보호자 퇴장 여부' })
-  userLeft: boolean;
-
-  @Column({ default: false, comment: '관리자 퇴장 여부' })
-  adminLeft: boolean;
-
   // 채팅 목록
   @OneToMany(() => Chats, (chat) => chat.room)
   chats: Chats[];   

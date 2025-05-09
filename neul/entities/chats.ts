@@ -21,6 +21,9 @@ export class Chats {
     @Column('boolean', {comment: '읽음여부', default: false})
     read: boolean
 
+    @Column('varchar', { comment: '보낸 사람', default: 'user' })
+    sender: 'user' | 'admin';
+
     @ManyToOne(() => ChatRoom, (room) => room.chats, {cascade: true, onDelete: 'CASCADE'})
     room: ChatRoom;
   

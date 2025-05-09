@@ -17,29 +17,25 @@ export class ChatService {
     ) {}
 
     // 채팅 저장
-    async saveChat({userId, adminId, message}){
+    async saveChat({userId, message, sender}){
         const user = await this.userRepository.findOne({ where: {id: userId} });
-        const admin = await this.userRepository.findOne({ where: {id: adminId} });
-
-        if (!user || !admin) {
-            throw new Error('사용자가 존재하지 않습니다.');
-        }
-
+        
         // 해당 유저-관리자 채팅방
         let room = await this.chatRoomRepository.findOne({
-            where: { user: {id: userId}, admin: {id: adminId} },
+            where: { user: {id: userId} },
+            relations: ['admin'],
         });
 
         if (!room) {
-            room = this.chatRoomRepository.create({ user, admin });
-            room = await this.chatRoomRepository.save(room);
+            throw new Error('연결된 도우미가 없습니다.');
         }
 
         const chat = this.chatRepository.create({
             user,
-            admin,
+            admin: room.admin,
             message,
-            room
+            room,
+            sender
         });
         return await this.chatRepository.save(chat);
     }

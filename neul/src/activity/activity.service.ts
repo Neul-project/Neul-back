@@ -50,7 +50,7 @@ export class ActivityService {
     // 활동기록 제공
     async listAct(userId: number){
         const activities = await this.activityRepository.find({
-            where: {admin: {id: userId}},
+            where: {user: {id: userId}},
             select: ['id', 'title', 'recorded_at'],
             order: {recorded_at: 'DESC'}
         });
