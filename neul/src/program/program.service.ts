@@ -12,7 +12,11 @@ export class ProgramService {
 
     // 프로그램 전체 전달
     async allPro(){
-        const program = await this.programRepository.find();
-        return program;
+        return await this.programRepository.find();
+    }
+
+    // 선택된 프로그램 전달
+    async detailPro(detailid: number){
+        return await this.programRepository.findOne({where: {id: detailid}});
     }
 }
