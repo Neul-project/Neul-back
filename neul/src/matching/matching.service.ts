@@ -1,31 +1,38 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Patients } from 'entities/patients';
+import { Users } from 'entities/users';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class MatchingService {
     constructor(
-        @InjectRepository
-    )
+        @InjectRepository(Users)
+        private userRepository: Repository<Users>,
+        @InjectRepository(Patients)
+        private patientRepository: Repository<Patients>
+    ) {}
 
     // 전체 유저 전달
     async userAll(){
-        const users = await this.userRepository.find({
-            relations: ['familyPatients']
+        const patients = await this.patientRepository.find({
+            relations: ['user', 'admin']
         });
 
-        return users.map(x => {
-            const patient = x.familyPatients?.[0];
+        return patients.map(x => ({
+            user_id: x.user?.id || null,
+            user_name: x.user?.name || null,
+            user_email: x.user?.email || null,
+            user_phone: x.user?.phone || null,
 
-            return {
-                id: x.id,
-                email: x.email,
-                name: x.name,
-                phone: x.phone,
-                patient_id: patient?.id || null,
-                patient_name: patient?.name || '등록안함',
-                patient_gender: patient?.gender || '등록안함',
-                patient_birth: patient?.birth || '등록안함',
-                patient_note: patient?.note || '등록안함',
-            };
-        })
+            admin_id: x.admin?.id || null,
+            admin_name: x.admin?.name || null,
+
+            patient_id: x.id,
+            patient_name: x.name || '없음',
+            patient_gender: x.gender || '없음',
+            patient_birth: x.birth || '없음',
+            patient_note: x.note || '없음'
+        }));
     }
 }
