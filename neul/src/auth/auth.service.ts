@@ -65,7 +65,7 @@ export class AuthService {
     async loginMe(userId: number){
         const user = await this.userRepository.findOne({ 
             where: {id: userId},
-            select: ['id', 'name'],
+            select: ['id', 'name', 'provider'],
         });
         return user;
     }
