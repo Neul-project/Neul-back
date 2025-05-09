@@ -4,6 +4,7 @@ import { CreatePatientDto } from './dto/create-patient.dto';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { AddPatientDto } from './dto/add-patient.dto';
 import { ApiResponse } from '@nestjs/swagger';
+import { PatientInfoDto } from './dto/patient-info.dto';
 
 @Controller('patient')
 export class PatientController {
@@ -33,6 +34,7 @@ export class PatientController {
     // 피보호자 정보 전달
     @Get('/info')
     @UseGuards(JwtAuthGuard)
+    @ApiResponse({type: PatientInfoDto})
     async patientInfo(@Req() req){
         const userId = req.user.id;
         return this.patientService.patientInfo(userId);
