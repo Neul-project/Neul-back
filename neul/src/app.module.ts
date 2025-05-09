@@ -13,7 +13,7 @@ import { ActivityModule } from './activity/activity.module';
 import { StatusModule } from './status/status.module';
 import { ProgramModule } from './program/program.module';
 import { ChatModule } from './chat/chat.module';
-import { ShiftModule } from './shift/shift.module';
+import { ShiftModule } from './matching/matching.module';
 import { BannerModule } from './banner/banner.module';
 
 import { Users } from 'entities/users';

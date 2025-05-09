@@ -7,6 +7,7 @@ import { ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { DuplicateCheckDto } from './dto/res/duplicate-check';
 import { AgreeCheckDto } from './dto/agree-check.dto';
 import { UserIdDto } from './dto/res/user-id.dto';
+import { UpdatePWDto } from './dto/update-pw.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -87,8 +88,8 @@ export class AuthController {
     // 비밀번호 변경
     @Patch('/password')
     @UseGuards(JwtAuthGuard)
-    async updatePW(@Body() body, @Req() req){
+    async updatePW(@Body() dto: UpdatePWDto, @Req() req){
         const userId = req.user.id;
-        return this.authService.updatePW(userId, body.newPassword);
+        return this.authService.updatePW(userId, dto.newPassword);
     }
 }
