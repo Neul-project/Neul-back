@@ -38,9 +38,8 @@ export class AuthService {
             role,
         });
         const savedUser = await this.userRepository.save(newUser);
-        const userId = savedUser.id;
-
-        return userId;
+        
+        return { userId: savedUser.id };
     }
 
     // 로컬로그인
