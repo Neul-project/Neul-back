@@ -139,6 +139,22 @@ export class AuthService {
             user: user,
             term: JSON.stringify(term)
         });
-        return await this.userCheckRepository.save(userCheck);
+        await this.userCheckRepository.save(userCheck);
+
+        return { ok: true };
+    }
+
+    // 비밀번호 변경
+    async updatePW(userId:number, newPassword: string){
+        const user = await this.userRepository.findOne({ where: {id: userId}});
+        if(!user){
+            throw new UnauthorizedException('등록되지 않은 사용자입니다.')
+        }
+
+        const hasPw = await bcrypt.hash(newPassword, 10);
+        user.password = hasPw;
+        await this.userRepository.save(user);
+
+        return { ok: true };
     }
 }

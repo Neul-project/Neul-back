@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SingupUserDto } from 'src/auth/dto/signup-user.dto';
 import { JwtAuthGuard, KakaoAuthGuard, LocalAuthGuard, NaverAuthGuard } from './auth.guard';
@@ -82,5 +82,13 @@ export class AuthController {
     @Post('/agreements')
     async userAgreements(@Body() dto: AgreeCheckDto){
         return await this.authService.userAgree(dto.userId, dto.term);
+    }
+
+    // 비밀번호 변경
+    @Patch('/password')
+    @UseGuards(JwtAuthGuard)
+    async updatePW(@Body() body, @Req() req){
+        const userId = req.user.id;
+        return this.authService.updatePW(userId, body.newPassword);
     }
 }
