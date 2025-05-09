@@ -5,6 +5,7 @@ import { AddUserDto } from './dto/add-user.dto';
 import { ApiResponse } from '@nestjs/swagger';
 import { AdminListDto } from './dto/res/admin-list.dto';
 import { UserPatientDto } from './dto/res/user-patient.dto';
+import { CreateAddressDto } from './dto/create-address.dto';
 @Controller('user')
 export class UserController {
     constructor(private readonly userService: UserService) {}
@@ -37,5 +38,13 @@ export class UserController {
     @ApiResponse({type: UserPatientDto})
     async userAll(){
         return this.userService.userAll();   
+    }
+
+    // 주소 저장
+    @Post('/address')
+    @UseGuards(JwtAuthGuard)
+    async getAddress(@Body() dto: CreateAddressDto, @Req() req){
+        const userId = req.user.id;
+        return this.userService.getAddress(userId, dto.address);
     }
 }

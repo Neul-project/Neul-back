@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from 'entities/users';
 import { Repository } from 'typeorm';
@@ -68,5 +68,18 @@ export class UserService {
                 patient_note: patient?.note || '등록안함',
             };
         })
+    }
+
+    // 주소 저장
+    async getAddress(userId: number, newAddress: string){
+        const user = await this.userRepository.findOne({ where: {id: userId}});
+        if(!user){
+            throw new UnauthorizedException('등록되지 않은 사용자입니다.')
+        }
+
+        user.address = newAddress;
+        await this.userRepository.save(user);
+
+        return { ok: true };
     }
 }
