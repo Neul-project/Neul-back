@@ -59,4 +59,14 @@ export class UserService {
 
         return { ok: true };
     }
+
+    // 유저 정보 전달
+    async getUserInfo(userId: number){
+        const user = await this.userRepository.findOne({ 
+            where: {id: userId},
+            select: ['name', 'email', 'phone', 'address']
+        });
+
+        return user;
+    }
 }

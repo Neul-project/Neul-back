@@ -6,6 +6,7 @@ import { ApiResponse } from '@nestjs/swagger';
 import { AdminListDto } from './dto/res/admin-list.dto';
 import { UserPatientDto } from '../matching/dto/res/user-patient.dto';
 import { CreateAddressDto } from './dto/create-address.dto';
+import { UserInfoDto } from './dto/res/user-info.dto';
 @Controller('user')
 export class UserController {
     constructor(private readonly userService: UserService) {}
@@ -39,5 +40,14 @@ export class UserController {
     async getAddress(@Body() dto: CreateAddressDto, @Req() req){
         const userId = req.user.id;
         return this.userService.getAddress(userId, dto.address);
+    }
+
+    // 유저 정보 전달
+    @Get('/info')
+    @UseGuards(JwtAuthGuard)
+    @ApiResponse({type: UserInfoDto})
+    async userInfo(@Req() req){
+        const userId = req.user.id;
+        return this.userService.getUserInfo(userId);
     }
 }
