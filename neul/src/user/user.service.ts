@@ -24,7 +24,9 @@ export class UserService {
         user.name = dto.name;
         user.phone = dto.phone;
 
-        return await this.userRepository.save(user);
+        await this.userRepository.save(user);
+
+        return { ok: true };
     }
 
     // 관리자 전체 명단 전달
