@@ -4,7 +4,7 @@ import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { AddUserDto } from './dto/add-user.dto';
 import { ApiResponse } from '@nestjs/swagger';
 import { AdminListDto } from './dto/res/admin-list.dto';
-import { UserPatientDto } from './dto/res/user-patient.dto';
+import { UserPatientDto } from '../matching/dto/res/user-patient.dto';
 import { CreateAddressDto } from './dto/create-address.dto';
 @Controller('user')
 export class UserController {
@@ -31,13 +31,6 @@ export class UserController {
     async userDelete(@Req() req){
         const userId = req.user.id;
         return await this.userService.userDel(userId);
-    }
-
-    // 전체 유저 전달
-    @Get('/alluser')
-    @ApiResponse({type: UserPatientDto})
-    async userAll(){
-        return this.userService.userAll();   
     }
 
     // 주소 저장

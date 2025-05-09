@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn } from 'typeorm';
 import { Patients } from './patients';
 import { ChatRoom } from './chat_room';
 
@@ -27,6 +27,9 @@ export class Users {
 
   @Column('enum', {enum: ['user', 'admin'], comment:'역할', default: 'user'})
   role: string;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  created_at: Date;
 
   // 보호자가 연결한 환자
   @OneToMany(() => Patients, (patient) => patient.user, { cascade: true, onDelete: "CASCADE" })
