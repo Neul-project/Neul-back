@@ -1,7 +1,8 @@
 import { Body, Controller, Delete, Get } from '@nestjs/common';
 import { MatchingService } from './matching.service';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiResponse } from '@nestjs/swagger';
 import { UserPatientDto } from './dto/res/user-patient.dto';
+import { DeleteStatusDto } from 'src/status/dto/delete-status.dto';
 
 @Controller('matching')
 export class MatchingController {
@@ -16,7 +17,8 @@ export class MatchingController {
 
     // 선택한 유저 탈퇴
     @Delete('/userdelete')
-    async slectUserDelete(@Body() body){
-        console.log(body, '삭제리스트');
+    @ApiBody({type: DeleteStatusDto})
+    async slectUserDelete(@Body() body: number[]){
+        return this.matchingService.userDel(body);
     };
 }

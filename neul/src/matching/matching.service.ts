@@ -36,4 +36,9 @@ export class MatchingService {
             patient_note: x.note || '없음'
         }));
     }
+
+    // 선택 유저 삭제
+    async userDel(ids: number[]){
+        return await this.userRepository.delete(ids);
+    }
 }
