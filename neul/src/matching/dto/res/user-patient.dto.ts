@@ -1,30 +1,39 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UserPatientDto {
-  @ApiProperty({ example: 1, description: '유저 ID' })
-  id: number;
+  @ApiProperty({ example: 3, description: '보호자(유저) ID' })
+  user_id: number | null;
 
-  @ApiProperty({ example: 'test@example.com', description: '이메일' })
-  email: string;
+  @ApiProperty({ example: '홍길동', description: '보호자(유저) 이름' })
+  user_name: string;
 
-  @ApiProperty({ example: '홍길동', description: '이름' })
-  name: string;
+  @ApiProperty({ example: 'user@example.com', description: '보호자 이메일' })
+  user_email: string;
 
-  @ApiProperty({ example: '01012345678', description: '전화번호' })
-  phone: string;
+  @ApiProperty({ example: '010-1234-5678', description: '보호자 연락처' })
+  user_phone: string;
 
-  @ApiProperty({ example: 1, description: '환자 ID' })
-  patient_id: number | null;
+  @ApiProperty({ example: '2025-05-07T09:34:50.603Z', description: '보호자 등록 시간' })
+  user_create: string;
 
-  @ApiProperty({ example: '홍길동', description: '환자 이름' })
+  @ApiProperty({ example: 1, description: '관리자 ID' })
+  admin_id: number | null;
+
+  @ApiProperty({ example: '김관리', description: '관리자 이름' })
+  admin_name: string;
+
+  @ApiProperty({ example: 7, description: '환자 ID' })
+  patient_id: number;
+
+  @ApiProperty({ example: '이환자', description: '환자 이름' })
   patient_name: string;
 
-  @ApiProperty({ example: '남성', description: '환자 성별' })
+  @ApiProperty({ example: '여성', description: '환자 성별' })
   patient_gender: string;
 
-  @ApiProperty({ example: '1990-01-01', description: '환자 생년월일' })
+  @ApiProperty({ example: '1945-08-15', description: '환자 생년월일' })
   patient_birth: string;
 
-  @ApiProperty({ example: '고혈압 있음', description: '환자 특이사항' })
+  @ApiProperty({ example: '치매 초기 증상 있음', description: '환자 특이사항' })
   patient_note: string;
 }
