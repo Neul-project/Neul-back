@@ -4,6 +4,7 @@ import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { AddUserDto } from './dto/add-user.dto';
 import { ApiResponse } from '@nestjs/swagger';
 import { AdminListDto } from './dto/res/admin-list.dto';
+import { UserPatientDto } from './dto/res/user-patient.dto';
 @Controller('user')
 export class UserController {
     constructor(private readonly userService: UserService) {}
@@ -20,7 +21,7 @@ export class UserController {
     @Get('/adminlist')
     @ApiResponse({type: AdminListDto})
     async adminAll(){
-        return await this.userService.adminALl();
+        return await this.userService.adminAll();
     }
 
     // 회원탈퇴
@@ -29,5 +30,12 @@ export class UserController {
     async userDelete(@Req() req){
         const userId = req.user.id;
         return await this.userService.userDel(userId);
+    }
+
+    // 전체 유저 전달
+    @Get('/alluser')
+    @ApiResponse({type: UserPatientDto})
+    async userAll(){
+        return this.userService.userAll();   
     }
 }
