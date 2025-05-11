@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, CreateDateColumn } from 'typeorm';
 import { Users } from './users';
 import { Chats } from './chats';
 
@@ -17,5 +17,8 @@ export class ChatRoom {
 
   // 채팅 목록
   @OneToMany(() => Chats, (chat) => chat.room, {cascade: true, onDelete: 'CASCADE'})
-  chats: Chats[];   
+  chats: Chats[];
+
+  @CreateDateColumn({ type: 'timestamp' })
+  created_at: Date;
 }

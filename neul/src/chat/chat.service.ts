@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ChatRoom } from 'entities/chat_room';
 import { Chats } from 'entities/chats';
@@ -64,9 +64,9 @@ export class ChatService {
                 'user.id AS userId', // 보호자 id
                 'user.name AS userName', // 관리자가 담당하고 있는 보호자 이름
                 'patient.name AS patientName', // 해당 보호자의 피보호자 이름
-                'MAX(chat.created_at) AS lastTime', // 마지막 채팅 보낸 시각
-                'MAX(chat.message) AS lastMessage', // 마지막으로 보낸 채팅 내용
-                `SUM(CASE WHEN chat.read = false AND chat.adminId = :adminId THEN 1 ELSE 0 END) AS unreadCount`, // 안 읽은 알림 개수
+                'COALESCE(MAX(chat.created_at), room.created_at) AS lastTime', // 마지막 채팅 보낸 시각
+                `COALESCE(MAX(chat.message), '') AS lastMessage`, // 마지막으로 보낸 채팅 내용
+                `COALESCE(SUM(CASE WHEN chat.read = false AND chat.adminId = :adminId THEN 1 ELSE 0 END), 0) AS unreadCount`, // 안 읽은 알림 개수
             ])
             .where('room.adminId = :adminId', { adminId })
             .groupBy('room.id')
@@ -80,5 +80,29 @@ export class ChatService {
             ...room,
             unreadCount: parseInt(room.unreadCount, 10)
         }));
+    }
+
+    // 읽음처리
+    async chatRead(adminId: number, userId: number){
+        const room = await this.chatRoomRepository.findOne({
+            where: {
+                admin: { id: adminId },
+                user: { id: userId },
+            },
+        });
+
+        if (!room) {
+            throw new NotFoundException('해당 채팅방이 존재하지 않습니다.');
+        }
+
+        // 해당 채팅방의 'user'가 보낸 메시지 중 아직 읽지 않은 것들을 읽음 처리
+        return await this.chatRepository
+            .createQueryBuilder()
+            .update()
+            .set({ read: true })
+            .where('roomId = :roomId', { roomId: room.id })
+            .andWhere('sender = :sender', { sender: 'user' })
+            .andWhere('read = false')
+            .execute();
     }
 }
