@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { ApiResponse } from '@nestjs/swagger';
 import { ChatListDTO } from './dto/res/chat-list.dto';
 import { ChatRoomListDto } from './dto/res/chatroom-list.dto';
+import { JwtAuthGuard } from 'src/auth/auth.guard';
 
 @Controller('chat')
 export class ChatController {
@@ -27,5 +28,14 @@ export class ChatController {
     async chattingRead(@Body() body){
         console.log(body, '읽음처리')
         return this.chatService.chatRead(body.adminId, body.userId);
+    }
+
+    // 채팅내역 삭제 (사용자)
+    @Delete('/alldelete')
+    @UseGuards(JwtAuthGuard)
+    async chatDelete(@Req() req){
+        const userId = req.user.id
+        console.log(userId)
+        return this.chatService.chatDel(userId)
     }
 }

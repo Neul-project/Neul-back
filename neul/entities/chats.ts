@@ -29,4 +29,7 @@ export class Chats {
   
     @CreateDateColumn({ type: 'timestamp' })
     created_at: Date;
+
+    @Column({ comment: '사용자 삭제', default: false })
+    userDel: boolean;
 }

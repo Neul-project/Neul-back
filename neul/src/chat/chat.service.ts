@@ -105,4 +105,12 @@ export class ChatService {
             .andWhere('read = false')
             .execute();
     }
+
+    // 채팅내역 삭제 (사용자)
+    async chatDel(userId: number){
+        return await this.chatRepository.update(
+            { user: { id: userId } },
+            { userDel: true },
+        );
+    }
 }
