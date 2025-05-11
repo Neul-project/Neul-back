@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Patch, Post } from '@nestjs/common';
 import { MatchingService } from './matching.service';
 import { ApiBody, ApiResponse } from '@nestjs/swagger';
 import { UserPatientDto } from './dto/res/user-patient.dto';
@@ -27,5 +27,11 @@ export class MatchingController {
     @Post('/user')
     async userMatching(@Body() dto: MatchUserDto){
         return this.matchingService.userMatch(dto.adminId, dto.userId, dto.patientId);
+    }
+
+    // 피보호자-관리자 매칭 취소 + 채팅방 삭제
+    @Patch('/cancel')
+    async userNotMatching(@Body() dto: MatchUserDto){
+        return this.matchingService.userNotMatch(dto.adminId, dto.userId, dto.patientId);
     }
 }

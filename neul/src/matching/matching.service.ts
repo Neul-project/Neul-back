@@ -82,4 +82,38 @@ export class MatchingService {
 
         return { ok: true };
     }
+
+    // 피보호자-관리자 매칭 취소 + 채팅방 삭제
+    async userNotMatch(adminId: number, userId: number, patientId: number){
+        const admin = await this.userRepository.findOne({where:{ id: adminId }});
+        if (!admin){
+            throw new NotFoundException('해당 관리자 계정을 찾을 수 없습니다.');
+        }
+
+        const user = await this.userRepository.findOne({where: { id: userId }});
+        if (!user) {
+            throw new NotFoundException('해당 보호자 계정을 찾을 수 없습니다.');
+        }
+
+        const patient = await this.patientRepository.findOne({where: { id: patientId }});
+        if (!patient){ 
+            throw new NotFoundException('해당 피보호자를 찾을 수 없습니다.');
+        }
+
+        patient.admin = null;
+        await this.patientRepository.save(patient); // 매칭 해제
+
+        const room = await this.chatRoomRepository.findOne({
+            where: {
+                user: {id: userId},
+                admin: {id: adminId}
+            },
+        });
+
+        if (room){ // 채팅방 삭제
+            await this.chatRoomRepository.remove(room); 
+        };
+
+        return { ok: true };
+    }
 }
