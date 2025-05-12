@@ -38,4 +38,11 @@ export class ProgramService {
     async detailPro(detailid: number){
         return await this.programRepository.findOne({where: {id: detailid}});
     }
+
+    // 프로그램 신청내역 전달
+    // async historyPro(userId: number){
+    //     const program = await this.programRepository.find({
+    //         where: {}
+    //     })
+    // }
 }

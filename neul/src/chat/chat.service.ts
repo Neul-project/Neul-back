@@ -78,7 +78,7 @@ export class ChatService {
 
         return chatRoom.map((room) => ({
             ...room,
-            unreadCount: parseInt(room.unreadCount, 10)
+            unreadCount: parseInt(room.unreadCount, 10),
         }));
     }
 

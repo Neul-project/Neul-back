@@ -11,8 +11,10 @@ export class ChatController {
 
     // 채팅목록 전달
     @Get('/list')
+    @UseGuards(JwtAuthGuard)
     @ApiResponse({type: ChatListDTO})
-    async chatList(@Query('userId') userId: number){
+    async chatList(@Req() req){
+        const userId = req.user.id;
         return this.chatService.getChatList(userId);
     }
 
@@ -26,7 +28,6 @@ export class ChatController {
     // 읽음처리
     @Post('/read')
     async chattingRead(@Body() body){
-        console.log(body, '읽음처리')
         return this.chatService.chatRead(body.adminId, body.userId);
     }
 
@@ -35,7 +36,6 @@ export class ChatController {
     @UseGuards(JwtAuthGuard)
     async chatDelete(@Req() req){
         const userId = req.user.id
-        console.log(userId)
         return this.chatService.chatDel(userId)
     }
 }

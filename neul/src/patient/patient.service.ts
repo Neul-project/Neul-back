@@ -78,6 +78,7 @@ export class PatientService {
             email: user.email,
             phone: user.phone,
             address: user.address,
+            role: user.role,
             ward: patient ? {
                 name: patient.name,
                 gender: patient.gender,

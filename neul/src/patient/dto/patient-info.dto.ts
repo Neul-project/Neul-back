@@ -27,6 +27,9 @@ export class PatientInfoDto {
   @ApiProperty({ example: '서울시 강남구', description: '보호자 주소' })
   address: string;
 
+  @ApiProperty({ example: 'user', description: '역할' })
+  role: string;
+
   @ApiPropertyOptional({ type: WardDto, description: '보호자가 등록한 환자 정보' })
   ward?: WardDto | null;
 }

@@ -1,10 +1,11 @@
-import { Body, Controller, Get, Post, Query, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Req, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ProgramService } from './program.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { join } from 'path';
 import { ApiConsumes } from '@nestjs/swagger';
 import { CreateProgramDto } from './dto/create-program.dto';
+import { JwtAuthGuard } from 'src/auth/auth.guard';
 
 @Controller('program')
 export class ProgramController {
@@ -38,5 +39,13 @@ export class ProgramController {
     @Get('/detail')
     async detailProgram(@Query('detailid') detailid: number){
         return this.programService.detailPro(detailid);
+    }
+
+    // 프로그램 신청내역 전달
+    @Get('/histories')
+    @UseGuards(JwtAuthGuard)
+    async historyProgram(@Req() req){
+        const userId = req.user.id;
+        // return this.programService.historyPro(userId);
     }
 }
