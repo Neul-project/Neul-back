@@ -41,6 +41,14 @@ export class ProgramController {
         return this.programService.detailPro(detailid);
     }
 
+    // 프로그램 신청
+    @Post('/apply')
+    @UseGuards(JwtAuthGuard)
+    async applyProgram(@Req() req, @Body() body){
+        const userId = req.user.id;
+        return this.programService.applyPro(userId, body.programId);
+    }
+
     // 프로그램 신청내역 전달
     @Get('/histories')
     @UseGuards(JwtAuthGuard)

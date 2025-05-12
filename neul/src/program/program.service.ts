@@ -3,12 +3,18 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Programs } from 'entities/programs';
 import { Repository } from 'typeorm';
 import { CreateProgramDto } from './dto/create-program.dto';
+import { Users } from 'entities/users';
+import { Pay } from 'entities/pay';
 
 @Injectable()
 export class ProgramService {
     constructor(
         @InjectRepository(Programs)
-        private programRepository: Repository<Programs>,        
+        private programRepository: Repository<Programs>,
+        @InjectRepository(Users)
+        private userRepository: Repository<Users>,
+        @InjectRepository(Pay)
+        private payRepository: Repository<Pay>
     ) {}
 
     // 프로그램 등록
@@ -37,6 +43,24 @@ export class ProgramService {
     // 선택된 프로그램 전달
     async detailPro(detailid: number){
         return await this.programRepository.findOne({where: {id: detailid}});
+    }
+
+    // 프로그램 신청
+    async applyPro(userId: number, programId: number){
+        const user = await this.userRepository.findOne({ where: {id: userId} });
+        const program = await this.programRepository.findOne({ where: {id: programId} });
+
+        if(!user || !program){
+            throw new Error('유저 또는 프로그램을 찾을 수 없습니다.');
+        }
+
+        const pay = this.payRepository.create({
+            user,
+            program,
+            price: program.price,
+        });
+
+        return await this.payRepository.save(pay);
     }
 
     // 프로그램 신청내역 전달

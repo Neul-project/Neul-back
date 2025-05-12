@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany } from 'typeorm';
+import { Pay } from './pay';
   
 @Entity('programs')
 export class Programs {
@@ -31,6 +32,9 @@ export class Programs {
   
     @Column('varchar', {comment:'문의전화'})
     call: string;
+
+    @OneToMany(() => Pay, (pay) => pay.program, { cascade: true, onDelete: "CASCADE" })
+    pay: Pay[];
   
     @CreateDateColumn({ type: 'timestamp' })
     registration_at: Date;

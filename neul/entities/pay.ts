@@ -10,7 +10,7 @@ export class Pay {
   @ManyToOne(() => Users, (user) => user.id, { cascade: true, onDelete: "CASCADE" })
   user: Users;
 
-  @ManyToOne(() => Programs, (program) => program.id, { cascade: true, onDelete: "CASCADE" })
+  @ManyToOne(() => Programs, (program) => program.id, { onDelete: "CASCADE" })
   program: Programs;
 
   @Column('enum', { enum: ['결제 성공', '결제 대기'], comment:'결제 상태', default: '결제 대기' })
