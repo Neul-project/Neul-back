@@ -19,7 +19,10 @@ export class StatusService {
 
     // 상태기록 등록 (관리자)
     async writeSta(dto: CreateStatusDto){
-        const patient = await this.patientRepository.findOne({where: {id: dto.patient_id}})
+        const patient = await this.patientRepository.findOne({
+            where: {id: dto.patient_id},
+            relations: ['user'],
+        });
         const admin = await this.userRepository.findOne({where: {id: dto.adminId}});
 
         if(!patient || !admin){
@@ -29,6 +32,7 @@ export class StatusService {
         const status = this.statusRepository.create({
             patient,
             admin,
+            user: patient.user,
             meal: (dto.meal ?? []).join(','),
             condition: dto.condition,
             medication: dto.medication,
@@ -42,18 +46,19 @@ export class StatusService {
 
     // 상태기록 수정 (관리자)
     async updateSta(id: number, dto: CreateStatusDto){
-        const updateStatus = {
-            patient: {id: dto.patient_id},
-            admin: {id: dto.adminId},
-            meal: (dto.meal ?? []).join(','),
-            condition: dto.condition,
-            medication: dto.medication,
-            sleep: dto.sleep,
-            pain: dto.pain,
-            note: dto.note,
-        };
+        const existing = await this.statusRepository.findOne({ where: {id}});
+        if(!existing){
+            throw new Error('상태기록을 찾을 수 없습니다.');
+        }
 
-        return await this.statusRepository.update(id, updateStatus);
+        existing.meal = (dto.meal ?? []).join(',');
+        existing.condition = dto.condition;
+        existing.medication = dto.medication;
+        existing.sleep = dto.sleep;
+        existing.pain = dto.pain;
+        existing.note = dto.note;
+
+        return await this.statusRepository.save(existing);
     }
 
     // 전체 상태기록 전달 (관리자)
@@ -108,10 +113,9 @@ export class StatusService {
                 user: {id: userId},
                 recorded_at: Between(start, end)
             },
-            order: { recorded_at: 'DESC'}
         });
 
-        console.log(day, '상태기록 전달');
+        console.log(day, '전달할건?');
         return day;
     }
 }

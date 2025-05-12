@@ -57,6 +57,8 @@ export class StatusController {
     // 특정 날짜 상태기록 전달
     @Get('/day')
     async dateStatus(@Query('userId') userId: number, @Query('date') date: string){
+        // console.log(userId, '유저아이디')
+        // console.log(date, '날짜')
         return this.statusService.dateSta(userId, date);
     }
 }
