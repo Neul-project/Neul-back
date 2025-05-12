@@ -11,10 +11,8 @@ export class ChatController {
 
     // 채팅목록 전달
     @Get('/list')
-    @UseGuards(JwtAuthGuard)
     @ApiResponse({type: ChatListDTO})
-    async chatList(@Req() req){
-        const userId = req.user.id;
+    async chatList(@Query('userId') userId: number){
         return this.chatService.getChatList(userId);
     }
 
@@ -33,9 +31,7 @@ export class ChatController {
 
     // 채팅내역 삭제 (사용자)
     @Delete('/alldelete')
-    @UseGuards(JwtAuthGuard)
-    async chatDelete(@Req() req){
-        const userId = req.user.id
-        return this.chatService.chatDel(userId)
+    async chatDelete(@Query('userId') userId: number){
+        return this.chatService.chatDel(userId);
     }
 }
