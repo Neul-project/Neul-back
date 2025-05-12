@@ -87,4 +87,17 @@ export class PatientService {
             } : null
         };
     }
+
+    // 피보호자 정보 수정
+    async updatePat(userId: number, newNote: string){
+        const patient = await this.patientRepository.findOne({
+            where:{user: {id: userId}},
+            relations: ['user']
+        });
+
+        patient.note = newNote;
+        await this.patientRepository.save(patient);
+        
+        return { ok: true };
+    }
 }

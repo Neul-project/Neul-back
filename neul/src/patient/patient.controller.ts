@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { PatientService } from './patient.service';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
@@ -38,5 +38,13 @@ export class PatientController {
     async patientInfo(@Req() req){
         const userId = req.user.id;
         return this.patientService.patientInfo(userId);
+    }
+
+    // 피보호자 정보 수정 (사용자)
+    @Patch('/info')
+    @UseGuards(JwtAuthGuard)
+    async updatePatient(@Req() req, @Body() body){
+        const userId = req.user.id;
+        return this.patientService.updatePat(userId, body.note);
     }
 }
