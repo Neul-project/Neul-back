@@ -53,26 +53,45 @@ export class ChatService {
     
     // 채팅방 전달 (관리자)
     async getChatroomList(adminId: number){
+        const latestChatSubquery = await this.chatRepository
+            .createQueryBuilder('chat')
+            .select([
+                'chat.roomId AS roomId',
+                'chat.message AS lastMessage',
+                'chat.created_at AS lastTime',
+                'ROW_NUMBER() OVER (PARTITION BY chat.roomId ORDER BY chat.created_at DESC) AS sub',
+            ]);
+
         const chatRoom = await this.chatRoomRepository
             .createQueryBuilder('room')
             .leftJoin('room.user', 'user') // 보호자
             .leftJoin('room.admin', 'admin') // 관리자
             .leftJoin('user.familyPatients', 'patient') // 보호자의 피보호자
             .leftJoin('room.chats', 'chat')
+            .leftJoin(
+                '(' + latestChatSubquery.getQuery() + ')',
+                'latest',
+                'latest.roomId = room.id AND latest.sub = 1'
+            )
+            .setParameters(latestChatSubquery.getParameters())
             .select([
                 'room.id AS id', // 고유 id
                 'user.id AS userId', // 보호자 id
                 'user.name AS userName', // 관리자가 담당하고 있는 보호자 이름
                 'patient.name AS patientName', // 해당 보호자의 피보호자 이름
-                'COALESCE(MAX(chat.created_at), room.created_at) AS lastTime', // 마지막 채팅 보낸 시각
-                `COALESCE(MAX(chat.message), '') AS lastMessage`, // 마지막으로 보낸 채팅 내용
-                `COALESCE(SUM(CASE WHEN chat.read = false AND chat.adminId = :adminId THEN 1 ELSE 0 END), 0) AS unreadCount`, // 안 읽은 알림 개수
+                'COALESCE(latest.lastTime, room.created_at) AS lastTime', // 마지막 채팅 보낸 시각
+                `COALESCE(latest.lastMessage, '') AS lastMessage`, // 마지막으로 보낸 채팅 내용
+                `COALESCE(SUM(CASE 
+                    WHEN chat.read = false AND chat.adminId = :adminId AND chat.sender = 'user' 
+                    THEN 1 ELSE 0 END), 0) AS unreadCount` // 안 읽은 알림 개수
             ])
             .where('room.adminId = :adminId', { adminId })
             .groupBy('room.id')
             .addGroupBy('user.id')
             .addGroupBy('user.name')
             .addGroupBy('patient.name')
+            .addGroupBy('latest.lastTime')
+            .addGroupBy('latest.lastMessage')
             .orderBy('lastTime', 'DESC')
             .getRawMany();
 
