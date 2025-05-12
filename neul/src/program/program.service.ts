@@ -40,9 +40,18 @@ export class ProgramService {
     }
 
     // 프로그램 신청내역 전달
-    // async historyPro(userId: number){
-    //     const program = await this.programRepository.find({
-    //         where: {}
-    //     })
-    // }
+    async historyPro(userId: number){
+        return await this.programRepository
+            .createQueryBuilder('program')
+            .leftJoin('program.pay', 'pay')
+            .where('pay.userId = :userId', { userId })
+            .select([
+                'program.id AS id',
+                'program.name AS name',
+                'pay.payment_status AS payment_status',
+                'program.manager AS manager',
+                'pay.price AS price'
+            ])
+            .getRawMany();
+    }
 }

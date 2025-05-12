@@ -46,6 +46,6 @@ export class ProgramController {
     @UseGuards(JwtAuthGuard)
     async historyProgram(@Req() req){
         const userId = req.user.id;
-        // return this.programService.historyPro(userId);
+        return this.programService.historyPro(userId);
     }
 }
