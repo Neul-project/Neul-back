@@ -25,14 +25,14 @@ export class ActivityService {
     async writeAct(userId: number, dto: CreateActivityDto, files: Express.Multer.File[]){
         const filename = files.map((file) => file.filename).join(',');
 
-        const user = await this.userRepository.findOne({where: {id: userId}})
-        if(!user){
-            throw new UnauthorizedException('유저 없음');
-        }
+        const user = await this.userRepository.findOne({where: {id: userId}});
+        const patient = await this.patientRepository.findOne({ 
+            where: {id: Number(dto.patient_id)},
+            relations: ['user'],
+        });
 
-        const patient = await this.patientRepository.findOne({ where: {id: Number(dto.patient_id)}})
-        if(!patient){
-            throw new UnauthorizedException('환자 없음');
+        if(!patient || !user){
+            throw new Error('피보호자나 관리자 정보를 찾을 수 없습니다.');
         }
 
         const activity = this.activityRepository.create({
@@ -41,9 +41,11 @@ export class ActivityService {
             rehabilitation: dto.rehabilitation,
             note: dto.note,
             admin: user,
+            user: patient.user,
             patient: patient,
             img: filename
         });
+        
         return await this.activityRepository.save(activity);
     }
 
