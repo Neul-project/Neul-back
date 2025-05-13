@@ -6,9 +6,10 @@ import { Chats } from 'entities/chats';
 import { ChatGateway } from './chat.gateway';
 import { Users } from 'entities/users';
 import { ChatRoom } from '../../entities/chat_room';
+import { Patients } from 'entities/patients';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Chats, Users, ChatRoom])],
+  imports: [TypeOrmModule.forFeature([Chats, Users, ChatRoom, Patients])],
   providers: [ChatService, ChatGateway],
   controllers: [ChatController]
 })

@@ -34,4 +34,12 @@ export class ChatController {
     async chatDelete(@Query('userId') userId: number){
         return this.chatService.chatDel(userId);
     }
+
+    // 안 읽은 채팅 개수 전달 (사용자)
+    @Get('/unreadCount')
+    @UseGuards(JwtAuthGuard)
+    async chatCount(@Req() req){
+        const userId = req.user.id
+        return this.chatService.chatCount(userId);
+    }
 }
