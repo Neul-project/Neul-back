@@ -7,7 +7,7 @@ export class Pay {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Users, (user) => user.id, { cascade: true, onDelete: "CASCADE" })
+  @ManyToOne(() => Users, (user) => user.id, { onDelete: "CASCADE" })
   user: Users;
 
   @ManyToOne(() => Programs, (program) => program.id, { onDelete: "CASCADE" })

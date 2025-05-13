@@ -7,10 +7,10 @@ export class Shifts {
     @PrimaryGeneratedColumn()
     id: number;
   
-    @ManyToOne(() => Users, (user) => user.id, { cascade: true, onDelete: "CASCADE" })
+    @ManyToOne(() => Users, (user) => user.id, { onDelete: "CASCADE" })
     admin: Users;
   
-    @ManyToOne(() => Patients, (patient) => patient.id, { cascade: true, onDelete: "CASCADE" })
+    @ManyToOne(() => Patients, (patient) => patient.id, { onDelete: "CASCADE" })
     patient: Patients;
   
     @Column('varchar', {comment:'근무 시간'})

@@ -56,4 +56,13 @@ export class ProgramController {
         const userId = req.user.id;
         return this.programService.historyPro(userId);
     }
+
+    // 프로그램 환불 신청
+    @Post('/refund')
+    @UseGuards(JwtAuthGuard)
+    async refundProgram(@Req() req, @Body() body){
+        console.log(body, '받은거요')
+        const userId = req.user.id;
+        return this.programService.refundPro(userId, body);
+    }
 }

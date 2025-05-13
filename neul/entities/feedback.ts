@@ -15,7 +15,7 @@ export class Feedback {
   @ManyToOne(() => Users, (user) => user.carePatients, {onDelete: 'CASCADE'})
   admin: Users;
 
-  @ManyToOne(() => Activities, (activities) => activities.id, { cascade: true, onDelete: "CASCADE" })
+  @ManyToOne(() => Activities, (activities) => activities.id, { onDelete: "CASCADE" })
   activity: Activities;
 
   @Column('text', { comment: '음성/텍스트 메시지' })

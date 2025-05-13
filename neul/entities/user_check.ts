@@ -6,7 +6,7 @@ export class UserCheck {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToOne(() => Users, (user) => user.id, { cascade: true, onDelete: "CASCADE" })
+    @ManyToOne(() => Users, (user) => user.id, { onDelete: "CASCADE" })
     user: Users;
 
     @Column('varchar', {comment:'약관확인', nullable: true})

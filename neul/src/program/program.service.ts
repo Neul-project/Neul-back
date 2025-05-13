@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { CreateProgramDto } from './dto/create-program.dto';
 import { Users } from 'entities/users';
 import { Pay } from 'entities/pay';
+import { Refund } from 'entities/refund';
 
 @Injectable()
 export class ProgramService {
@@ -14,7 +15,9 @@ export class ProgramService {
         @InjectRepository(Users)
         private userRepository: Repository<Users>,
         @InjectRepository(Pay)
-        private payRepository: Repository<Pay>
+        private payRepository: Repository<Pay>,
+        @InjectRepository(Refund)
+        private refundRepository: Repository<Refund>
     ) {}
 
     // 프로그램 등록
@@ -78,5 +81,15 @@ export class ProgramService {
                 'program.img AS img'
             ])
             .getRawMany();
+    }
+
+    // 프로그램 환불 신청
+    async refundPro(userId: number, body: any){
+        
+        const refund = await this.refundRepository.create({
+
+        });
+
+        // retrun {ok: true};
     }
 }

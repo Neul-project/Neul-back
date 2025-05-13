@@ -7,7 +7,7 @@ export class Status {
     @PrimaryGeneratedColumn()
     id: number;
   
-    @ManyToOne(() => Patients, (patient) => patient.id, { cascade: true, onDelete: "CASCADE" })
+    @ManyToOne(() => Patients, (patient) => patient.id, { onDelete: "CASCADE" })
     patient: Patients;
   
     // 가족

@@ -7,10 +7,10 @@ export class Refund {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToOne(() => Users, (user) => user.id, { cascade: true, onDelete: "CASCADE" })
+    @ManyToOne(() => Users, (user) => user.id, { onDelete: "CASCADE" })
     user: Users;
 
-    @ManyToOne(() => Programs, (program) => program.id, { cascade: true, onDelete: "CASCADE" })
+    @ManyToOne(() => Programs, (program) => program.id, { onDelete: "CASCADE" })
     program: Programs;
 
     @Column('varchar', {comment:'계좌번호'})
