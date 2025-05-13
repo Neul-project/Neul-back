@@ -3,12 +3,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from 'entities/users';
 import { Repository } from 'typeorm';
 import { AddUserDto } from './dto/add-user.dto';
+import { Patients } from 'entities/patients';
 
 @Injectable()
 export class UserService {
     constructor(
         @InjectRepository(Users)
         private userRepository: Repository<Users>,
+        @InjectRepository(Patients)
+        private patientRepository: Repository<Patients>,
     ) {}
 
     // 소셜로그인 사용자 추가정보 입력
@@ -51,7 +54,7 @@ export class UserService {
     async getAddress(userId: number, newAddress: string){
         const user = await this.userRepository.findOne({ where: {id: userId}});
         if(!user){
-            throw new UnauthorizedException('등록되지 않은 사용자입니다.')
+            throw new UnauthorizedException('등록되지 않은 사용자입니다.');
         }
 
         user.address = newAddress;
@@ -68,5 +71,19 @@ export class UserService {
         });
 
         return user;
+    }
+
+    // 매칭된 관리자 id 전달
+    async getMatchAdmin(userId: number){
+        const patient = await this.patientRepository.findOne({
+            where: {user: {id: userId}},
+            relations: ['admin']
+        });
+
+        if(!patient || !patient.admin){
+            throw new UnauthorizedException('아직 담당자가 매칭되지 않았습니다.');
+        }
+
+        return patient.admin.id;
     }
 }

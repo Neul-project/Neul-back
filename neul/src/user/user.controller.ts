@@ -50,4 +50,12 @@ export class UserController {
         const userId = req.user.id;
         return this.userService.getUserInfo(userId);
     }
+
+    // 매칭된 관리자 id 전달
+    @Get('/admin')
+    @UseGuards(JwtAuthGuard)
+    async matchAdmin(@Req() req){
+        const userId = req.user.id;
+        return this.userService.getMatchAdmin(userId);
+    }
 }
