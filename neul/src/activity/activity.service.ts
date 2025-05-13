@@ -49,6 +49,24 @@ export class ActivityService {
         return await this.activityRepository.save(activity);
     }
 
+    // 활동기록 수정
+    async updateAct(activityId: number, dto: CreateActivityDto, files: Express.Multer.File[]){
+        const filename = files.map((file) => file.filename).join(',');
+
+        const activity = await this.activityRepository.findOne({ where: {id: activityId}});
+        if(!activity){
+            throw new Error('활동기록을 찾을 수 없습니다.');
+        }
+
+        activity.title = dto.title;
+        activity.type = dto.type;
+        activity.rehabilitation = dto.rehabilitation;
+        activity.note = dto.note;
+        activity.img = filename;
+
+        return await this.activityRepository.save(activity);
+    }
+
     // 활동기록 제공
     async listAct(userId: number){
         const activities = await this.activityRepository.find({

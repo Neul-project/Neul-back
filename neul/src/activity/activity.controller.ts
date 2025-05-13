@@ -1,4 +1,4 @@
-import { Body, ClassSerializerInterceptor, Controller, Get, Param, Post, Query, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Get, Param, Patch, Post, Query, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { ActivityService } from './activity.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { join } from 'path';
@@ -32,6 +32,23 @@ export class ActivityController {
     @ApiConsumes('multipart/form-data')
     async writeActivity(@Param('userid') userid: number, @Body() dto: CreateActivityDto, @UploadedFiles() files: Express.Multer.File[]){
         return await this.activityService.writeAct(userid, dto, files);
+    }
+
+    // 활동기록 수정
+    @Patch('/update/:activityId')
+    @UseInterceptors(
+        FilesInterceptor('img', 5, {
+            storage: diskStorage({
+                destination: join(process.cwd(), 'uploads'),
+                filename: (req, file, callback) => {
+                    const filename = `${file.originalname}`;
+                    callback(null, filename);
+                },
+            }),
+        }),
+    )
+    async updateActivity(@Param('activityId') activityId: number, @Body() dto: CreateActivityDto, @UploadedFiles() files: Express.Multer.File[]){
+        return await this.activityService.updateAct(activityId, dto, files);
     }
 
     // 활동기록 제공 (사용자)
