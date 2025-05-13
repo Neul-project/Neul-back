@@ -124,6 +124,15 @@ export class ActivityService {
         return activity;
     }
 
+    // 선택한 활동기록 삭제
+    async listDelAct(ids: number[]){
+        if (!ids || ids.length === 0){
+            throw new Error('선택한 활동기록이 존재하지 않습니다.');
+        }
+
+        return await this.activityRepository.delete(ids);
+    }
+
     // 피드백 저장
     async postFeed(dto: CreateFeedbackDto){
         const user = await this.userRepository.findOne({ where: {id: dto.userId}});

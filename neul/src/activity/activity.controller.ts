@@ -1,4 +1,4 @@
-import { Body, ClassSerializerInterceptor, Controller, Get, Param, Patch, Post, Query, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Patch, Post, Query, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { ActivityService } from './activity.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { join } from 'path';
@@ -6,11 +6,12 @@ import { CreateActivityDto } from './dto/create-activity.dto';
 import { diskStorage } from 'multer';
 import { ListActivityDto } from './dto/res/list-activity.dto';
 import { plainToInstance } from 'class-transformer';
-import { ApiConsumes, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiResponse } from '@nestjs/swagger';
 import { ContectPatientDto } from 'src/status/dto/res/contect-patient.dto';
 import { SelectActivityDto } from './dto/res/select-activity.dto';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
 import { AllFeedbackDto } from './dto/res/all-feedback.dto';
+import { DeleteActivityDto } from './dto/delete-activity.dto';
 
 @Controller('activity')
 export class ActivityController {
@@ -87,6 +88,12 @@ export class ActivityController {
     @ApiResponse({type: SelectActivityDto})
     async detailActivity(@Query('userId') userId: number, @Query('id') id: number){
         return this.activityService.detailAct(userId, id);
+    }
+
+    // 선택한 활동기록 삭제 (사용자)
+    @Delete('/delete')
+    async listDelete(@Body() dto: DeleteActivityDto){
+        return this.activityService.listDelAct(dto.ids);
     }
 
     // 피드백 저장
