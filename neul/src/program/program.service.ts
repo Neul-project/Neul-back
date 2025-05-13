@@ -74,7 +74,8 @@ export class ProgramService {
                 'program.name AS name',
                 'pay.payment_status AS payment_status',
                 'program.manager AS manager',
-                'pay.price AS price'
+                'pay.price AS price',
+                'program.img AS img'
             ])
             .getRawMany();
     }

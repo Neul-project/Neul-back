@@ -50,8 +50,9 @@ export class PatientService {
             note: dto.note,
             user
         });
+        await this.patientRepository.save(patient);
 
-        return await this.patientRepository.save(patient);
+        return { ok: true }
     }
 
     // 피보호자 이름 전달
