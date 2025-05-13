@@ -7,6 +7,7 @@ import { Users } from 'entities/users';
 import { Patients } from 'entities/patients';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
 import { Feedback } from 'entities/feedback';
+import { UpdateActivityDto } from './dto/res/update-activity.dto';
 
 @Injectable()
 export class ActivityService {
@@ -50,8 +51,10 @@ export class ActivityService {
     }
 
     // 활동기록 수정
-    async updateAct(activityId: number, dto: CreateActivityDto, files: Express.Multer.File[]){
-        const filename = files.map((file) => file.filename).join(',');
+    async updateAct(activityId: number, dto: UpdateActivityDto, files: Express.Multer.File[]){
+        const newFile = files.map((file) => file.filename);
+        const oldFile = dto.img;
+        const finalFilename = [...oldFile, ...newFile];
 
         const activity = await this.activityRepository.findOne({ where: {id: activityId}});
         if(!activity){
@@ -62,7 +65,7 @@ export class ActivityService {
         activity.type = dto.type;
         activity.rehabilitation = dto.rehabilitation;
         activity.note = dto.note;
-        activity.img = filename;
+        activity.img = finalFilename.join(',');
 
         return await this.activityRepository.save(activity);
     }

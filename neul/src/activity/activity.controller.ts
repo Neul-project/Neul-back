@@ -6,12 +6,13 @@ import { CreateActivityDto } from './dto/create-activity.dto';
 import { diskStorage } from 'multer';
 import { ListActivityDto } from './dto/res/list-activity.dto';
 import { plainToInstance } from 'class-transformer';
-import { ApiBody, ApiConsumes, ApiResponse } from '@nestjs/swagger';
+import { ApiConsumes, ApiResponse } from '@nestjs/swagger';
 import { ContectPatientDto } from 'src/status/dto/res/contect-patient.dto';
 import { SelectActivityDto } from './dto/res/select-activity.dto';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
 import { AllFeedbackDto } from './dto/res/all-feedback.dto';
-import { DeleteActivityDto } from './dto/delete-activity.dto';
+import { DeleteStatusDto } from 'src/status/dto/delete-status.dto';
+import { UpdateActivityDto } from './dto/res/update-activity.dto';
 
 @Controller('activity')
 export class ActivityController {
@@ -48,7 +49,8 @@ export class ActivityController {
             }),
         }),
     )
-    async updateActivity(@Param('activityId') activityId: number, @Body() dto: CreateActivityDto, @UploadedFiles() files: Express.Multer.File[]){
+    async updateActivity(@Param('activityId') activityId: number, @Body() dto: UpdateActivityDto, @UploadedFiles() files: Express.Multer.File[]){
+        console.log(dto, '활동기록수정', files)
         return await this.activityService.updateAct(activityId, dto, files);
     }
 
@@ -92,7 +94,7 @@ export class ActivityController {
 
     // 선택한 활동기록 삭제 (사용자)
     @Delete('/delete')
-    async listDelete(@Body() dto: DeleteActivityDto){
+    async listDelete(@Body() dto: DeleteStatusDto){
         return this.activityService.listDelAct(dto.ids);
     }
 
