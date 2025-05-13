@@ -23,10 +23,16 @@ export class ChatController {
         return this.chatService.getChatroomList(adminId);
     }
 
-    // 읽음처리
+    // 읽음처리 (관리자)
     @Post('/read')
     async chattingRead(@Body() body){
         return this.chatService.chatRead(body.adminId, body.userId);
+    }
+
+    // 읽음처리 (사용자)
+    @Post('/user/read')
+    async chattingReadUser(@Body() body){
+        return this.chatService.chatReadUser(body.adminId, body.userId);
     }
 
     // 채팅내역 삭제 (사용자)

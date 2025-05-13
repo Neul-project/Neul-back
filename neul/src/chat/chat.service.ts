@@ -104,7 +104,7 @@ export class ChatService {
         }));
     }
 
-    // 읽음처리
+    // 읽음처리 (관리자)
     async chatRead(adminId: number, userId: number){
         const room = await this.chatRoomRepository.findOne({
             where: {
@@ -126,6 +126,31 @@ export class ChatService {
             .andWhere('sender = :sender', { sender: 'user' })
             .andWhere('read = false')
             .execute();
+    }
+
+    // 읽음처리 (사용자)
+    async chatReadUser(adminId: number, userId: number){
+        const room = await this.chatRoomRepository.findOne({
+            where: {
+                admin: { id: adminId },
+                user: { id: userId },
+            },
+        });
+
+        if (!room) {
+            throw new NotFoundException('해당 채팅방이 존재하지 않습니다.');
+        }
+
+        // 해당 채팅방의 'user'가 보낸 메시지 중 아직 읽지 않은 것들을 읽음 처리
+        return await this.chatRepository
+            .createQueryBuilder()
+            .update()
+            .set({ read: true })
+            .where('roomId = :roomId', { roomId: room.id })
+            .andWhere('sender = :sender', { sender: 'admin' })
+            .andWhere('read = false')
+            .execute();
+
     }
 
     // 채팅내역 삭제 (사용자)
