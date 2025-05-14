@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany } from 'typeorm';
 import { Pay } from './pay';
+import { Cart } from './cart';
   
 @Entity('programs')
 export class Programs {
@@ -35,6 +36,9 @@ export class Programs {
 
     @OneToMany(() => Pay, (pay) => pay.program, { cascade: true, onDelete: "CASCADE" })
     pay: Pay[];
+
+    @OneToMany(() => Cart, (cart) => cart.program, { cascade: true, onDelete: "CASCADE" })
+    cart: Cart[];
   
     @CreateDateColumn({ type: 'timestamp' })
     registration_at: Date;

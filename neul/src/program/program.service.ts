@@ -6,6 +6,7 @@ import { CreateProgramDto } from './dto/create-program.dto';
 import { Users } from 'entities/users';
 import { Pay } from 'entities/pay';
 import { Refund } from 'entities/refund';
+import { Cart } from 'entities/cart';
 
 @Injectable()
 export class ProgramService {
@@ -17,7 +18,9 @@ export class ProgramService {
         @InjectRepository(Pay)
         private payRepository: Repository<Pay>,
         @InjectRepository(Refund)
-        private refundRepository: Repository<Refund>
+        private refundRepository: Repository<Refund>,
+        @InjectRepository(Cart)
+        private cartRepository: Repository<Cart>
     ) {}
 
     // 프로그램 등록
@@ -57,27 +60,27 @@ export class ProgramService {
             throw new Error('유저 또는 프로그램을 찾을 수 없습니다.');
         }
 
-        const pay = this.payRepository.create({
+        const pay = this.cartRepository.create({
             user,
             program,
             price: program.price,
         });
 
-        return await this.payRepository.save(pay);
+        return await this.cartRepository.save(pay);
     }
 
     // 프로그램 신청내역 전달
     async historyPro(userId: number){
         return await this.programRepository
             .createQueryBuilder('program')
-            .leftJoin('program.pay', 'pay')
-            .where('pay.userId = :userId', { userId })
+            .leftJoin('program.cart', 'cart')
+            .where('cart.userId = :userId', { userId })
             .select([
                 'program.id AS id',
                 'program.name AS name',
-                'pay.payment_status AS payment_status',
+                'cart.status AS payment_status',
                 'program.manager AS manager',
-                'pay.price AS price',
+                'cart.price AS price',
                 'program.img AS img'
             ])
             .getRawMany();

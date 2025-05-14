@@ -13,9 +13,6 @@ export class Pay {
   @ManyToOne(() => Programs, (program) => program.id, { onDelete: "CASCADE" })
   program: Programs;
 
-  @Column('enum', { enum: ['결제 성공', '결제 대기'], comment:'결제 상태', default: '결제 대기' })
-  payment_status: string;
-
   @Column('int', {comment:'결제금액', nullable: true})
   price: number;
 

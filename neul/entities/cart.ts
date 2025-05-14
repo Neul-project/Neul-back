@@ -17,8 +17,11 @@ export class Cart {
   @ManyToOne(() => Pay, (pay) => pay.id, { nullable: true })
   pay?: Pay;
 
-  @Column('boolean', { default: false, comment: '결제 여부' })
-  isPaid: boolean;
+  @Column('int', {nullable: true, comment:'결제 금액'})
+  price?: number;
+  
+  @Column('enum', { enum: ['결제 성공', '결제 대기'], comment:'결제 상태', default: '결제 대기' })
+  status: string;
 
   @CreateDateColumn()
   created_at: Date;
