@@ -100,9 +100,12 @@ export class ActivityController {
 
     // 피드백 저장
     @Post('/feedback')
-    async postFeedback(@Body() dto: CreateFeedbackDto){
-        return this.activityService.postFeed(dto);
+    async postFeedback(@Body() body){
+        console.log(body, '오디오는어떻게');
     }
+    // async postFeedback(@Body() dto: CreateFeedbackDto){
+    //     return this.activityService.postFeed(dto);
+    // }
 
     // 전체 피드백 전달
     @Get('/feedback/views')

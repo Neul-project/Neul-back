@@ -5,7 +5,8 @@ import { ChatRoom } from 'entities/chat_room';
 import { Chats } from 'entities/chats';
 import { Patients } from 'entities/patients';
 import { Users } from 'entities/users';
-import { Repository } from 'typeorm';
+import { Like, Raw, Repository } from 'typeorm';
+import { SearchUserDto } from './dto/search-user.dto';
 
 @Injectable()
 export class MatchingService {
@@ -153,4 +154,26 @@ export class MatchingService {
         return { ok: true };
     }
 
+    // 전체 회원 검색
+    async getSerchUser(dto: SearchUserDto){
+        if(dto.search === 'user_id'){
+            return this.userRepository.find({
+                where: {id: Raw((alias) => `CAST(${alias} AS CHAR) LIKE '%${dto.word}%'`)}
+            });
+        }
+
+        if(dto.search === 'user_name'){
+            return this.userRepository.find({
+                where: {name: Like(`%${dto.word}%`)}
+            });
+        }
+
+        if(dto.search === 'patient_name'){
+            return this.patientRepository.find({
+                where: {name: Like(`%${dto.word}%`)}
+            });
+        }
+
+        throw new Error('지원하지 않는 검색 기준입니다.');
+    }
 }

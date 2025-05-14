@@ -1,10 +1,11 @@
-import { Body, Controller, Delete, Get, Patch, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { MatchingService } from './matching.service';
 import { ApiBody, ApiResponse } from '@nestjs/swagger';
 import { UserPatientDto } from './dto/res/user-patient.dto';
 import { DeleteStatusDto } from 'src/status/dto/delete-status.dto';
 import { MatchUserDto } from './dto/match-user.dto';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
+import { SearchUserDto } from './dto/search-user.dto';
 
 @Controller('matching')
 export class MatchingController {
@@ -43,5 +44,11 @@ export class MatchingController {
     @Patch('/cancel')
     async userNotMatching(@Body() dto: MatchUserDto){
         return this.matchingService.userNotMatch(dto.adminId, dto.userId, dto.patientId);
+    }
+
+    // 전체 회원 검색
+    @Get('/searchuser')
+    async serchUser(@Query() dto: SearchUserDto){
+        return this.matchingService.getSerchUser(dto);
     }
 }
