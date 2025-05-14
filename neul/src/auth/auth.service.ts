@@ -157,4 +157,19 @@ export class AuthService {
 
         return { ok: true };
     }
+
+    // 아이디 찾기
+    async findEmail(body: any){
+        const user = await this.userRepository.findOne({ 
+            where: {
+                name: body.name,
+                phone: body.phone
+            }}
+        );
+        if(!user){
+            throw new UnauthorizedException('해당 정보와 일치하는 사용자가 없습니다.')
+        }
+
+        return {email: user.email};
+    }
 }

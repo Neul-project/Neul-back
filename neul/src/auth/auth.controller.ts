@@ -92,4 +92,10 @@ export class AuthController {
         const userId = req.user.id;
         return this.authService.updatePW(userId, dto.newPassword);
     }
+
+    // 아이디 찾기
+    @Post('/find-email')
+    async findEmail(@Body() body){
+        return this.authService.findEmail(body);
+    }
 }
