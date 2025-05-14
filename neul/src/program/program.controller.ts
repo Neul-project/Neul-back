@@ -6,6 +6,7 @@ import { join } from 'path';
 import { ApiConsumes } from '@nestjs/swagger';
 import { CreateProgramDto } from './dto/create-program.dto';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
+import { CreateRefundDto } from './dto/create-refund.dto';
 
 @Controller('program')
 export class ProgramController {
@@ -60,9 +61,8 @@ export class ProgramController {
     // 프로그램 환불 신청
     @Post('/refund')
     @UseGuards(JwtAuthGuard)
-    async refundProgram(@Req() req, @Body() body){
-        console.log(body, '받은거요')
+    async refundProgram(@Req() req, @Body() dto: CreateRefundDto){
         const userId = req.user.id;
-        return this.programService.refundPro(userId, body);
+        return this.programService.refundPro(userId, dto);
     }
 }

@@ -7,6 +7,7 @@ import { Users } from 'entities/users';
 import { Pay } from 'entities/pay';
 import { Refund } from 'entities/refund';
 import { Cart } from 'entities/cart';
+import { CreateRefundDto } from './dto/create-refund.dto';
 
 @Injectable()
 export class ProgramService {
@@ -87,12 +88,25 @@ export class ProgramService {
     }
 
     // 프로그램 환불 신청
-    async refundPro(userId: number, body: any){
+    async refundPro(userId: number, dto: CreateRefundDto){
+        const user = await this.userRepository.findOne({ where: {id: userId}});
+        const program = await this.programRepository.findOne({ where: {id: dto.programs_id}});
+        
+        if(!user || !program){
+            throw new Error('유저 또는 프로그램을 찾을 수 없습니다.');
+        }
         
         const refund = await this.refundRepository.create({
-
+            user,
+            program,
+            account: dto.account,
+            name: dto.name,
+            bank: dto.bank,
+            note: dto.note,
+            price: program.price
         });
+        await this.refundRepository.save(refund);
 
-        // retrun {ok: true};
+        return {ok: true};
     }
 }

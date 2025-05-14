@@ -25,8 +25,8 @@ export class Refund {
     @Column('int', {comment:'환불금액'})
     price: number;
 
-    @Column('text', { comment: '환불사유', nullable: true })
-    note?: string;
+    @Column('text', { comment: '환불사유' })
+    note: string;
 
     @CreateDateColumn({ type: 'timestamp' }) 
     created_at: Date;
