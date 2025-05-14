@@ -8,6 +8,8 @@ import { Pay } from 'entities/pay';
 import { Refund } from 'entities/refund';
 import { Cart } from 'entities/cart';
 import { CreateRefundDto } from './dto/create-refund.dto';
+import { Alert } from 'entities/alert';
+import { Patients } from 'entities/patients';
 
 @Injectable()
 export class ProgramService {
@@ -21,7 +23,9 @@ export class ProgramService {
         @InjectRepository(Refund)
         private refundRepository: Repository<Refund>,
         @InjectRepository(Cart)
-        private cartRepository: Repository<Cart>
+        private cartRepository: Repository<Cart>,
+        @InjectRepository(Alert)
+        private alertRepository: Repository<Alert>,
     ) {}
 
     // 프로그램 등록
@@ -41,6 +45,8 @@ export class ProgramService {
         });
         return await this.programRepository.save(program);
     }
+
+    // 프로그램 수정
 
     // 프로그램 전체 전달
     async allPro(){
@@ -96,7 +102,7 @@ export class ProgramService {
             throw new Error('유저 또는 프로그램을 찾을 수 없습니다.');
         }
         
-        const refund = await this.refundRepository.create({
+        const refund = this.refundRepository.create({
             user,
             program,
             account: dto.account,

@@ -28,6 +28,9 @@ export class Refund {
     @Column('text', { comment: '환불사유' })
     note: string;
 
+    @Column('enum', { enum: ['환불 성공', '환불 대기'], comment:'환불 상태', default: '환불 대기' })
+    status: string;
+
     @CreateDateColumn({ type: 'timestamp' }) 
     created_at: Date;
 }

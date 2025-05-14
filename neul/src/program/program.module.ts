@@ -7,9 +7,10 @@ import { Users } from 'entities/users';
 import { Pay } from 'entities/pay';
 import { Refund } from 'entities/refund';
 import { Cart } from 'entities/cart';
+import { Alert } from 'entities/alert';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Programs, Users, Pay, Refund, Cart])],
+  imports: [TypeOrmModule.forFeature([Programs, Users, Pay, Refund, Cart, Alert])],
   providers: [ProgramService],
   controllers: [ProgramController]
 })

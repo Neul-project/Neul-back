@@ -21,6 +21,12 @@ export class Programs {
   
     @Column('varchar', {comment:'모집기간'})
     recruitment: string;
+
+    @Column('varchar', {comment:'대상'})
+    target: string;
+
+    @Column('varchar', {comment:'프로그램 내용'})
+    note: string;
   
     @Column('int', {comment:'수강료'})
     price: number;
