@@ -1,6 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Alert } from 'entities/alert';
 import { ChatRoom } from 'entities/chat_room';
+import { Chats } from 'entities/chats';
 import { Patients } from 'entities/patients';
 import { Users } from 'entities/users';
 import { Repository } from 'typeorm';
@@ -13,7 +15,11 @@ export class MatchingService {
         @InjectRepository(Patients)
         private patientRepository: Repository<Patients>,
         @InjectRepository(ChatRoom)
-        private chatRoomRepository: Repository<ChatRoom>
+        private chatRoomRepository: Repository<ChatRoom>,
+        @InjectRepository(Alert)
+        private alertRepository: Repository<Alert>,
+        @InjectRepository(Chats)
+        private chatRepository: Repository<Chats>
     ) {}
 
     // 전체 유저 전달
@@ -70,7 +76,7 @@ export class MatchingService {
         return await this.userRepository.delete(ids);
     }
 
-    // 피보호자-관리자 매칭 + 채팅방 생성
+    // 피보호자-관리자 매칭 + 채팅방 생성 + 알림 추가
     async userMatch(adminId: number, userId: number, patientId: number){
         const admin = await this.userRepository.findOne({where:{ id: adminId }});
         const user = await this.userRepository.findOne({where: { id: userId }});
@@ -98,10 +104,17 @@ export class MatchingService {
             await this.chatRoomRepository.save(newRoom);
         };
 
+        const alert = this.alertRepository.create({ // 알림 추가
+            user: user,
+            admin: admin,
+            message: 'match'
+        });
+        await this.alertRepository.save(alert);
+
         return { ok: true };
     }
 
-    // 피보호자-관리자 매칭 취소 + 채팅방 삭제
+    // 피보호자-관리자 매칭 취소 + 사용자쪽 채팅 내역 삭제 + 알림 추가
     async userNotMatch(adminId: number, userId: number, patientId: number){
         const admin = await this.userRepository.findOne({where:{ id: adminId }});
         const user = await this.userRepository.findOne({where: { id: userId }});
@@ -119,12 +132,25 @@ export class MatchingService {
                 user: {id: userId},
                 admin: {id: adminId}
             },
+            relations: ['chats'],
         });
 
-        if (room){ // 채팅방 삭제
-            await this.chatRoomRepository.remove(room); 
+        if (room){ // userDel을 true로 변경
+            const chats = room.chats.map(chat => {
+                chat.userDel = true;
+                return chat;
+            });
+            await this.chatRepository.save(chats);
         };
+
+        const alert = this.alertRepository.create({ // 알림 추가
+            user: user,
+            admin: admin,
+            message: 'match_cancle'
+        });
+        await this.alertRepository.save(alert);
 
         return { ok: true };
     }
+
 }

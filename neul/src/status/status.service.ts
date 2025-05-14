@@ -115,7 +115,6 @@ export class StatusService {
             },
         });
 
-        console.log(day, '전달할건?');
         return day;
     }
 }

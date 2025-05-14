@@ -15,6 +15,7 @@ import { ProgramModule } from './program/program.module';
 import { ChatModule } from './chat/chat.module';
 import { MatchingModule } from './matching/matching.module';
 import { BannerModule } from './banner/banner.module';
+import { AlertModule } from './alert/alert.module';
 
 import { Users } from 'entities/users';
 import { Patients } from 'entities/patients';
@@ -26,11 +27,11 @@ import { Pay } from 'entities/pay';
 import { Refund } from 'entities/refund';
 import { Status } from 'entities/status';
 import { Chats } from 'entities/chats';
-import { Shifts } from 'entities/shifts';
 import { Match } from 'entities/match';
 import { Banners } from 'entities/banners';
 import { ChatRoom } from 'entities/chat_room';
 import { Cart } from 'entities/cart';
+import { Alert } from 'entities/alert';
 
 
 @Module({
@@ -46,7 +47,7 @@ import { Cart } from 'entities/cart';
       username: process.env.DB_USER,
       password: process.env.DB_PASS,
       database: process.env.DB_NAME,
-      entities: [Users, Patients, UserCheck, Activities, Feedback, Programs, Pay, Refund, Status, Chats, Shifts, Match, Banners, ChatRoom, Cart],
+      entities: [Users, Patients, UserCheck, Activities, Feedback, Programs, Pay, Refund, Status, Chats, Match, Banners, ChatRoom, Cart, Alert],
       charset: 'utf8mb4',
       synchronize: true,
     }),
@@ -65,6 +66,7 @@ import { Cart } from 'entities/cart';
     ChatModule,
     MatchingModule,
     BannerModule,
+    AlertModule,
   ],
   controllers: [AppController],
   providers: [AppService],

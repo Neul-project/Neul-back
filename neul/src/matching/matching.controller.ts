@@ -33,13 +33,13 @@ export class MatchingController {
         return this.matchingService.userDel(body);
     };
 
-    // 피보호자-관리자 매칭 + 채팅방 생성
+    // 피보호자-관리자 매칭 + 채팅방 생성 + 알림 추가
     @Post('/user')
     async userMatching(@Body() dto: MatchUserDto){
         return this.matchingService.userMatch(dto.adminId, dto.userId, dto.patientId);
     }
 
-    // 피보호자-관리자 매칭 취소 + 채팅방 삭제
+    // 피보호자-관리자 매칭 취소 + 사용자쪽 채팅 내역 삭제 + 알림 추가
     @Patch('/cancel')
     async userNotMatching(@Body() dto: MatchUserDto){
         return this.matchingService.userNotMatch(dto.adminId, dto.userId, dto.patientId);
