@@ -115,4 +115,13 @@ export class ProgramService {
 
         return {ok: true};
     }
+
+    // 프로그램 삭제
+    async deletePro(ids: number[]){
+        if (!ids || ids.length === 0){
+            throw new Error('선택한 프로그램이 존재하지 않습니다.');
+        }
+
+        return await this.programRepository.delete(ids);
+    }
 }

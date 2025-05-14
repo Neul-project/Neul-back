@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Patch, Post, Query, Req, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Patch, Post, Query, Req, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ProgramService } from './program.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -7,6 +7,7 @@ import { ApiConsumes } from '@nestjs/swagger';
 import { CreateProgramDto } from './dto/create-program.dto';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { CreateRefundDto } from './dto/create-refund.dto';
+import { DeleteStatusDto } from 'src/status/dto/delete-status.dto';
 
 @Controller('program')
 export class ProgramController {
@@ -70,5 +71,11 @@ export class ProgramController {
     async refundProgram(@Req() req, @Body() dto: CreateRefundDto){
         const userId = req.user.id;
         return this.programService.refundPro(userId, dto);
+    }
+
+    // 프로그램 삭제
+    @Delete('/delete')
+    async deleteProgram(@Body() dto: DeleteStatusDto){
+        return this.programService.deletePro(dto.ids);
     }
 }
