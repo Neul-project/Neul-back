@@ -167,7 +167,7 @@ export class AuthService {
             }}
         );
         if(!user){
-            throw new UnauthorizedException('해당 정보와 일치하는 사용자가 없습니다.')
+            return {ok: false};
         }
 
         return {email: user.email};
