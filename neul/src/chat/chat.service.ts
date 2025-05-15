@@ -112,7 +112,7 @@ export class ChatService {
         return chatRoom.map((room) => ({
             ...room,
             unreadCount: parseInt(room.unreadCount, 10),
-            isMatched: room.isMatched === true || room.isMatched === '1',
+            isMatched: room.isMatched === true || room.isMatched === 1,
         }));
     }
 
