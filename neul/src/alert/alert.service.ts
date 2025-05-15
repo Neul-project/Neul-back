@@ -11,11 +11,22 @@ export class AlertService {
     ) {}
 
     // 알림 전체 전달
-    async getAlarmAll(){
+    async getAlarmAll(userId: number){
         const alarm = await this.alertRepository.find({
+            where: {user: {id: userId}},
             select: ['id', 'message', 'isChecked', 'created_at']
         });
 
         return alarm;
+    }
+
+    // 알림 체크
+    async checkAll(userId: number){
+        return await this.alertRepository
+            .createQueryBuilder()
+            .update()
+            .set({ isChecked: true })
+            .where('userId = :userId', {userId})
+            .execute();
     }
 }
