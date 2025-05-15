@@ -80,7 +80,7 @@ export class ChatService {
             .leftJoin('room.admin', 'admin') // 관리자
             .leftJoin('user.familyPatients', 'patient') // 보호자의 피보호자
             .leftJoin('room.chats', 'chat')
-            .leftJoin(
+            .leftJoin('match', 'match', 'match.adminId = :adminId AND match.userId = user.id', { adminId })            .leftJoin(
                 '(' + latestChatSubquery.getQuery() + ')',
                 'latest',
                 'latest.roomId = room.id AND latest.sub = 1'
@@ -95,7 +95,8 @@ export class ChatService {
                 `COALESCE(latest.lastMessage, '') AS lastMessage`, // 마지막으로 보낸 채팅 내용
                 `COALESCE(SUM(CASE 
                     WHEN chat.read = false AND chat.adminId = :adminId AND chat.sender = 'user' 
-                    THEN 1 ELSE 0 END), 0) AS unreadCount` // 안 읽은 알림 개수
+                    THEN 1 ELSE 0 END), 0) AS unreadCount`, // 안 읽은 알림 개수
+                'CASE WHEN match.id IS NOT NULL THEN 1 ELSE 0 END AS isMatched'
             ])
             .where('room.adminId = :adminId', { adminId })
             .groupBy('room.id')
@@ -104,12 +105,14 @@ export class ChatService {
             .addGroupBy('patient.name')
             .addGroupBy('latest.lastTime')
             .addGroupBy('latest.lastMessage')
+            .addGroupBy('match.id')
             .orderBy('lastTime', 'DESC')
             .getRawMany();
-
+            
         return chatRoom.map((room) => ({
             ...room,
             unreadCount: parseInt(room.unreadCount, 10),
+            isMatched: room.isMatched === true || room.isMatched === '1',
         }));
     }
 
