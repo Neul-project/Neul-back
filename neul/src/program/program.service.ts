@@ -150,4 +150,13 @@ export class ProgramService {
 
         return await this.programRepository.delete(ids);
     }
+
+    // 장바구니 개수
+    async cartCount(userId: number){
+        const count = await this.cartRepository.count({
+            where: { user: {id: userId} }
+        });
+
+        return { count };
+    }
 }

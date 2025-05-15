@@ -90,4 +90,12 @@ export class ProgramController {
     async deleteProgram(@Body() dto: DeleteStatusDto){
         return this.programService.deletePro(dto.ids);
     }
+
+    // 장바구니 개수 요청
+    @Get('/count')
+    @UseGuards(JwtAuthGuard)
+    async cartCount(@Req() req){
+        const userId = req.user.id;
+        return this.programService.cartCount(userId);
+    }
 }
