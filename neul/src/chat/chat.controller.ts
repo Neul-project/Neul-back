@@ -13,6 +13,7 @@ export class ChatController {
     @Get('/list')
     @ApiResponse({type: ChatListDTO})
     async chatList(@Query('userId') userId: number){
+        console.log(userId, '사용자id')
         return this.chatService.getChatList(userId);
     }
 

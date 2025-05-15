@@ -1,6 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { Users } from './users';
-import { Patients } from './patients';
   
 @Entity('match')
 export class Match {
@@ -10,6 +9,6 @@ export class Match {
     @ManyToOne(() => Users, (user) => user.id, { onDelete: "CASCADE" })
     admin: Users;
     
-    @ManyToOne(() => Patients, (patient) => patient.id, { onDelete: "CASCADE" })
-    patient: Patients;
+    @ManyToOne(() => Users, (user) => user.id, { onDelete: "CASCADE" })
+    user: Users;
 }

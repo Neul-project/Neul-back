@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ChatRoom } from 'entities/chat_room';
 import { Chats } from 'entities/chats';
+import { Match } from 'entities/match';
 import { Patients } from 'entities/patients';
 import { Users } from 'entities/users';
 import { Repository } from 'typeorm';
@@ -16,7 +17,9 @@ export class ChatService {
         @InjectRepository(Users)
         private userRepository: Repository<Users>,
         @InjectRepository(Patients)
-        private patientRepository: Repository<Patients>
+        private patientRepository: Repository<Patients>,
+        @InjectRepository(Match)
+        private matchRepository: Repository<Match>
     ) {}
 
     // 채팅 저장
@@ -43,20 +46,26 @@ export class ChatService {
         return await this.chatRepository.save(chat);
     }
 
-    // 채팅목록 전달 (사용자)
+    // 채팅목록 전달 (사용자+관리자)
     async getChatList(userId: number){
+        const room = await this.chatRoomRepository.findOne({
+            where:{ user: {id: userId} }
+        });
+
         const chat = await this.chatRepository.find({
-            where: {user: {id: userId}},
+            where: { 
+                room: {id: room.id}
+            },
             order: {created_at: 'ASC'},
             relations: ['user', 'admin'],
         });
-        
+
         return chat;
     }
     
     // 채팅방 전달 (관리자)
     async getChatroomList(adminId: number){
-        const latestChatSubquery = await this.chatRepository
+        const latestChatSubquery = this.chatRepository
             .createQueryBuilder('chat')
             .select([
                 'chat.roomId AS roomId',

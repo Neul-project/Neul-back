@@ -7,6 +7,7 @@ import { Patients } from 'entities/patients';
 import { Users } from 'entities/users';
 import { Like, Raw, Repository } from 'typeorm';
 import { SearchUserDto } from './dto/search-user.dto';
+import { Match } from 'entities/match';
 
 @Injectable()
 export class MatchingService {
@@ -20,7 +21,9 @@ export class MatchingService {
         @InjectRepository(Alert)
         private alertRepository: Repository<Alert>,
         @InjectRepository(Chats)
-        private chatRepository: Repository<Chats>
+        private chatRepository: Repository<Chats>,
+        @InjectRepository(Match)
+        private matchRepository: Repository<Match>
     ) {}
 
     // 전체 유저 전달
@@ -87,6 +90,15 @@ export class MatchingService {
             throw new NotFoundException('해당 관리자/보호자/피보호자 계정을 찾을 수 없습니다.');
         }
 
+        const existingMatch = await this.matchRepository.findOne({
+            where: { admin: { id: adminId }, user: { id: userId } }
+        });
+
+        if (!existingMatch) { // 보호자와 관리자 매칭
+            const match = this.matchRepository.create({ user, admin });
+            await this.matchRepository.save(match);
+        }
+
         patient.admin = admin;
         await this.patientRepository.save(patient); // 피보호자와 관리자 매칭
 
@@ -127,6 +139,14 @@ export class MatchingService {
 
         patient.admin = null;
         await this.patientRepository.save(patient); // 매칭 해제
+
+        const match = await this.matchRepository.findOne({
+            where: { admin: { id: adminId }, user: { id: userId } }
+        });
+        
+        if(match){
+            await this.matchRepository.remove(match); // 매칭 해제
+        }
 
         const room = await this.chatRoomRepository.findOne({
             where: {
