@@ -41,6 +41,8 @@ export class ProgramService {
             manager: dto.manager,
             capacity: Number(dto.capacity),
             call: dto.call,
+            target: dto.target,
+            note: dto.note,
             img: filename
         });
         return await this.programRepository.save(program);

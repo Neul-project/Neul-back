@@ -10,6 +10,12 @@ export class CreateProgramDto {
   @ApiProperty({ description: '모집기간', example: '2021.06.01 ~ 2021.06.30' })
   recruitment: string;
 
+  @ApiProperty({ description: '대상', example: '초등학생 저학년' })
+  target: string;
+
+  @ApiProperty({ description: '프로그램 내용', example: '동화책 읽기' })
+  note: string;
+  
   @ApiProperty({ description: '수강료', example: '10000' })
   price: string;
 
