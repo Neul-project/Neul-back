@@ -65,6 +65,7 @@ export class ProgramService {
         program.price = Number(dto.price);
         program.manager = dto.manager;
         program.capacity = Number(dto.capacity);
+        program.recruitment = dto.recruitment;
         program.call = dto.call;
         program.category = dto.category;
         program.note = dto.note;
