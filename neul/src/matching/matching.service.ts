@@ -156,24 +156,50 @@ export class MatchingService {
 
     // 전체 회원 검색
     async getSerchUser(dto: SearchUserDto){
-        if(dto.search === 'user_id'){
-            return this.userRepository.find({
-                where: {id: Raw((alias) => `CAST(${alias} AS CHAR) LIKE '%${dto.word}%'`)}
+        let patients: Patients[] = [];
+
+        if (dto.search === 'user_id' || dto.search === 'user_name') {
+            const userWhere = dto.search === 'user_id'
+                ? { id: Raw((alias) => `CAST(${alias} AS CHAR) LIKE '%${dto.word}%'`) }
+                : { name: Like(`%${dto.word}%`) };
+
+            const users = await this.userRepository.find({
+                where: userWhere,
+                relations: ['familyPatients']
             });
+
+            // flatMap을 이용해 user와 연결된 환자들을 한 번에 정리
+            patients = users.flatMap(user =>
+                (user.familyPatients || []).map(patient => {
+                    patient.user = user;
+                    return patient;
+                })
+            );
+
+        } else if (dto.search === 'patient_name') {
+            patients = await this.patientRepository.find({
+                where: { name: Like(`%${dto.word}%`) },
+                relations: ['user', 'admin']
+            });
+        } else {
+            throw new Error('지원하지 않는 검색 기준입니다.');
         }
 
-        if(dto.search === 'user_name'){
-            return this.userRepository.find({
-                where: {name: Like(`%${dto.word}%`)}
-            });
-        }
+        return patients.map(x => ({
+            user_id: x.user?.id || null,
+            user_name: x.user?.name || null,
+            user_email: x.user?.email || null,
+            user_phone: x.user?.phone || null,
+            user_create: x.user?.created_at || null,
 
-        if(dto.search === 'patient_name'){
-            return this.patientRepository.find({
-                where: {name: Like(`%${dto.word}%`)}
-            });
-        }
+            admin_id: x.admin?.id || null,
+            admin_name: x.admin?.name || null,
 
-        throw new Error('지원하지 않는 검색 기준입니다.');
+            patient_id: x.id,
+            patient_name: x.name || '없음',
+            patient_gender: x.gender || '없음',
+            patient_birth: x.birth || '없음',
+            patient_note: x.note || '없음'
+        }));
     }
 }
