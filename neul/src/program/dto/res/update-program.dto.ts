@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateProgramDto {
+export class UpdateProgramDto {
   @ApiProperty({ description: '프로그램명', example: '동화책읽기' })
   name: string;
 
@@ -30,4 +30,7 @@ export class CreateProgramDto {
 
   @ApiProperty({ description: '카테고리', example: '2' })
   category: string;
+
+  @ApiProperty({ example: ['apple1.jpeg', 'apple2.jpeg'], description: '이미지 파일명 배열' })
+  img: string[];
 }

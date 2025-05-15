@@ -10,6 +10,7 @@ import { Cart } from 'entities/cart';
 import { CreateRefundDto } from './dto/create-refund.dto';
 import { Alert } from 'entities/alert';
 import { Patients } from 'entities/patients';
+import { UpdateProgramDto } from './dto/res/update-program.dto';
 
 @Injectable()
 export class ProgramService {
@@ -49,6 +50,29 @@ export class ProgramService {
     }
 
     // 프로그램 수정
+    async updatePro(programId: number, dto: UpdateProgramDto, files: Express.Multer.File[]){
+        const newFile = files.map((file) => file.filename);
+        const oldFile = dto.img;
+        const finalFilename = [...oldFile, ...newFile];
+
+        const program = await this.programRepository.findOne({ where: {id: programId}});
+        if(!program){
+            throw new Error('프로그램을 찾을 수 없습니다.');
+        }
+
+        program.name = dto.name;
+        program.progress = dto.progress;
+        program.price = Number(dto.price);
+        program.manager = dto.manager;
+        program.capacity = Number(dto.capacity);
+        program.call = dto.call;
+        program.category = dto.category;
+        program.note = dto.note;
+        program.target = dto.target;
+        program.img = finalFilename.join(',');
+        
+        return await this.programRepository.save(program);
+    }
 
     // 프로그램 전체 전달
     async allPro(){
