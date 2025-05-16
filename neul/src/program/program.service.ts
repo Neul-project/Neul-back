@@ -222,7 +222,7 @@ export class ProgramService {
             const program = pp.program;
             await this.cartRepository.update(
                 { user: {id: userId}, program: {id: program.id}, status: '결제 대기' }, // 조건
-                { pay: pay, status: '결제 성공' } // 변경
+                { pay: pay, status: '결제 완료' } // 변경
             );
         }
 

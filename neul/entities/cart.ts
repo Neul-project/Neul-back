@@ -20,7 +20,7 @@ export class Cart {
   @Column('int', {nullable: true, comment:'결제 금액'})
   price?: number;
   
-  @Column('enum', { enum: ['결제 성공', '결제 대기'], comment:'결제 상태', default: '결제 대기' })
+  @Column('enum', { enum: ['결제 완료', '결제 대기'], comment:'결제 상태', default: '결제 대기' })
   status: string;
 
   @CreateDateColumn()
