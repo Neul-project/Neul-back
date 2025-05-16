@@ -158,6 +158,11 @@ export class ActivityService {
         return await this.feedbackRepository.save(feedback);
     }
 
+    // 피드백 저장 ver 오디오
+    async postAudio(body: number, file: Express.Multer.File){
+
+    }
+
     // 전체 피드백 전달
     async allFeed(){
         const feedback = await this.feedbackRepository.find({

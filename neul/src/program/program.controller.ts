@@ -19,7 +19,7 @@ export class ProgramController {
     @UseInterceptors(
         FilesInterceptor('img', 3, {
             storage: diskStorage({
-                destination: join(process.cwd(), 'uploads'),
+                destination: join(process.cwd(), 'uploads/image'),
                 filename: (req, file, callback) => {
                     const filename = `${file.originalname}`;
                     callback(null, filename);
@@ -37,7 +37,7 @@ export class ProgramController {
     @UseInterceptors(
         FilesInterceptor('img', 3, {
             storage: diskStorage({
-                destination: join(process.cwd(), 'uploads'),
+                destination: join(process.cwd(), 'uploads/image'),
                 filename: (req, file, callback) => {
                     const filename = `${file.originalname}`;
                     callback(null, filename);

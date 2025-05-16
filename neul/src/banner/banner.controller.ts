@@ -15,7 +15,7 @@ export class BannerController {
     @UseInterceptors(
         FilesInterceptor('img', 2, {
           storage: diskStorage({
-            destination: join(process.cwd(), 'uploads'),
+            destination: join(process.cwd(), 'uploads/image'),
             filename: (req, file, callback) => {
               const filename = `${file.originalname}`;
               callback(null, filename);

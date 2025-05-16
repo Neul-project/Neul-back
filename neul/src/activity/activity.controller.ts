@@ -1,6 +1,6 @@
-import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Patch, Post, Query, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Patch, Post, Query, UploadedFile, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { ActivityService } from './activity.service';
-import { FilesInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { join } from 'path';
 import { CreateActivityDto } from './dto/create-activity.dto';
 import { diskStorage } from 'multer';
@@ -23,7 +23,7 @@ export class ActivityController {
     @UseInterceptors(
         FilesInterceptor('img', 5, {
             storage: diskStorage({
-                destination: join(process.cwd(), 'uploads'),
+                destination: join(process.cwd(), 'uploads/image'),
                 filename: (req, file, callback) => {
                     const filename = `${file.originalname}`;
                     callback(null, filename);
@@ -41,7 +41,7 @@ export class ActivityController {
     @UseInterceptors(
         FilesInterceptor('img', 5, {
             storage: diskStorage({
-                destination: join(process.cwd(), 'uploads'),
+                destination: join(process.cwd(), 'uploads/image'),
                 filename: (req, file, callback) => {
                     const filename = `${file.originalname}`;
                     callback(null, filename);
@@ -99,12 +99,27 @@ export class ActivityController {
 
     // 피드백 저장
     @Post('/feedback')
-    async postFeedback(@Body() body){
-        console.log(body, '오디오는어떻게');
+    async postFeedback(@Body() dto: CreateFeedbackDto){
+        return this.activityService.postFeed(dto);
     }
-    // async postFeedback(@Body() dto: CreateFeedbackDto){
-    //     return this.activityService.postFeed(dto);
-    // }
+
+    // 피드백 저장 ver 오디오
+    @Post('/feedback/audio')
+    @UseInterceptors(
+        FileInterceptor('file', {
+            storage: diskStorage({
+                destination: join(process.cwd(), 'uploads/audio'),
+                filename: (req, file, callback) => {
+                    const filename = `${file.originalname}`;
+                    callback(null, filename);
+                },
+            }),
+        })
+    )
+    async audio(@Body() body, @UploadedFile() file: Express.Multer.File){
+        console.log(body, '활동아이디', file, '오디오파일이름')
+        // return this.activityService.postAudio(body, file);
+    }
 
     // 전체 피드백 전달
     @Get('/feedback/views')
