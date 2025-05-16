@@ -160,4 +160,25 @@ export class ProgramService {
 
         return { count };
     }
+
+    // 프로그램 결제
+    async payPro(userId: number, body: any){
+        const user = await this.userRepository.findOne({ where: {id: userId} });
+        if(!user){
+            throw new Error('사용자를 찾을 수 없습니다.');
+        }
+
+        const orderId = `order_${userId}_${Date.now()}`
+
+        const pay = this.payRepository.create({
+            user,
+            programs: body.programId.join(','),
+            price: body.amount,
+            orderId,
+        });
+        await this.payRepository.save(pay);
+        console.log(orderId);
+
+        return orderId;
+    }
 }

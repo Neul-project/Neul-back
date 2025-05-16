@@ -98,4 +98,12 @@ export class ProgramController {
         const userId = req.user.id;
         return this.programService.cartCount(userId);
     }
+
+    // 프로그램 결제
+    @Post('/create')
+    @UseGuards(JwtAuthGuard)
+    async payProgram(@Req() req, @Body() body){
+        const userId = req.user.id;
+        return this.programService.payPro(userId, body);
+    }
 }

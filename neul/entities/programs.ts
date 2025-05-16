@@ -40,9 +40,6 @@ export class Programs {
     @Column('varchar', {comment:'문의전화'})
     call: string;
 
-    @OneToMany(() => Pay, (pay) => pay.program, { cascade: true, onDelete: "CASCADE" })
-    pay: Pay[];
-
     @OneToMany(() => Cart, (cart) => cart.program, { cascade: true, onDelete: "CASCADE" })
     cart: Cart[];
   
