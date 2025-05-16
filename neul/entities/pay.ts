@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, OneToMany } from 'typeorm';
 import { Users } from './users';
+import { PayPrograms } from './pay_program';
   
 @Entity('pay')
 export class Pay {
@@ -9,15 +10,18 @@ export class Pay {
   @ManyToOne(() => Users, (user) => user.id, { onDelete: "CASCADE" })
   user: Users;
 
-  @Column('varchar', {comment:'결제 프로그램'})
-  programs: string;
-
   @Column('int', {comment:'결제 금액'})
   price: number;
 
   @Column('varchar', { comment: '결제 ID' })
   orderId: string;
 
+  @Column('varchar', { comment: '결제 키', nullable: true })
+  paymentKey?: string;
+
+  @OneToMany(() => PayPrograms, (pp) => pp.pay, { cascade: true, onDelete: "CASCADE" })
+  payPrograms: PayPrograms[];
+  
   @CreateDateColumn({ type: 'timestamp' }) 
   created_at: Date;
 }

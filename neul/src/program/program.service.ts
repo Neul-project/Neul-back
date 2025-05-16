@@ -9,8 +9,11 @@ import { Refund } from 'entities/refund';
 import { Cart } from 'entities/cart';
 import { CreateRefundDto } from './dto/create-refund.dto';
 import { Alert } from 'entities/alert';
-import { Patients } from 'entities/patients';
 import { UpdateProgramDto } from './dto/res/update-program.dto';
+import { PayPrograms } from 'entities/pay_program';
+import { Match } from 'entities/match';
+import { PayProgramDto } from './dto/pay-program.dto';
+import { ConfirmPayDto } from './dto/confirm-pay.dto';
 
 @Injectable()
 export class ProgramService {
@@ -27,6 +30,10 @@ export class ProgramService {
         private cartRepository: Repository<Cart>,
         @InjectRepository(Alert)
         private alertRepository: Repository<Alert>,
+        @InjectRepository(PayPrograms)
+        private payProgramRepository: Repository<PayPrograms>,
+        @InjectRepository(Match)
+        private matchRepository: Repository<Match>
     ) {}
 
     // 프로그램 등록
@@ -161,8 +168,8 @@ export class ProgramService {
         return { count };
     }
 
-    // 프로그램 결제
-    async payPro(userId: number, body: any){
+    // 프로그램 결제 요청
+    async payPro(userId: number, dto: PayProgramDto){
         const user = await this.userRepository.findOne({ where: {id: userId} });
         if(!user){
             throw new Error('사용자를 찾을 수 없습니다.');
@@ -172,13 +179,68 @@ export class ProgramService {
 
         const pay = this.payRepository.create({
             user,
-            programs: body.programId.join(','),
-            price: body.amount,
+            price: dto.amount,
             orderId,
         });
         await this.payRepository.save(pay);
-        console.log(orderId);
+
+        for (const programId of dto.programId){
+            const program = await this.programRepository.findOne({where: {id: programId}})
+            if (program) {
+                const pp = this.payProgramRepository.create({
+                    pay,
+                    program
+                });
+                await this.payProgramRepository.save(pp);
+            }
+        }
 
         return orderId;
+    }
+
+    // 프로그램 결제 승인
+    async payProOK(userId: number, dto: ConfirmPayDto){
+        const user = await this.userRepository.findOne({ where: {id: userId} });
+        const match = await this.matchRepository.findOne({
+            where: {user: {id: userId}},
+            relations: ['admin']
+        });
+        
+        const pay = await this.payRepository.findOne({
+            where: { orderId: dto.orderId},
+            relations: ['payPrograms', 'payPrograms.program']
+        });
+
+        if(!pay){
+            throw new Error('해당 주문을 찾을 수 없습니다.');
+        }
+
+        pay.paymentKey = dto.paymentKey;
+        await this.payRepository.save(pay);
+
+        for (const pp of pay.payPrograms){ // 결제 상태 변경
+            const program = pp.program;
+            await this.cartRepository.update(
+                { user: {id: userId}, program: {id: program.id}, status: '결제 대기' }, // 조건
+                { pay: pay, status: '결제 성공' } // 변경
+            );
+        }
+
+        const alert = this.alertRepository.create({ // 알림 추가
+            user,
+            admin: match.admin,
+            message: 'pay'
+        });
+        await this.alertRepository.save(alert);
+
+        return {
+            orderId: pay.orderId,
+            amount: pay.price,
+            programs: pay.payPrograms.map((pp)=> ({
+                id: pp.program.id,
+                name: pp.program.name,
+                price: pp.program.price
+            }))
+        };
     }
 }

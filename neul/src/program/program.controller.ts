@@ -3,12 +3,16 @@ import { ProgramService } from './program.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { join } from 'path';
-import { ApiConsumes } from '@nestjs/swagger';
+import { ApiConsumes, ApiResponse } from '@nestjs/swagger';
 import { CreateProgramDto } from './dto/create-program.dto';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { CreateRefundDto } from './dto/create-refund.dto';
 import { DeleteStatusDto } from 'src/status/dto/delete-status.dto';
 import { UpdateProgramDto } from './dto/res/update-program.dto';
+import { PayProgramDto } from './dto/pay-program.dto';
+import { PayOrderIdDto } from './dto/res/pay-orderId.dto';
+import { ConfirmedPayDto } from './dto/res/confirmed-pay.dto';
+import { ConfirmPayDto } from './dto/confirm-pay.dto';
 
 @Controller('program')
 export class ProgramController {
@@ -99,11 +103,21 @@ export class ProgramController {
         return this.programService.cartCount(userId);
     }
 
-    // 프로그램 결제
+    // 프로그램 결제 요청
     @Post('/create')
     @UseGuards(JwtAuthGuard)
-    async payProgram(@Req() req, @Body() body){
+    @ApiResponse({type: PayOrderIdDto})
+    async payProgram(@Req() req, @Body() dto: PayProgramDto){
         const userId = req.user.id;
-        return this.programService.payPro(userId, body);
+        return this.programService.payPro(userId, dto);
+    }
+
+    // 프로그램 결제 승인
+    @Post('/confirm')
+    @UseGuards(JwtAuthGuard)
+    @ApiResponse({type: ConfirmedPayDto})
+    async payProgramOK(@Req() req, @Body() dto: ConfirmPayDto){
+        const userId = req.user.id;
+        return this.programService.payProOK(userId, dto);
     }
 }

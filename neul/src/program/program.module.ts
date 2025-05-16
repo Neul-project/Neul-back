@@ -8,9 +8,11 @@ import { Pay } from 'entities/pay';
 import { Refund } from 'entities/refund';
 import { Cart } from 'entities/cart';
 import { Alert } from 'entities/alert';
+import { PayPrograms } from 'entities/pay_program';
+import { Match } from 'entities/match';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Programs, Users, Pay, Refund, Cart, Alert])],
+  imports: [TypeOrmModule.forFeature([Programs, Users, Pay, Refund, Cart, Alert, PayPrograms, Match])],
   providers: [ProgramService],
   controllers: [ProgramController]
 })
