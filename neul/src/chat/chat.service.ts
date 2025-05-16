@@ -47,7 +47,7 @@ export class ChatService {
     }
 
     // 채팅목록 전달 (사용자+관리자)
-    async getChatList(userId: number){
+    async getChatList(userId: number, page: number, limit: number){
         const room = await this.chatRoomRepository.findOne({
             where:{ user: {id: userId} }
         });
@@ -56,11 +56,13 @@ export class ChatService {
             where: { 
                 room: {id: room.id}
             },
-            order: {created_at: 'ASC'},
+            order: {created_at: 'DESC'},
+            take: limit,
+            skip: (page-1) * limit,
             relations: ['user', 'admin'],
         });
 
-        return chat;
+        return chat.reverse();
     }
     
     // 채팅방 전달 (관리자)

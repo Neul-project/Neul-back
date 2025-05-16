@@ -106,7 +106,7 @@ export class ActivityController {
     // 피드백 저장 ver 오디오
     @Post('/feedback/audio')
     @UseInterceptors(
-        FileInterceptor('file', {
+        FileInterceptor('audio', {
             storage: diskStorage({
                 destination: join(process.cwd(), 'uploads/audio'),
                 filename: (req, file, callback) => {
@@ -116,8 +116,15 @@ export class ActivityController {
             }),
         })
     )
-    async audio(@Body() body, @UploadedFile() file: Express.Multer.File){
-        console.log(body, '활동아이디', file, '오디오파일이름')
+    async audio(@Body() body: any, @UploadedFile() file: Express.Multer.File){
+        try {
+            console.log(body, '활동아이디');
+            console.log(file, '오디오파일이름');
+        } catch (error) {
+            console.error('업로드 중 에러:', error);
+            throw new Error('파일 업로드 실패');
+        }
+        // console.log(body, '활동아이디', file, '오디오파일이름')
         // return this.activityService.postAudio(body, file);
     }
 

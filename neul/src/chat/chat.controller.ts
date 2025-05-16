@@ -12,9 +12,9 @@ export class ChatController {
     // 채팅목록 전달
     @Get('/list')
     @ApiResponse({type: ChatListDTO})
-    async chatList(@Query('userId') userId: number){
+    async chatList(@Query('userId') userId: number, @Query('page') page: number, @Query('limit') limit: number){
         console.log(userId, '사용자id')
-        return this.chatService.getChatList(userId);
+        return this.chatService.getChatList(userId, +page, +limit);
     }
 
     // 채팅방목록 전달
