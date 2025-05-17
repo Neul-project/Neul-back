@@ -21,4 +21,7 @@ export class ChatRoomListDto {
 
   @ApiProperty({ example: 3, description: '안 읽은 메시지 수' })
   unreadCount: number;
+
+  @ApiProperty({ example: true, description: '매칭 여부'})
+  isMatched: boolean;
 }

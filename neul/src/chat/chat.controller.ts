@@ -13,15 +13,15 @@ export class ChatController {
     @Get('/list')
     @ApiResponse({type: ChatListDTO})
     async chatList(@Query('userId') userId: number, @Query('page') page: number, @Query('limit') limit: number){
-        console.log(userId, '사용자id')
+        console.log(userId, '채팅목록 사용자id')
         return this.chatService.getChatList(userId, +page, +limit);
     }
 
     // 채팅방목록 전달
     @Get('/rooms')
     @ApiResponse({type: ChatRoomListDto})
-    async chatroomList(@Query('adminId') adminId: number){
-        return this.chatService.getChatroomList(adminId);
+    async chatroomList(@Query('adminId') adminId: number, @Query('page') page: number, @Query('limit') limit: number){
+        return this.chatService.getChatroomList(adminId, +page, +limit);
     }
 
     // 읽음처리 (관리자)

@@ -66,7 +66,7 @@ export class ChatService {
     }
     
     // 채팅방 전달 (관리자)
-    async getChatroomList(adminId: number){
+    async getChatroomList(adminId: number, page: number, limit: number){
         const latestChatSubquery = this.chatRepository
             .createQueryBuilder('chat')
             .select([
@@ -76,18 +76,34 @@ export class ChatService {
                 'ROW_NUMBER() OVER (PARTITION BY chat.roomId ORDER BY chat.created_at DESC) AS sub',
             ]);
 
+        const scrollSubquery = this.chatRoomRepository
+            .createQueryBuilder('sub')
+            .select('sub.id', 'id')
+            .where('sub.adminId = :adminId', { adminId })
+            .skip((page - 1) * limit)
+            .take(limit);
+
         const chatRoom = await this.chatRoomRepository
             .createQueryBuilder('room')
+            .innerJoin(
+                '(' + scrollSubquery.getQuery() + ')',
+                'scroll',
+                'scroll.id = room.id'
+            )
             .leftJoin('room.user', 'user') // 보호자
             .leftJoin('room.admin', 'admin') // 관리자
             .leftJoin('user.familyPatients', 'patient') // 보호자의 피보호자
             .leftJoin('room.chats', 'chat')
-            .leftJoin('match', 'match', 'match.adminId = :adminId AND match.userId = user.id', { adminId })            .leftJoin(
+            .leftJoin('match', 'match', 'match.adminId = :adminId AND match.userId = user.id', { adminId })            
+            .leftJoin(
                 '(' + latestChatSubquery.getQuery() + ')',
                 'latest',
                 'latest.roomId = room.id AND latest.sub = 1'
             )
-            .setParameters(latestChatSubquery.getParameters())
+            .setParameters({
+                ...latestChatSubquery.getParameters(),
+                ...scrollSubquery.getParameters(),
+            })            
             .select([
                 'room.id AS id', // 고유 id
                 'user.id AS userId', // 보호자 id
@@ -98,9 +114,8 @@ export class ChatService {
                 `COALESCE(SUM(CASE 
                     WHEN chat.read = false AND chat.adminId = :adminId AND chat.sender = 'user' 
                     THEN 1 ELSE 0 END), 0) AS unreadCount`, // 안 읽은 알림 개수
-                'CASE WHEN match.id IS NOT NULL THEN 1 ELSE 0 END AS isMatched'
+                'CASE WHEN match.id IS NOT NULL THEN 1 ELSE 0 END AS isMatched' // 매칭여부
             ])
-            .where('room.adminId = :adminId', { adminId })
             .groupBy('room.id')
             .addGroupBy('user.id')
             .addGroupBy('user.name')
