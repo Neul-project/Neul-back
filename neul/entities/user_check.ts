@@ -9,6 +9,6 @@ export class UserCheck {
     @ManyToOne(() => Users, (user) => user.id, { onDelete: "CASCADE" })
     user: Users;
 
-    @Column('varchar', {comment:'약관확인', nullable: true})
+    @Column('varchar', {comment:'약관 유형', nullable: true})
     term?: string;
 }

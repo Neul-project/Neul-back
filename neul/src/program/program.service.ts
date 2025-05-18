@@ -115,6 +115,7 @@ export class ProgramService {
         return await this.programRepository
             .createQueryBuilder('program')
             .leftJoin('program.cart', 'cart')
+            .leftJoin('refund', 'refund', 'refund.userId = :userId AND refund.programId = program.id', { userId })
             .where('cart.userId = :userId', { userId })
             .select([
                 'program.id AS id',
@@ -122,7 +123,8 @@ export class ProgramService {
                 'cart.status AS payment_status',
                 'program.manager AS manager',
                 'cart.price AS price',
-                'program.img AS img'
+                'program.img AS img',
+                'refund.status AS refund_status'
             ])
             .getRawMany();
     }
