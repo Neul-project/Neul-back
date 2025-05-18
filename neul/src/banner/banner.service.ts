@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Banners } from 'entities/banners';
 import { Repository } from 'typeorm';
+import { BannerRegisterDto } from './dto/banner-register.dto';
 
 @Injectable()
 export class BannerService {
@@ -11,12 +12,15 @@ export class BannerService {
     ) {}
 
     // 배너 등록
-    async bannerRegi(files: Express.Multer.File[]){
+    async bannerRegi(dto: BannerRegisterDto, files: Express.Multer.File[]){
+        const url = [dto.lefturl, dto.righturl].filter(Boolean).join(',');
         const filename = files.map((file) => file.filename).join(',');
 
         const banner = this.bannerRepository.create({
-            img: filename
+            img: filename,
+            url: url
         });
+
         return await this.bannerRepository.save(banner);
     }
 

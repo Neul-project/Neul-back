@@ -162,7 +162,10 @@ export class ProgramService {
     // 장바구니 개수
     async cartCount(userId: number){
         const count = await this.cartRepository.count({
-            where: { user: {id: userId} }
+            where: { 
+                user: {id: userId},
+                status: '결제 대기'
+            }
         });
 
         return { count };

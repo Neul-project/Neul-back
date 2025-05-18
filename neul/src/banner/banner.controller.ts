@@ -5,6 +5,7 @@ import { join } from 'path';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiResponse } from '@nestjs/swagger';
 import { BannerListDto } from './dto/res/banner-list.dto';
+import { BannerRegisterDto } from './dto/banner-register.dto';
 
 @Controller('banner')
 export class BannerController {
@@ -23,10 +24,8 @@ export class BannerController {
           }),
         }),
       )
-    async bannerRegister(@Body() body, @UploadedFiles() files: Express.Multer.File[]){
-      console.log(body, '링크 들어오나?')
-      console.log(files, '이미지는?')
-      // return await this.bannerService.bannerRegi(files);
+    async bannerRegister(@Body() dto: BannerRegisterDto, @UploadedFiles() files: Express.Multer.File[]){
+      return await this.bannerService.bannerRegi(dto, files);
     }
 
     // 배너 전달
