@@ -13,6 +13,8 @@ import { PayProgramDto } from './dto/pay-program.dto';
 import { PayOrderIdDto } from './dto/res/pay-orderId.dto';
 import { ConfirmedPayDto } from './dto/res/confirmed-pay.dto';
 import { ConfirmPayDto } from './dto/confirm-pay.dto';
+import { RefundListDto } from './dto/res/refund-list.dto';
+import { RefundOKDto } from './dto/refund-ok.dto';
 
 @Controller('program')
 export class ProgramController {
@@ -81,7 +83,7 @@ export class ProgramController {
         return this.programService.historyPro(userId);
     }
 
-    // 프로그램 환불 신청
+    // 프로그램 환불 신청 (사용자)
     @Post('/refund')
     @UseGuards(JwtAuthGuard)
     async refundProgram(@Req() req, @Body() dto: CreateRefundDto){
@@ -119,5 +121,18 @@ export class ProgramController {
     async payProgramOK(@Req() req, @Body() dto: ConfirmPayDto){
         const userId = req.user.id;
         return this.programService.payProOK(userId, dto);
+    }
+
+    // 프로그램 환불 리스트 전달 (관리자)
+    @Get('/refund-list')
+    @ApiResponse({type: RefundListDto})
+    async refundList(){
+        return this.programService.refundList();
+    }
+
+    // 프로그램 환불 상태 변경 (관리자)
+    @Post('/refund-complete')
+    async refundOK(@Body() dto: RefundOKDto){
+        return this.programService.refundOK(dto.id);
     }
 }

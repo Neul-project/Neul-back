@@ -243,4 +243,53 @@ export class ProgramService {
             }))
         };
     }
+
+    // 프로그램 환불 리스트 전달 (관리자)
+    async refundList(){
+        const list = await this.refundRepository.find({
+            relations: ['user', 'program']
+        });
+
+        return list.map(refund => ({
+            id: refund.id,
+            requester: refund.user.name,
+            bank: refund.bank,
+            account: refund.account,
+            depositor: refund.name,
+            reason: refund.note,
+            programId: refund.program.id,
+            programName: refund.program.name,
+            price: refund.price,
+            email: refund.user.email,
+            phone: refund.user.phone
+        }));
+    }
+
+    // 프로그램 환불 상태 변경 (관리자) + 알림 추가
+    async refundOK(programId: number){
+        const refund = await this.refundRepository.findOne({ 
+            where: {program: {id: programId}},
+            relations: ['user']
+        });
+        if(!refund){
+            throw new Error('해당 프로그램의 환불 정보가 존재하지 않습니다.')
+        }
+
+        refund.status = '환불 완료';
+        await this.refundRepository.save(refund);
+
+        const match = await this.matchRepository.findOne({
+            where: {user: {id: refund.user.id}},
+            relations: ['admin']
+        });
+
+        const alert = this.alertRepository.create({ // 알림 추가
+            user: refund.user,
+            admin: match.admin,
+            message: 'refund'
+        });
+        await this.alertRepository.save(alert);
+
+        return {ok: true};
+    }
 }
