@@ -15,6 +15,7 @@ import { ConfirmedPayDto } from './dto/res/confirmed-pay.dto';
 import { ConfirmPayDto } from './dto/confirm-pay.dto';
 import { RefundListDto } from './dto/res/refund-list.dto';
 import { RefundOKDto } from './dto/refund-ok.dto';
+import { ProgramHistoryDto } from './dto/res/program-history.dto';
 
 @Controller('program')
 export class ProgramController {
@@ -86,6 +87,7 @@ export class ProgramController {
     // 프로그램 환불 신청 (사용자)
     @Post('/refund')
     @UseGuards(JwtAuthGuard)
+    @ApiResponse({type: ProgramHistoryDto})
     async refundProgram(@Req() req, @Body() dto: CreateRefundDto){
         const userId = req.user.id;
         return this.programService.refundPro(userId, dto);

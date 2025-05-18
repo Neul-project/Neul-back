@@ -26,7 +26,6 @@ export class BannerService {
 
     // 배너 제공
     async bannerList(){
-        const banners = await this.bannerRepository.find({ select: ['img'] });
-        return banners;
+        return await this.bannerRepository.find();
     }
 }
