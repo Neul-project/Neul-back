@@ -80,9 +80,7 @@ export class UserService {
             relations: ['admin']
         });
 
-        if(!match){
-            throw new Error('매칭된 관리자가 없습니다.')
-        }
+        if(!match) return;
 
         return match.admin.id;
     }
