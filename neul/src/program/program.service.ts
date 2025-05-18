@@ -292,4 +292,16 @@ export class ProgramService {
 
         return {ok: true};
     }
+
+    // 프로그램 신청 사람 수
+    async payList(programId: number){
+        const count = await this.cartRepository.count({
+            where: {
+                program: {id: programId},
+                status: '결제 완료'
+            }
+        });
+
+        return count;
+    }
 }

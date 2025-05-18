@@ -1,4 +1,4 @@
-import { Controller, Get, Post, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Post, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { BannerService } from './banner.service';
 import { diskStorage } from 'multer';
 import { join } from 'path';
@@ -23,8 +23,10 @@ export class BannerController {
           }),
         }),
       )
-    async bannerRegister(@UploadedFiles() files: Express.Multer.File[]){
-      return await this.bannerService.bannerRegi(files);
+    async bannerRegister(@Body() body, @UploadedFiles() files: Express.Multer.File[]){
+      console.log(body, '링크 들어오나?')
+      console.log(files, '이미지는?')
+      // return await this.bannerService.bannerRegi(files);
     }
 
     // 배너 전달

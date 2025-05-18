@@ -135,4 +135,11 @@ export class ProgramController {
     async refundOK(@Body() dto: RefundOKDto){
         return this.programService.refundOK(dto.id);
     }
+
+    // 프로그램 신청 사람 수
+    @Get('/paylist')
+    async payList(@Query('detailid') detailid: number){
+        console.log(detailid, '프로그램id');
+        return this.programService.payList(detailid);
+    }
 }
