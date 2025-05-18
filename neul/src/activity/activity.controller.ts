@@ -116,16 +116,8 @@ export class ActivityController {
             }),
         })
     )
-    async audio(@Body() body: any, @UploadedFile() file: Express.Multer.File){
-        try {
-            console.log(body, '활동아이디');
-            console.log(file, '오디오파일이름');
-        } catch (error) {
-            console.error('업로드 중 에러:', error);
-            throw new Error('파일 업로드 실패');
-        }
-        // console.log(body, '활동아이디', file, '오디오파일이름')
-        // return this.activityService.postAudio(body, file);
+    async audio(@Body() dto: CreateFeedbackDto, @UploadedFile() file: Express.Multer.File){
+        return this.activityService.postAudio(dto, file);
     }
 
     // 전체 피드백 전달
