@@ -85,6 +85,12 @@ export class ActivityController {
         return this.activityService.getAllListAct(adminId);
     }
 
+    // 활동기록 검색 (관리자)
+    @Get('/search')
+    async searchActivity(@Query('data') data: string){
+        return this.activityService.searchAct(data);
+    }
+
     // 해당 활동기록 정보 전달 (사용자)
     @Get('/detail')
     @ApiResponse({type: SelectActivityDto})
