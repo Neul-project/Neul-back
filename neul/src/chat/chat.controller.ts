@@ -49,4 +49,10 @@ export class ChatController {
         const userId = req.user.id
         return this.chatService.chatCount(userId);
     }
+
+    // 채팅방 삭제
+    @Delete('/exitRoom')
+    async roomExit(@Query('roomId') roomId: number){
+        return this.chatService.roomExit(roomId);
+    }
 }

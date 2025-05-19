@@ -224,4 +224,14 @@ export class ChatService {
         
         return unreadCount;
     }
+
+    // 채팅방 삭제
+    async roomExit(roomId: number){
+        const room = await this.chatRoomRepository.findOne({ where: {id: roomId} });
+        if(!room){
+            throw new Error('채팅방이 존재하지 않습니다.')
+        }
+
+        return await this.chatRoomRepository.remove(room);
+    }
 }
