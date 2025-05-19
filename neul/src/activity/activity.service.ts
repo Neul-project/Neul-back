@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateActivityDto } from './dto/create-activity.dto';
-import { Like, Repository } from 'typeorm';
+import { In, Like, Repository } from 'typeorm';
 import { Activities } from 'entities/activities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from 'entities/users';
@@ -114,16 +114,6 @@ export class ActivityService {
         return activities;
     }
 
-    // 활동기록 검색 (관리자)
-    async searchAct(data: string){
-        const activities = await this.activityRepository.find({
-            where: { title: Like(`%${data}%`) },
-            relations: ['patient']
-        });
-
-        return activities;
-    }
-
     // 해당 활동기록 정보 전달 (사용자)
     async detailAct(userId: number, activityId: number){
         const activity = await this.activityRepository.findOne({
@@ -211,5 +201,18 @@ export class ActivityService {
         });
 
         return feedback;
+    }
+
+    // 피드백 검색 (관리자)
+    async searchAct(data: string){
+        const activities = await this.activityRepository.find({ where: { title: Like(`%${data}%`) } });
+        const activityIds = activities.map((act) => act.id);
+
+        const feedbacks = await this.feedbackRepository.find({
+            where: {activity: In(activityIds)},
+            relations: ['activity'],
+        });
+
+        return feedbacks;
     }
 }

@@ -85,13 +85,6 @@ export class ActivityController {
         return this.activityService.getAllListAct(adminId);
     }
 
-    // 활동기록 검색 (관리자)
-    @Get('/search')
-    @ApiResponse({type: SelectActivityDto})
-    async searchActivity(@Query('data') data: string){
-        return this.activityService.searchAct(data);
-    }
-
     // 해당 활동기록 정보 전달 (사용자)
     @Get('/detail')
     @ApiResponse({type: SelectActivityDto})
@@ -137,9 +130,16 @@ export class ActivityController {
 
     // 관리자 별 피드백 전달
     @Get('/feedback/view')
-    @ApiResponse({type: SelectActivityDto})
+    @ApiResponse({type: AllFeedbackDto})
     async selectFeedback(@Query('adminId') adminId: number){
         return this.activityService.selectFeed(adminId);
+    }
+
+    // 피드백 검색 (관리자)
+    @Get('/search')
+    @ApiResponse({type: AllFeedbackDto})
+    async searchActivity(@Query('data') data: string){
+        return this.activityService.searchAct(data);
     }
 }
 
