@@ -117,7 +117,7 @@ export class ActivityService {
     // 활동기록 검색 (관리자)
     async searchAct(data: string){
         const activities = await this.activityRepository.find({
-            where: { title: Like(`%${data}%`)},
+            where: { title: Like(`%${data}%`) },
             relations: ['patient']
         });
 

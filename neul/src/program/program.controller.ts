@@ -151,4 +151,10 @@ export class ProgramController {
     async paymentList(){
         return this.programService.paymentList();
     }
+
+    // 프로그램 검색 (관리자)
+    @Get('/search')
+    async searchProgram(@Query('data') data: string){
+        return this.programService.searchPro(data);
+    }
 }

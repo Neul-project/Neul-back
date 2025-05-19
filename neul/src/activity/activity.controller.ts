@@ -87,6 +87,7 @@ export class ActivityController {
 
     // 활동기록 검색 (관리자)
     @Get('/search')
+    @ApiResponse({type: SelectActivityDto})
     async searchActivity(@Query('data') data: string){
         return this.activityService.searchAct(data);
     }

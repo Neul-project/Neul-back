@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Programs } from 'entities/programs';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { CreateProgramDto } from './dto/create-program.dto';
 import { Users } from 'entities/users';
 import { Pay } from 'entities/pay';
@@ -332,5 +332,14 @@ export class ProgramService {
         );
 
         return result;
+    }
+
+    // 프로그램 검색 (관리자)
+    async searchPro(data: string){
+        const programs = await this.programRepository.find({
+            where: { name: Like(`%${data}%`) }
+        });
+
+        return programs;
     }
 }
