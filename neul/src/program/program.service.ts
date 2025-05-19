@@ -266,7 +266,9 @@ export class ProgramService {
             programName: refund.program.name,
             price: refund.price,
             email: refund.user.email,
-            phone: refund.user.phone
+            phone: refund.user.phone,
+            status: refund.status,
+            created_at: refund.created_at
         }));
     }
 

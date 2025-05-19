@@ -33,4 +33,10 @@ export class RefundListDto {
 
   @ApiProperty({ example: '01012345678', description: '휴대폰 번호' })
   phone: string;
+
+  @ApiProperty({ example: '환불 완료', description: '환불 상태', nullable: true })
+  status?: string;
+
+  @ApiProperty({ example: '2024-01-01T12:00:00.000Z', description: '환불 신청 날짜' })
+  created_at: Date;
 }
