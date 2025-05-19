@@ -13,6 +13,6 @@ export class UpdateActivityDto {
   @ApiProperty({ description: '재활치료 여부', example: 'none', enum: ['yes', 'no', 'none'] })
   rehabilitation: string;
 
-  @ApiProperty({ example: ['apple1.jpeg', 'apple2.jpeg'], description: '이미지 파일명 배열' })
-  img: string[];
+  @ApiProperty({ example: ['apple1.jpeg', 'apple2.jpeg'], description: '이미지 파일명 배열', nullable: true })
+  img?: string[];
 }

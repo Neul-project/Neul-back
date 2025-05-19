@@ -31,6 +31,6 @@ export class UpdateProgramDto {
   @ApiProperty({ description: '카테고리', example: '2' })
   category: string;
 
-  @ApiProperty({ example: ['apple1.jpeg', 'apple2.jpeg'], description: '이미지 파일명 배열' })
-  img: string[];
+  @ApiProperty({ example: ['apple1.jpeg', 'apple2.jpeg'], description: '이미지 파일명 배열', nullable: true })
+  img?: string[];
 }

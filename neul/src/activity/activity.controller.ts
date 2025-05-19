@@ -50,6 +50,7 @@ export class ActivityController {
         }),
     )
     async updateActivity(@Param('activityId') activityId: number, @Body() dto: UpdateActivityDto, @UploadedFiles() files: Express.Multer.File[]){
+        console.log('받은텍스트', dto, '이미지용', files);
         return await this.activityService.updateAct(activityId, dto, files);
     }
 

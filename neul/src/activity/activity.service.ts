@@ -52,8 +52,8 @@ export class ActivityService {
 
     // 활동기록 수정
     async updateAct(activityId: number, dto: UpdateActivityDto, files: Express.Multer.File[]){
-        const newFile = files.map((file) => file.filename);
-        const oldFile = dto.img;
+        const newFile = files?.map((file) => file.filename) ?? [];
+        const oldFile = dto.img ?? [];
         const finalFilename = [...oldFile, ...newFile];
 
         const activity = await this.activityRepository.findOne({ where: {id: activityId}});

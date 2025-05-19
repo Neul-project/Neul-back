@@ -58,8 +58,8 @@ export class ProgramService {
 
     // 프로그램 수정
     async updatePro(programId: number, dto: UpdateProgramDto, files: Express.Multer.File[]){
-        const newFile = files.map((file) => file.filename);
-        const oldFile = dto.img;
+        const newFile = files.map((file) => file.filename) ?? [];
+        const oldFile = dto.img ?? [];
         const finalFilename = [...oldFile, ...newFile];
 
         const program = await this.programRepository.findOne({ where: {id: programId}});
@@ -211,7 +211,7 @@ export class ProgramService {
             relations: ['admin']
         });
         
-        const pay = await this.payRepository.findOne({
+        const pay = await this.payRepository.findOne({ // orderId를 기준으로 결제 정보(pay) 조회
             where: { orderId: dto.orderId},
             relations: ['payPrograms', 'payPrograms.program']
         });
