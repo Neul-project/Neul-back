@@ -311,4 +311,26 @@ export class ProgramService {
 
         return count;
     }
+
+    // 프로그램 결제 리스트 전달
+    async paymentList(){
+        const payment = await this.payRepository.find({
+            relations: ['user', 'payPrograms', 'payPrograms.program'],
+        });
+
+        const result = payment.flatMap((pay) =>
+            pay.payPrograms.map((pp) => ({
+                id: pay.id,
+                programId: pp.program.id,
+                programName: pp.program.name,
+                programManager: pp.program.manager,
+                payer: pay.user.name,
+                phone: pay.user.phone,
+                price: pay.price,
+                create_at: pay.created_at
+            }))
+        );
+
+        return result;
+    }
 }

@@ -16,6 +16,7 @@ import { ConfirmPayDto } from './dto/confirm-pay.dto';
 import { RefundListDto } from './dto/res/refund-list.dto';
 import { RefundOKDto } from './dto/refund-ok.dto';
 import { ProgramHistoryDto } from './dto/res/program-history.dto';
+import { PaymentListDto } from './dto/res/payment-list.dto';
 
 @Controller('program')
 export class ProgramController {
@@ -142,5 +143,12 @@ export class ProgramController {
     @Get('/paylist')
     async payList(@Query('detailid') detailid: number){
         return this.programService.payList(detailid);
+    }
+
+    // 프로그램 결제 리스트 전달 (관리자)
+    @Get('/payment-list')
+    @ApiResponse({type: PaymentListDto})
+    async paymentList(){
+        return this.programService.paymentList();
     }
 }
