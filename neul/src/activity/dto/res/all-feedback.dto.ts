@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ActivityInfoDto } from '../activity-info.dto';
+import { ActivityInfoDto } from '../req/activity-info.dto';
 
 export class AllFeedbackDto {
   @ApiProperty({ example: 1 })

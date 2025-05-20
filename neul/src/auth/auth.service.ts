@@ -4,9 +4,10 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Users } from 'entities/users';
 import { Patients } from 'entities/patients';
-import { SingupUserDto } from 'src/auth/dto/signup-user.dto';
+import { SingupUserDto } from 'src/auth/dto/req/signup-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { UserCheck } from 'entities/user_check';
+import { FindEmailDto } from './dto/req/find-email.dto';
 
 @Injectable()
 export class AuthService {
@@ -159,11 +160,11 @@ export class AuthService {
     }
 
     // 아이디 찾기
-    async findEmail(body: any){
+    async findEmail(dto: FindEmailDto){
         const user = await this.userRepository.findOne({ 
             where: {
-                name: body.name,
-                phone: body.phone
+                name: dto.name,
+                phone: dto.phone
             }}
         );
         if(!user){

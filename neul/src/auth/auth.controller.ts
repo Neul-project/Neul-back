@@ -1,13 +1,19 @@
 import { Body, Controller, Get, Patch, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { SingupUserDto } from 'src/auth/dto/signup-user.dto';
+import { SingupUserDto } from 'src/auth/dto/req/signup-user.dto';
 import { JwtAuthGuard, KakaoAuthGuard, LocalAuthGuard, NaverAuthGuard } from './auth.guard';
-import { CheckDuplicateDto } from './dto/check-duplicate.dto';
-import { ApiQuery, ApiResponse } from '@nestjs/swagger';
+import { CheckDuplicateDto } from './dto/req/check-duplicate.dto';
+import { ApiBody, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { DuplicateCheckDto } from './dto/res/duplicate-check';
-import { AgreeCheckDto } from './dto/agree-check.dto';
+import { AgreeCheckDto } from './dto/req/agree-check.dto';
 import { UserIdDto } from './dto/res/user-id.dto';
-import { UpdatePWDto } from './dto/update-pw.dto';
+import { UpdatePWDto } from './dto/req/update-pw.dto';
+import { LocalLoginDto } from './dto/req/local-login.dto';
+import { SendTokenDto } from './dto/res/send-token.dto';
+import { LoginMeDto } from './dto/res/login-me.dto';
+import { SnsTokenDto } from './dto/res/sns-token.dto';
+import { FindEmailDto } from './dto/req/find-email.dto';
+import { SendEmailDto } from './dto/res/send-email.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -23,6 +29,8 @@ export class AuthController {
     // 로컬로그인
     @Post('/local')
     @UseGuards(LocalAuthGuard)
+    @ApiBody({type: LocalLoginDto})
+    @ApiResponse({type: SendTokenDto})
     async localLogin(@Req() req){
         const user = req.user;
         return { user: user.payload, token: user.newToken }
@@ -31,6 +39,7 @@ export class AuthController {
     // 로그인한 유저 정보 전달
     @Get('/me')
     @UseGuards(JwtAuthGuard)
+    @ApiResponse({type: LoginMeDto})
     async loginMe(@Req() req){
         const userId = req.user.id;
         return this.authService.loginMe(userId);
@@ -59,6 +68,7 @@ export class AuthController {
     // 카카오 콜백처리
     @Get('/kakao/callback')
     @UseGuards(KakaoAuthGuard)
+    @ApiResponse({type: SnsTokenDto})
     async kakaoCallback(@Req() req, @Res() res){
         const user = req.user;
         const {snsAccess, snsRefresh} = await this.authService.kakaoUser(user);
@@ -73,6 +83,7 @@ export class AuthController {
     // 네이버 콜백처리
     @Get('/naver/callback')
     @UseGuards(NaverAuthGuard)
+    @ApiResponse({type: SnsTokenDto})
     async naverCallback(@Req() req, @Res() res){
         const user = req.user;
         const {snsAccess, snsRefresh} = await this.authService.naverUser(user);
@@ -95,7 +106,8 @@ export class AuthController {
 
     // 아이디 찾기
     @Post('/find-email')
-    async findEmail(@Body() body){
-        return this.authService.findEmail(body);
+    @ApiResponse({type: SendEmailDto})
+    async findEmail(@Body() dto: FindEmailDto){
+        return this.authService.findEmail(dto);
     }
 }

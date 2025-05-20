@@ -1,11 +1,11 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { CreateActivityDto } from './dto/create-activity.dto';
+import { CreateActivityDto } from './dto/req/create-activity.dto';
 import { In, Like, Repository } from 'typeorm';
 import { Activities } from 'entities/activities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from 'entities/users';
 import { Patients } from 'entities/patients';
-import { CreateFeedbackDto } from './dto/create-feedback.dto';
+import { CreateFeedbackDto } from './dto/req/create-feedback.dto';
 import { Feedback } from 'entities/feedback';
 import { UpdateActivityDto } from './dto/res/update-activity.dto';
 
@@ -210,7 +210,7 @@ export class ActivityService {
 
         const feedbacks = await this.feedbackRepository.find({
             where: {activity: In(activityIds)},
-            relations: ['activity'],
+            relations: ['activity', 'admin'],
         });
 
         return feedbacks;

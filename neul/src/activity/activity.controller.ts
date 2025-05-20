@@ -2,14 +2,14 @@ import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Patch
 import { ActivityService } from './activity.service';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { join } from 'path';
-import { CreateActivityDto } from './dto/create-activity.dto';
+import { CreateActivityDto } from './dto/req/create-activity.dto';
 import { diskStorage } from 'multer';
 import { ListActivityDto } from './dto/res/list-activity.dto';
 import { plainToInstance } from 'class-transformer';
 import { ApiConsumes, ApiResponse } from '@nestjs/swagger';
 import { ContectPatientDto } from 'src/status/dto/res/contect-patient.dto';
 import { SelectActivityDto } from './dto/res/select-activity.dto';
-import { CreateFeedbackDto } from './dto/create-feedback.dto';
+import { CreateFeedbackDto } from './dto/req/create-feedback.dto';
 import { AllFeedbackDto } from './dto/res/all-feedback.dto';
 import { DeleteStatusDto } from 'src/status/dto/delete-status.dto';
 import { UpdateActivityDto } from './dto/res/update-activity.dto';
