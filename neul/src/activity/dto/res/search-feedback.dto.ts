@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ActivityInfoDto } from '../req/activity-info.dto';
-import { AdminInfoDto } from 'src/status/dto/admin-info.dto';
+import { AdminInfoDto } from 'src/status/dto/req/admin-info.dto';
 
 export class SearchFeedbackDto {
   @ApiProperty({ example: 1 })

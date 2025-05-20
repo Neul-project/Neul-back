@@ -1,10 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { StatusService } from './status.service';
-import { CreateStatusDto } from './dto/create-status.dto';
+import { CreateStatusDto } from './dto/req/create-status.dto';
 import { ApiBody, ApiResponse } from '@nestjs/swagger';
 import { ContectPatientDto } from './dto/res/contect-patient.dto';
 import { ListStatusDto } from './dto/res/list-status.dto';
-import { DeleteStatusDto } from './dto/delete-status.dto';
+import { DeleteStatusDto } from './dto/req/delete-status.dto';
+import { StatusInfoDto } from './dto/res/status-info.dto';
 
 @Controller('status')
 export class StatusController {
@@ -56,6 +57,7 @@ export class StatusController {
 
     // 특정 날짜 상태기록 전달
     @Get('/day')
+    @ApiResponse({type: StatusInfoDto})
     async dateStatus(@Query('userId') userId: number, @Query('date') date: string){
         return this.statusService.dateSta(userId, date);
     }

@@ -11,7 +11,7 @@ import { ContectPatientDto } from 'src/status/dto/res/contect-patient.dto';
 import { SelectActivityDto } from './dto/res/select-activity.dto';
 import { CreateFeedbackDto } from './dto/req/create-feedback.dto';
 import { AllFeedbackDto } from './dto/res/all-feedback.dto';
-import { DeleteStatusDto } from 'src/status/dto/delete-status.dto';
+import { DeleteStatusDto } from 'src/status/dto/req/delete-status.dto';
 import { UpdateActivityDto } from './dto/req/update-activity.dto';
 import { SearchFeedbackDto } from './dto/res/search-feedback.dto';
 

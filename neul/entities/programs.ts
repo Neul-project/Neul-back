@@ -48,5 +48,4 @@ export class Programs {
   
     @CreateDateColumn({ type: 'timestamp' })
     registration_at: Date;
-}
-  
+} 

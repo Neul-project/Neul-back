@@ -4,20 +4,21 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { join } from 'path';
 import { ApiConsumes, ApiResponse } from '@nestjs/swagger';
-import { CreateProgramDto } from './dto/create-program.dto';
+import { CreateProgramDto } from './dto/req/create-program.dto';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
-import { CreateRefundDto } from './dto/create-refund.dto';
-import { DeleteStatusDto } from 'src/status/dto/delete-status.dto';
+import { CreateRefundDto } from './dto/req/create-refund.dto';
+import { DeleteStatusDto } from 'src/status/dto/req/delete-status.dto';
 import { UpdateProgramDto } from './dto/res/update-program.dto';
-import { PayProgramDto } from './dto/pay-program.dto';
+import { PayProgramDto } from './dto/req/pay-program.dto';
 import { PayOrderIdDto } from './dto/res/pay-orderId.dto';
 import { ConfirmedPayDto } from './dto/res/confirmed-pay.dto';
-import { ConfirmPayDto } from './dto/confirm-pay.dto';
+import { ConfirmPayDto } from './dto/req/confirm-pay.dto';
 import { RefundListDto } from './dto/res/refund-list.dto';
-import { RefundOKDto } from './dto/refund-ok.dto';
+import { RefundOKDto } from './dto/req/refund-ok.dto';
 import { ProgramHistoryDto } from './dto/res/program-history.dto';
 import { PaymentListDto } from './dto/res/payment-list.dto';
-import { CartDeleteDto } from './dto/cart-delete.dto';
+import { CartDeleteDto } from './dto/req/cart-delete.dto';
+import { ProgramInfoDto } from './dto/res/program-info.dto';
 
 @Controller('program')
 export class ProgramController {
@@ -60,12 +61,14 @@ export class ProgramController {
 
     // 프로그램 전체 전달
     @Get('/list')
+    @ApiResponse({type: ProgramInfoDto})
     async allProgram(){
         return this.programService.allPro();
     }
 
     // 선택된 프로그램 전달
     @Get('/detail')
+    @ApiResponse({type: ProgramInfoDto})
     async detailProgram(@Query('detailid') detailid: number){
         return this.programService.detailPro(detailid);
     }
@@ -73,14 +76,15 @@ export class ProgramController {
     // 프로그램 신청
     @Post('/apply')
     @UseGuards(JwtAuthGuard)
-    async applyProgram(@Req() req, @Body() body){
+    async applyProgram(@Req() req, @Body() dto: RefundOKDto){
         const userId = req.user.id;
-        return this.programService.applyPro(userId, body.programId);
+        return this.programService.applyPro(userId, dto.id);
     }
 
     // 프로그램 신청내역 전달
     @Get('/histories')
     @UseGuards(JwtAuthGuard)
+    @ApiResponse({type: ProgramHistoryDto})
     async historyProgram(@Req() req){
         const userId = req.user.id;
         return this.programService.historyPro(userId);
@@ -89,7 +93,6 @@ export class ProgramController {
     // 프로그램 환불 신청 (사용자)
     @Post('/refund')
     @UseGuards(JwtAuthGuard)
-    @ApiResponse({type: ProgramHistoryDto})
     async refundProgram(@Req() req, @Body() dto: CreateRefundDto){
         const userId = req.user.id;
         return this.programService.refundPro(userId, dto);
@@ -104,6 +107,7 @@ export class ProgramController {
     // 장바구니 개수 요청
     @Get('/count')
     @UseGuards(JwtAuthGuard)
+    @ApiResponse({schema: {example: {count: 2}}})
     async cartCount(@Req() req){
         const userId = req.user.id;
         return this.programService.cartCount(userId);
@@ -150,6 +154,7 @@ export class ProgramController {
 
     // 프로그램 신청 사람 수
     @Get('/paylist')
+    @ApiResponse({schema: {example: {count: 2}}})
     async payList(@Query('detailid') detailid: number){
         return this.programService.payList(detailid);
     }
@@ -163,6 +168,7 @@ export class ProgramController {
 
     // 프로그램 검색 (관리자)
     @Get('/search')
+    @ApiResponse({type: ProgramInfoDto})
     async searchProgram(@Query('data') data: string){
         return this.programService.searchPro(data);
     }

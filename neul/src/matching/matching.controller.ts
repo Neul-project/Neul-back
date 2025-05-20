@@ -2,10 +2,10 @@ import { Body, Controller, Delete, Get, Patch, Post, Query, Req, UseGuards } fro
 import { MatchingService } from './matching.service';
 import { ApiBody, ApiResponse } from '@nestjs/swagger';
 import { UserPatientDto } from './dto/res/user-patient.dto';
-import { DeleteStatusDto } from 'src/status/dto/delete-status.dto';
-import { MatchUserDto } from './dto/match-user.dto';
+import { DeleteStatusDto } from 'src/status/dto/req/delete-status.dto';
+import { MatchUserDto } from './dto/req/match-user.dto';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
-import { SearchUserDto } from './dto/search-user.dto';
+import { SearchUserDto } from './dto/req/search-user.dto';
 
 @Controller('matching')
 export class MatchingController {
@@ -48,6 +48,7 @@ export class MatchingController {
 
     // 전체 회원 검색
     @Get('/searchuser')
+    @ApiResponse({type: UserPatientDto})
     async serchUser(@Query() dto: SearchUserDto){
         return this.matchingService.getSerchUser(dto);
     }

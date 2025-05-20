@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Banners } from 'entities/banners';
 import { Repository } from 'typeorm';
-import { BannerRegisterDto } from './dto/banner-register.dto';
+import { BannerRegisterDto } from './dto/req/banner-register.dto';
 
 @Injectable()
 export class BannerService {

@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class SearchUserDto {
   @ApiProperty({
     example: 'user_id',
-    description: '검색 기준 (user_id | user_name | patient_name)',
+    description: '검색 기준',
     enum: ['user_id', 'user_name', 'patient_name'],
   })
   search: string;

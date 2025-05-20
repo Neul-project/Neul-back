@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { AdminInfoDto } from 'src/status/dto/admin-info.dto';
+import { AdminInfoDto } from 'src/status/dto/req/admin-info.dto';
 
 export class ChatListDTO {
   @ApiProperty({ example: 2, description: '채팅 ID' })

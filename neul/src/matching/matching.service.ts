@@ -6,7 +6,7 @@ import { Chats } from 'entities/chats';
 import { Patients } from 'entities/patients';
 import { Users } from 'entities/users';
 import { Like, Raw, Repository } from 'typeorm';
-import { SearchUserDto } from './dto/search-user.dto';
+import { SearchUserDto } from './dto/req/search-user.dto';
 import { Match } from 'entities/match';
 
 @Injectable()

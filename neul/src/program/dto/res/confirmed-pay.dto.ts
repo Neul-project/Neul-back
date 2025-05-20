@@ -18,6 +18,6 @@ export class ConfirmedPayDto {
   @ApiProperty({ example: 35000, description: '총 결제 금액' })
   amount: number;
 
-  @ApiProperty({ description: '결제된 프로그램 목록' })
+  @ApiProperty({ description: '결제된 프로그램 목록', type: () => ConfirmedProgram })
   programs: ConfirmedProgram[];
 }

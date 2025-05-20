@@ -5,7 +5,7 @@ import { join } from 'path';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiResponse } from '@nestjs/swagger';
 import { BannerListDto } from './dto/res/banner-list.dto';
-import { BannerRegisterDto } from './dto/banner-register.dto';
+import { BannerRegisterDto } from './dto/req/banner-register.dto';
 
 @Controller('banner')
 export class BannerController {

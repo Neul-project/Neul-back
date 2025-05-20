@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Status } from 'entities/status';
 import { Between, Repository } from 'typeorm';
-import { CreateStatusDto } from './dto/create-status.dto';
+import { CreateStatusDto } from './dto/req/create-status.dto';
 import { Patients } from 'entities/patients';
 import { Users } from 'entities/users';
 
