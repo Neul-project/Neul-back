@@ -17,6 +17,7 @@ import { RefundListDto } from './dto/res/refund-list.dto';
 import { RefundOKDto } from './dto/refund-ok.dto';
 import { ProgramHistoryDto } from './dto/res/program-history.dto';
 import { PaymentListDto } from './dto/res/payment-list.dto';
+import { CartDeleteDto } from './dto/cart-delete.dto';
 
 @Controller('program')
 export class ProgramController {
@@ -106,6 +107,14 @@ export class ProgramController {
     async cartCount(@Req() req){
         const userId = req.user.id;
         return this.programService.cartCount(userId);
+    }
+
+    // 장바구니 삭제
+    @Post('/delete-cart')
+    @UseGuards(JwtAuthGuard)
+    async cartDelete(@Req() req, @Body() dto: CartDeleteDto){
+        const userId = req.user.id;
+        return this.programService.cartDel(userId, dto);
     }
 
     // 프로그램 결제 요청

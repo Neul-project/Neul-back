@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Programs } from 'entities/programs';
-import { Like, Repository } from 'typeorm';
+import { In, Like, Repository } from 'typeorm';
 import { CreateProgramDto } from './dto/create-program.dto';
 import { Users } from 'entities/users';
 import { Pay } from 'entities/pay';
@@ -14,6 +14,7 @@ import { PayPrograms } from 'entities/pay_program';
 import { Match } from 'entities/match';
 import { PayProgramDto } from './dto/pay-program.dto';
 import { ConfirmPayDto } from './dto/confirm-pay.dto';
+import { CartDeleteDto } from './dto/cart-delete.dto';
 
 @Injectable()
 export class ProgramService {
@@ -171,6 +172,25 @@ export class ProgramService {
         });
 
         return { count };
+    }
+
+    // 장바구니 삭제
+    async cartDel(userId: number, dto: CartDeleteDto){
+        const user = await this.userRepository.findOne({ where: {id: userId} });
+        if(!user){
+            throw new Error('사용자를 찾을 수 없습니다.');
+        }
+
+        if (!dto.programIds || dto.programIds.length === 0) {
+            throw new Error('삭제할 프로그램 ID가 없습니다.');
+        }
+
+        await this.cartRepository.delete({
+            user: {id: userId},
+            program: {id: In(dto.programIds)}
+        });
+
+        return {ok: true};
     }
 
     // 프로그램 결제 요청
