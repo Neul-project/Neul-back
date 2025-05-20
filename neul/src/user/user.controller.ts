@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Query, Req, Res, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { UserService } from './user.service';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { ApiResponse } from '@nestjs/swagger';
@@ -7,6 +7,9 @@ import { CreateAddressDto } from './dto/req/create-address.dto';
 import { UserInfoDto } from './dto/res/user-info.dto';
 import { FindEmailDto } from 'src/auth/dto/req/find-email.dto';
 import { UserIdDto } from 'src/auth/dto/res/user-id.dto';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { join } from 'path';
 @Controller('user')
 export class UserController {
     constructor(private readonly userService: UserService) {}
@@ -19,11 +22,32 @@ export class UserController {
         return await this.userService.addUser(userId, dto);
     }
 
-    // 관리자 전체 명단 전달
+    // 도우미 전체 명단 전달
     @Get('/adminlist')
     @ApiResponse({type: AdminListDto})
     async adminAll(){
         return await this.userService.adminAll();
+    }
+
+    // 도우미 프로필 정보 저장
+    @Post('/helper-signup')
+    @UseInterceptors(
+        FileFieldsInterceptor(
+            [{ name: 'profileImage', maxCount: 1 }, { name: 'certificate', maxCount: 1 }],
+            {
+                storage: diskStorage({
+                    destination: join(process.cwd(), 'uploads/file'),
+                    filename: (req, file, callback) => {
+                        const uniqueName = `${file.originalname}`;
+                        callback(null, uniqueName);
+                    },
+                }),
+            },
+        )
+    )
+    async helperSignup(@Body() body, @UploadedFiles() files: { profileImage?: Express.Multer.File[]; certificate?: Express.Multer.File[]; }){
+        console.log(body, '받은폼텍스트', files, '파일이름');
+        // return this.userService.helperSign();
     }
 
     // 회원탈퇴

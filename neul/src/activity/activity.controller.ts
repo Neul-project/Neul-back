@@ -104,22 +104,22 @@ export class ActivityController {
         return this.activityService.postFeed(dto);
     }
 
-    // 피드백 저장 ver 오디오
-    @Post('/feedback/audio')
-    @UseInterceptors(
-        FileInterceptor('audio', {
-            storage: diskStorage({
-                destination: join(process.cwd(), 'uploads/audio'),
-                filename: (req, file, callback) => {
-                    const filename = `${file.originalname}`;
-                    callback(null, filename);
-                },
-            }),
-        })
-    )
-    async audio(@Body() dto: CreateFeedbackDto, @UploadedFile() file: Express.Multer.File){
-        return this.activityService.postAudio(dto, file);
-    }
+    // // 피드백 저장 ver 오디오
+    // @Post('/feedback/audio')
+    // @UseInterceptors(
+    //     FileInterceptor('audio', {
+    //         storage: diskStorage({
+    //             destination: join(process.cwd(), 'uploads/audio'),
+    //             filename: (req, file, callback) => {
+    //                 const filename = `${file.originalname}`;
+    //                 callback(null, filename);
+    //             },
+    //         }),
+    //     })
+    // )
+    // async audio(@Body() dto: CreateFeedbackDto, @UploadedFile() file: Express.Multer.File){
+    //     return this.activityService.postAudio(dto, file);
+    // }
 
     // 전체 피드백 전달
     @Get('/feedback/views')
