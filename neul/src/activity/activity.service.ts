@@ -7,7 +7,7 @@ import { Users } from 'entities/users';
 import { Patients } from 'entities/patients';
 import { CreateFeedbackDto } from './dto/req/create-feedback.dto';
 import { Feedback } from 'entities/feedback';
-import { UpdateActivityDto } from './dto/res/update-activity.dto';
+import { UpdateActivityDto } from './dto/req/update-activity.dto';
 
 @Injectable()
 export class ActivityService {

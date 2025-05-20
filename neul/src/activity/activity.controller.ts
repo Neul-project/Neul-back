@@ -12,7 +12,8 @@ import { SelectActivityDto } from './dto/res/select-activity.dto';
 import { CreateFeedbackDto } from './dto/req/create-feedback.dto';
 import { AllFeedbackDto } from './dto/res/all-feedback.dto';
 import { DeleteStatusDto } from 'src/status/dto/delete-status.dto';
-import { UpdateActivityDto } from './dto/res/update-activity.dto';
+import { UpdateActivityDto } from './dto/req/update-activity.dto';
+import { SearchFeedbackDto } from './dto/res/search-feedback.dto';
 
 @Controller('activity')
 export class ActivityController {
@@ -50,7 +51,6 @@ export class ActivityController {
         }),
     )
     async updateActivity(@Param('activityId') activityId: number, @Body() dto: UpdateActivityDto, @UploadedFiles() files: Express.Multer.File[]){
-        console.log('받은텍스트', dto, '이미지용', files);
         return await this.activityService.updateAct(activityId, dto, files);
     }
 
@@ -137,9 +137,8 @@ export class ActivityController {
 
     // 피드백 검색 (관리자)
     @Get('/search')
-    @ApiResponse({type: AllFeedbackDto})
+    @ApiResponse({type: SearchFeedbackDto})
     async searchActivity(@Query('data') data: string){
         return this.activityService.searchAct(data);
     }
 }
-

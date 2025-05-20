@@ -1,10 +1,10 @@
 import { Body, Controller, Get, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { PatientService } from './patient.service';
-import { CreatePatientDto } from './dto/create-patient.dto';
+import { CreatePatientDto } from './dto/req/create-patient.dto';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
-import { AddPatientDto } from './dto/add-patient.dto';
+import { AddPatientDto } from './dto/req/add-patient.dto';
 import { ApiResponse } from '@nestjs/swagger';
-import { PatientInfoDto } from './dto/patient-info.dto';
+import { PatientInfoDto } from './dto/res/patient-info.dto';
 
 @Controller('patient')
 export class PatientController {
@@ -43,6 +43,7 @@ export class PatientController {
     // 피보호자 정보 수정 (사용자)
     @Patch('/info')
     @UseGuards(JwtAuthGuard)
+    @ApiResponse({schema: {example: {note: '치매 초기 진단 받음'}}})
     async updatePatient(@Req() req, @Body() body){
         const userId = req.user.id;
         return this.patientService.updatePat(userId, body.note);
