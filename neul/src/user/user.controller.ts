@@ -1,12 +1,12 @@
-import { Body, Controller, Delete, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
-import { AddUserDto } from './dto/add-user.dto';
 import { ApiResponse } from '@nestjs/swagger';
 import { AdminListDto } from './dto/res/admin-list.dto';
-import { UserPatientDto } from '../matching/dto/res/user-patient.dto';
-import { CreateAddressDto } from './dto/create-address.dto';
+import { CreateAddressDto } from './dto/req/create-address.dto';
 import { UserInfoDto } from './dto/res/user-info.dto';
+import { FindEmailDto } from 'src/auth/dto/req/find-email.dto';
+import { UserIdDto } from 'src/auth/dto/res/user-id.dto';
 @Controller('user')
 export class UserController {
     constructor(private readonly userService: UserService) {}
@@ -14,7 +14,7 @@ export class UserController {
     // 소셜로그인 사용자 추가정보 입력
     @Post('/info')
     @UseGuards(JwtAuthGuard)
-    async addUser(@Body() dto: AddUserDto, @Req() req){
+    async addUser(@Body() dto: FindEmailDto, @Req() req){
         const userId = req.user.id;
         return await this.userService.addUser(userId, dto);
     }
@@ -53,9 +53,11 @@ export class UserController {
 
     // 매칭된 관리자 id 전달
     @Get('/admin')
-    @UseGuards(JwtAuthGuard)
-    async matchAdmin(@Req() req){
-        const userId = req.user.id;
+    @ApiResponse({type: UserIdDto})
+    async matchAdmin(@Query('userId') userId: number){
+        if(!userId){
+            return;
+        }
         return this.userService.getMatchAdmin(userId);
     }
 }
