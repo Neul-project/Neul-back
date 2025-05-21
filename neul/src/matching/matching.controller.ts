@@ -34,8 +34,15 @@ export class MatchingController {
         return this.matchingService.userDel(body);
     };
 
+    // 매칭 신청 (사용자)
+    @Post('/submit-request')
+    async submitRequest(@Body() body){
+        console.log(body, '받은정보');
+        // return this.matchingService.submitReq(body);
+    }
+
     // 피보호자-관리자 매칭 + 채팅방 생성 + 알림 추가
-    @Post('/user')
+    @Post('/accept')
     async userMatching(@Body() dto: MatchUserDto){
         return this.matchingService.userMatch(dto.adminId, dto.userId, dto.patientId);
     }

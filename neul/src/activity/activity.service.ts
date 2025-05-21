@@ -158,30 +158,6 @@ export class ActivityService {
         return await this.feedbackRepository.save(feedback);
     }
 
-    // 피드백 저장 ver 오디오
-    // async postAudio(dto: CreateFeedbackDto, file: Express.Multer.File){
-    //     const filename = file.filename;
-
-    //     const user = await this.userRepository.findOne({ where: {id: dto.userId}});
-    //     const activity = await this.activityRepository.findOne({ 
-    //         where: {id: dto.activityid},
-    //         relations: ['patient', 'patient.admin']
-    //     });
-
-    //     if(!user || !activity){
-    //         throw new UnauthorizedException('유저/활동기록을 찾을 수 없습니다.');
-    //     }
-
-    //     const feedback = this.feedbackRepository.create({
-    //         user,
-    //         admin: activity.patient.admin,
-    //         activity,
-    //         message: filename
-    //     });
-        
-    //     return await this.feedbackRepository.save(feedback);
-    // }
-
     // 전체 피드백 전달
     async allFeed(){
         const feedback = await this.feedbackRepository.find({

@@ -35,6 +35,8 @@ import { Cart } from 'entities/cart';
 import { Alert } from 'entities/alert';
 import { PayPrograms } from 'entities/pay_program';
 import { Helper } from 'entities/helpers';
+import { Apply } from 'entities/apply';
+import { Shift } from 'entities/shift';
 
 @Module({
   imports: [
@@ -49,7 +51,7 @@ import { Helper } from 'entities/helpers';
       username: process.env.DB_USER,
       password: process.env.DB_PASS,
       database: process.env.DB_NAME,
-      entities: [Users, Patients, UserCheck, Activities, Feedback, Programs, Pay, Refund, Status, Chats, Match, Banners, ChatRoom, Cart, Alert, PayPrograms, Helper],
+      entities: [Users, Patients, UserCheck, Activities, Feedback, Programs, Pay, Refund, Status, Chats, Match, Banners, ChatRoom, Cart, Alert, PayPrograms, Helper, Apply, Shift],
       charset: 'utf8mb4',
       synchronize: true,
     }),
