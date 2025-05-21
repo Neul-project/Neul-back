@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Alert } from 'entities/alert';
 import { Helper } from 'entities/helpers';
 import { Users } from 'entities/users';
 import { HelperSignupDto } from 'src/helper/dto/req/helper-signup.dto';
@@ -12,6 +13,8 @@ export class HelperService {
         private helperRepository: Repository<Helper>,
         @InjectRepository(Users)
         private userRepository: Repository<Users>,
+        @InjectRepository(Alert)
+        private alertRepository: Repository<Alert>
     ) {}
 
     // 도우미 프로필 정보 저장
@@ -68,26 +71,48 @@ export class HelperService {
         return helper;
     }
 
-    // 정식 도우미 승인
+    // 정식 도우미 승인 + 알림 추가
     async helperYes(userId: number){
-        const helper = await this.helperRepository.findOne({ where: {user: {id: userId}}});
+        const helper = await this.helperRepository.findOne({
+            where: {user: {id: userId}},
+            relations: ['user'],
+        });
+
         if(!helper){
             throw new Error('해당 정보가 없습니다.')
         }
 
         helper.status = '승인 완료';
-        return await this.helperRepository.save(helper);
+        await this.helperRepository.save(helper); // 승인 완료 상태
+
+        const alert = this.alertRepository.create({
+            user: helper.user,
+            message: 'helper',
+        });
+        return await this.alertRepository.save(alert); // 알림 추가
     }
 
-    // 정식 도우미 승인 반려
+    // 정식 도우미 승인 반려 + 알림 추가
+    async helperNo(userId: number, reason: string){
+        const helper = await this.helperRepository.findOne({
+            where: {user: {id: userId}},
+            relations: ['user'],
+        });
 
-    // const helper = await this.helperRepository.find({ where: {user: {id: In(userIds)}} });
-    // const updateHelper = helper.map(x =>{
-    //     x.status = '승인 반려';
-    //     return x;
-    // })
+        if(!helper){
+            throw new Error('해당 정보가 없습니다.')
+        }
 
-    // return await this.helperRepository.save(updateHelper);
+        helper.status = '승인 반려';
+        await this.helperRepository.save(helper); // 승인 반려 상태
+
+        const alert = this.alertRepository.create({
+            user: helper.user,
+            message: 'helper_cancel',
+            reason
+        });
+        return await this.alertRepository.save(alert); // 알림 추가
+    }
 
     // 도우미 삭제
     async helperDel(userIds: number[]){

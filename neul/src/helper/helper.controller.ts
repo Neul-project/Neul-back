@@ -54,14 +54,18 @@ export class HelperController {
         return this.helperService.helperOne(id);
     }
 
-    // 정식 도우미 승인
+    // 정식 도우미 승인 + 알림 추가
     @Post('/registration')
     async helperYes(@Body() dto: UserIdDto){
         return this.helperService.helperYes(dto.userId);
     }
 
-    // 정식 도우미 승인 반려
-
+    // 정식 도우미 승인 반려 + 알림 추가
+    @Post('/return')
+    async helperNo(@Body() body){
+        console.log(body, '반려 받은거')
+        return this.helperService.helperNo(body.id, body.content);
+    }
     
     // 도우미 삭제
     @Delete('/userdelete')
