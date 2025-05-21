@@ -1,9 +1,11 @@
-import { Body, Controller, Get, Post, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { HelperService } from './helper.service';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { join } from 'path';
 import { HelperSignupDto } from 'src/helper/dto/req/helper-signup.dto';
+import { ApiResponse } from '@nestjs/swagger';
+import { HelperInfoDto } from './dto/res/helper-info.dto';
 
 @Controller('helper')
 export class HelperController {
@@ -31,7 +33,15 @@ export class HelperController {
 
     // 승인대기 도우미 전체 전달
     @Get('/applylist')
+    @ApiResponse({type: HelperInfoDto})
     async helperApplyList(){
         return this.helperService.helperApply();
+    }
+
+    // 해당 도우미 데이터 전달
+    @Get('/userlist')
+    @ApiResponse({type: HelperInfoDto})
+    async helperOne(@Query('id') id: number){
+        return this.helperService.helperOne(id);
     }
 }

@@ -40,6 +40,21 @@ export class HelperService {
 
     // 승인대기 도우미 전체 전달
     async helperApply(){
-        return await this.helperRepository.find({ where: {status: '승인 대기'} });
+        const helpers = await this.helperRepository.find({ 
+            where: {status: '승인 대기'}, 
+            relations: ['user'],
+        });
+
+        return helpers;
+    }
+
+    // 해당 도우미 데이터 전달
+    async helperOne(userId: number){
+        const helper = await this.helperRepository.findOne({
+            where: {user: {id: userId}},
+            relations: ['user'],
+        });
+
+        return helper;
     }
 }
