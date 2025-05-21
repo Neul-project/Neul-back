@@ -34,6 +34,7 @@ import { Cart } from 'entities/cart';
 import { Alert } from 'entities/alert';
 import { PayPrograms } from 'entities/pay_program';
 import { Helper } from 'entities/helpers';
+import { HelperModule } from './helper/helper.module';
 
 @Module({
   imports: [
@@ -68,6 +69,7 @@ import { Helper } from 'entities/helpers';
     MatchingModule,
     BannerModule,
     AlertModule,
+    HelperModule,
   ],
   controllers: [AppController],
   providers: [AppService],
