@@ -8,6 +8,8 @@ import { Users } from 'entities/users';
 import { Like, Raw, Repository } from 'typeorm';
 import { SearchUserDto } from './dto/req/search-user.dto';
 import { Match } from 'entities/match';
+import { Helper } from 'entities/helpers';
+import { Apply } from 'entities/apply';
 
 @Injectable()
 export class MatchingService {
@@ -23,7 +25,11 @@ export class MatchingService {
         @InjectRepository(Chats)
         private chatRepository: Repository<Chats>,
         @InjectRepository(Match)
-        private matchRepository: Repository<Match>
+        private matchRepository: Repository<Match>,
+        @InjectRepository(Helper)
+        private helperRepository: Repository<Helper>,
+        @InjectRepository(Apply)
+        private applyRepository: Repository<Apply>
     ) {}
 
     // 전체 유저 전달
@@ -78,6 +84,44 @@ export class MatchingService {
     // 선택 유저 삭제
     async userDel(ids: number[]){
         return await this.userRepository.delete(ids);
+    }
+
+    // 도우미 매칭 수락 + 알림 추가
+    async helperAccept(adminId: number, userId: number){
+        const user = await this.userRepository.findOne({where: {id: userId}});
+        const admin = await this.applyRepository.findOne({where: {admin: {id: adminId}}});
+        if(!admin || !user){
+            throw new Error('해당 도우미/유저가 없습니다.');
+        }
+
+        admin.status = '결제 대기';
+        await this.helperRepository.save(admin); // 결제 대기 상태 변경
+
+        const alert = this.alertRepository.create({
+            user,
+            admin,
+            message: 'match_ok'
+        });
+        return await this.alertRepository.save(alert); // 알림 추가
+    }
+
+    // 도우미 매칭 거절 + 알림 추가
+    async helperCancel(adminId: number, userId: number, reason: string){
+        const user = await this.userRepository.findOne({where: {id: userId}});
+        const admin = await this.applyRepository.findOne({where: {admin: {id: adminId}}});
+        if(!admin || !user){
+            throw new Error('해당 도우미/유저가 없습니다.');
+        }
+
+        admin.status = '승인 반려';
+        await this.helperRepository.save(admin); // 승인 반려 상태 변경
+
+        const alert = this.alertRepository.create({
+            user,
+            admin,
+            message: 'match_cancel'
+        });
+        return await this.alertRepository.save(alert); // 알림 추가
     }
 
     // 피보호자-관리자 매칭 + 채팅방 생성 + 알림 추가

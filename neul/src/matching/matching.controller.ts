@@ -3,9 +3,10 @@ import { MatchingService } from './matching.service';
 import { ApiBody, ApiResponse } from '@nestjs/swagger';
 import { UserPatientDto } from './dto/res/user-patient.dto';
 import { DeleteStatusDto } from 'src/status/dto/req/delete-status.dto';
-import { MatchUserDto } from './dto/req/match-user.dto';
+import { MatchOKDto } from './dto/req/match-ok.dto';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { SearchUserDto } from './dto/req/search-user.dto';
+import { MatchCancelDto } from './dto/req/match-cancel.dto';
 
 @Controller('matching')
 export class MatchingController {
@@ -41,17 +42,27 @@ export class MatchingController {
         // return this.matchingService.submitReq(body);
     }
 
-    // 피보호자-관리자 매칭 + 채팅방 생성 + 알림 추가
+    // 도우미 매칭 수락 + 알림 추가
     @Post('/accept')
-    async userMatching(@Body() dto: MatchUserDto){
-        return this.matchingService.userMatch(dto.adminId, dto.userId, dto.patientId);
+    async helperAccept(@Body() dto: MatchOKDto){
+        return this.matchingService.helperAccept(dto.adminId, dto.userId);
     }
 
-    // 피보호자-관리자 매칭 취소 + 사용자쪽 채팅 내역 삭제 + 알림 추가
-    @Patch('/cancel')
-    async userNotMatching(@Body() dto: MatchUserDto){
-        return this.matchingService.userNotMatch(dto.adminId, dto.userId, dto.patientId);
+    // 도우미 매칭 거절 + 알림 추가
+    @Post('/cancel')
+    async helperCancel(@Body() dto: MatchCancelDto){
+        return this.matchingService.helperCancel(dto.adminId, dto.userId, dto.content);
     }
+
+    // async userMatching(@Body() dto: MatchUserDto){
+    //     return this.matchingService.userMatch(dto.adminId, dto.userId, dto.patientId);
+    // }
+
+    // // 피보호자-관리자 매칭 취소 + 사용자쪽 채팅 내역 삭제 + 알림 추가
+    // @Patch('/cancel')
+    // async userNotMatching(@Body() dto: MatchUserDto){
+    //     return this.matchingService.userNotMatch(dto.adminId, dto.userId, dto.patientId);
+    // }
 
     // 전체 회원 검색
     @Get('/searchuser')
