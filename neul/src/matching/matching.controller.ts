@@ -75,4 +75,12 @@ export class MatchingController {
     async serchUser(@Query() dto: SearchUserDto){
         return this.matchingService.getSerchUser(dto);
     }
+
+    // 해당 도우미에게 매칭 신청한 유저 전달
+    @Get('/applyuser')
+    @UseGuards(JwtAuthGuard)
+    async applyUser(@Req() req){
+        const userId = req.user.id;
+        return this.matchingService.applyUser(userId);
+    }
 }

@@ -151,99 +151,99 @@ export class MatchingService {
         return await this.alertRepository.save(alert); // 알림 추가
     }
 
-    // 피보호자-관리자 매칭 + 채팅방 생성 + 알림 추가
-    async userMatch(adminId: number, userId: number, patientId: number){
-        const admin = await this.userRepository.findOne({where:{ id: adminId }});
-        const user = await this.userRepository.findOne({where: { id: userId }});
-        const patient = await this.patientRepository.findOne({where: { id: patientId }});
+    // // 피보호자-관리자 매칭 + 채팅방 생성 + 알림 추가
+    // async userMatch(adminId: number, userId: number, patientId: number){
+    //     const admin = await this.userRepository.findOne({where:{ id: adminId }});
+    //     const user = await this.userRepository.findOne({where: { id: userId }});
+    //     const patient = await this.patientRepository.findOne({where: { id: patientId }});
         
-        if (!admin || !user || !patient){
-            throw new NotFoundException('해당 관리자/보호자/피보호자 계정을 찾을 수 없습니다.');
-        }
+    //     if (!admin || !user || !patient){
+    //         throw new NotFoundException('해당 관리자/보호자/피보호자 계정을 찾을 수 없습니다.');
+    //     }
 
-        const existingMatch = await this.matchRepository.findOne({
-            where: { admin: { id: adminId }, user: { id: userId } }
-        });
+    //     const existingMatch = await this.matchRepository.findOne({
+    //         where: { admin: { id: adminId }, user: { id: userId } }
+    //     });
 
-        if (!existingMatch) { // 보호자와 관리자 매칭
-            const match = this.matchRepository.create({ user, admin });
-            await this.matchRepository.save(match);
-        }
+    //     if (!existingMatch) { // 보호자와 관리자 매칭
+    //         const match = this.matchRepository.create({ user, admin });
+    //         await this.matchRepository.save(match);
+    //     }
 
-        patient.admin = admin;
-        await this.patientRepository.save(patient); // 피보호자와 관리자 매칭
+    //     patient.admin = admin;
+    //     await this.patientRepository.save(patient); // 피보호자와 관리자 매칭
 
-        const existingRoom = await this.chatRoomRepository.findOne({
-            where: {
-                user: { id: userId },
-                admin: { id: adminId },
-            },
-        });
+    //     const existingRoom = await this.chatRoomRepository.findOne({
+    //         where: {
+    //             user: { id: userId },
+    //             admin: { id: adminId },
+    //         },
+    //     });
 
-        if (!existingRoom) { // 채팅방 생성
-            const newRoom = this.chatRoomRepository.create({
-                user: user,
-                admin: admin,
-            });
-            await this.chatRoomRepository.save(newRoom);
-        };
+    //     if (!existingRoom) { // 채팅방 생성
+    //         const newRoom = this.chatRoomRepository.create({
+    //             user: user,
+    //             admin: admin,
+    //         });
+    //         await this.chatRoomRepository.save(newRoom);
+    //     };
 
-        const alert = this.alertRepository.create({ // 알림 추가
-            user: user,
-            admin: admin,
-            message: 'match'
-        });
-        await this.alertRepository.save(alert);
+    //     const alert = this.alertRepository.create({ // 알림 추가
+    //         user: user,
+    //         admin: admin,
+    //         message: 'match'
+    //     });
+    //     await this.alertRepository.save(alert);
 
-        return { ok: true };
-    }
+    //     return { ok: true };
+    // }
 
-    // 피보호자-관리자 매칭 취소 + 사용자쪽 채팅 내역 삭제 + 알림 추가
-    async userNotMatch(adminId: number, userId: number, patientId: number){
-        const admin = await this.userRepository.findOne({where:{ id: adminId }});
-        const user = await this.userRepository.findOne({where: { id: userId }});
-        const patient = await this.patientRepository.findOne({where: { id: patientId }});
+    // // 피보호자-관리자 매칭 취소 + 사용자쪽 채팅 내역 삭제 + 알림 추가
+    // async userNotMatch(adminId: number, userId: number, patientId: number){
+    //     const admin = await this.userRepository.findOne({where:{ id: adminId }});
+    //     const user = await this.userRepository.findOne({where: { id: userId }});
+    //     const patient = await this.patientRepository.findOne({where: { id: patientId }});
         
-        if (!admin || !user || !patient){
-            throw new NotFoundException('해당 관리자/보호자/피보호자 계정을 찾을 수 없습니다.');
-        }
+    //     if (!admin || !user || !patient){
+    //         throw new NotFoundException('해당 관리자/보호자/피보호자 계정을 찾을 수 없습니다.');
+    //     }
 
-        patient.admin = null;
-        await this.patientRepository.save(patient); // 매칭 해제
+    //     patient.admin = null;
+    //     await this.patientRepository.save(patient); // 매칭 해제
 
-        const match = await this.matchRepository.findOne({
-            where: { admin: { id: adminId }, user: { id: userId } }
-        });
+    //     const match = await this.matchRepository.findOne({
+    //         where: { admin: { id: adminId }, user: { id: userId } }
+    //     });
         
-        if(match){
-            await this.matchRepository.remove(match); // 매칭 해제
-        }
+    //     if(match){
+    //         await this.matchRepository.remove(match); // 매칭 해제
+    //     }
 
-        const room = await this.chatRoomRepository.findOne({
-            where: {
-                user: {id: userId},
-                admin: {id: adminId}
-            },
-            relations: ['chats'],
-        });
+    //     const room = await this.chatRoomRepository.findOne({
+    //         where: {
+    //             user: {id: userId},
+    //             admin: {id: adminId}
+    //         },
+    //         relations: ['chats'],
+    //     });
 
-        if (room){ // userDel을 true로 변경
-            const chats = room.chats.map(chat => {
-                chat.userDel = true;
-                return chat;
-            });
-            await this.chatRepository.save(chats);
-        };
+    //     if (room){ // userDel을 true로 변경
+    //         const chats = room.chats.map(chat => {
+    //             chat.userDel = true;
+    //             return chat;
+    //         });
+    //         await this.chatRepository.save(chats);
+    //     };
 
-        const alert = this.alertRepository.create({ // 알림 추가
-            user: user,
-            admin: admin,
-            message: 'match_cancel'
-        });
-        await this.alertRepository.save(alert);
+    //     const alert = this.alertRepository.create({ // 알림 추가
+    //         user: user,
+    //         admin: admin,
+    //         message: 'match_cancel'
+    //     });
+    //     await this.alertRepository.save(alert);
 
-        return { ok: true };
-    }
+    //     return { ok: true };
+    // }
 
     // 전체 회원 검색
     async getSerchUser(dto: SearchUserDto){
@@ -292,5 +292,33 @@ export class MatchingService {
             patient_birth: x.birth || '없음',
             patient_note: x.note || '없음'
         }));
+    }
+
+    // 해당 도우미에게 매칭 신청한 유저 전달
+    async applyUser(adminId: number){
+        const users = await this.applyRepository.find({
+            where: {admin: {id: adminId}},
+            relations: ['user', 'user.familyPatients'],
+        });
+
+        return users.map((apply) =>{
+            const patient = apply.user.familyPatients?.[0];
+
+            return{
+                status: apply.status,
+                created_at: apply.created_at,
+
+                id: apply.user.id,
+                email: apply.user.email,
+                name: apply.user.name,
+                phone: apply.user.phone,
+
+                patient_id: patient.id,
+                patient_name: patient.name || '없음',
+                patient_gender: patient.gender || '없음',
+                patient_birth: patient.birth || '없음',
+                patient_note: patient.note || '없음',
+            };
+        });
     }
 }
