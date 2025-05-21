@@ -1,9 +1,9 @@
-import { Body, Controller, Post, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Post, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { HelperService } from './helper.service';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { join } from 'path';
-import { HelperSignupDto } from 'src/user/dto/req/helper-signup.dto';
+import { HelperSignupDto } from 'src/helper/dto/req/helper-signup.dto';
 
 @Controller('helper')
 export class HelperController {
@@ -27,5 +27,11 @@ export class HelperController {
     )
     async helperSignup(@Body() dto: HelperSignupDto, @UploadedFiles() files: {profileImage: Express.Multer.File[]; certificate: Express.Multer.File[]}){
         return this.helperService.helperSign(dto, files);
+    }
+
+    // 승인대기 도우미 전체 전달
+    @Get('/applylist')
+    async helperApplyList(){
+        return this.helperService.helperApply();
     }
 }

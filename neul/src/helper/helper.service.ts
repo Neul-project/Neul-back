@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Helper } from 'entities/helpers';
 import { Users } from 'entities/users';
-import { HelperSignupDto } from 'src/user/dto/req/helper-signup.dto';
+import { HelperSignupDto } from 'src/helper/dto/req/helper-signup.dto';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -36,5 +36,10 @@ export class HelperService {
         await this.helperRepository.save(helper);
 
         return {ok: true};
+    }
+
+    // 승인대기 도우미 전체 전달
+    async helperApply(){
+        return await this.helperRepository.find({ where: {status: '승인 대기'} });
     }
 }

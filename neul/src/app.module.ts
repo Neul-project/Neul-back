@@ -16,6 +16,7 @@ import { ChatModule } from './chat/chat.module';
 import { MatchingModule } from './matching/matching.module';
 import { BannerModule } from './banner/banner.module';
 import { AlertModule } from './alert/alert.module';
+import { HelperModule } from './helper/helper.module';
 
 import { Users } from 'entities/users';
 import { Patients } from 'entities/patients';
@@ -34,7 +35,6 @@ import { Cart } from 'entities/cart';
 import { Alert } from 'entities/alert';
 import { PayPrograms } from 'entities/pay_program';
 import { Helper } from 'entities/helpers';
-import { HelperModule } from './helper/helper.module';
 
 @Module({
   imports: [
