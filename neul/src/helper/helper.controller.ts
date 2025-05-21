@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Query, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { HelperService } from './helper.service';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -7,6 +7,7 @@ import { HelperSignupDto } from 'src/helper/dto/req/helper-signup.dto';
 import { ApiResponse } from '@nestjs/swagger';
 import { HelperInfoDto } from './dto/res/helper-info.dto';
 import { UserIdDto } from 'src/auth/dto/res/user-id.dto';
+import { UserIdsDto } from './dto/req/user-ids.dto';
 
 @Controller('helper')
 export class HelperController {
@@ -39,6 +40,13 @@ export class HelperController {
         return this.helperService.helperApply();
     }
 
+    // 승인완료 도우미 전체 전달
+    @Get('/approveduser')
+    @ApiResponse({type: HelperInfoDto})
+    async helperApproveList(){
+        return this.helperService.helperApprove();
+    }
+
     // 해당 도우미 데이터 전달
     @Get('/userlist')
     @ApiResponse({type: HelperInfoDto})
@@ -50,5 +58,14 @@ export class HelperController {
     @Post('/registration')
     async helperYes(@Body() dto: UserIdDto){
         return this.helperService.helperYes(dto.userId);
+    }
+
+    // 정식 도우미 승인 반려
+
+    
+    // 도우미 삭제
+    @Delete('/userdelete')
+    async helperDelete(@Body() dto: UserIdsDto){
+        return this.helperService.helperDel(dto.ids);
     }
 }

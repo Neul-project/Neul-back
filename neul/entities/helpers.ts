@@ -6,7 +6,7 @@ export class Helper {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => Users)
+  @OneToOne(() => Users, { onDelete: 'CASCADE' })
   @JoinColumn()
   user: Users;
 
@@ -37,6 +37,6 @@ export class Helper {
   @Column('varchar', { comment: '자격증 파일 경로' })
   certificate: string;
   
-  @Column('enum', { enum: ['승인 완료', '승인 대기'], comment:'승인 상태', default: '승인 대기' })
+  @Column('enum', { enum: ['승인 완료', '승인 대기', '승인 반려'], comment:'승인 상태', default: '승인 대기' })
   status: string;
 }

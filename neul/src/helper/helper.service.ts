@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Helper } from 'entities/helpers';
 import { Users } from 'entities/users';
 import { HelperSignupDto } from 'src/helper/dto/req/helper-signup.dto';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 @Injectable()
 export class HelperService {
@@ -48,6 +48,16 @@ export class HelperService {
         return helpers;
     }
 
+    // 승인완료 도우미 전체 전달
+    async helperApprove(){
+        const helpers = await this.helperRepository.find({ 
+            where: {status: '승인 완료'}, 
+            relations: ['user'],
+        });
+
+        return helpers;
+    }
+
     // 해당 도우미 데이터 전달
     async helperOne(userId: number){
         const helper = await this.helperRepository.findOne({
@@ -64,8 +74,27 @@ export class HelperService {
         if(!helper){
             throw new Error('해당 정보가 없습니다.')
         }
-        
+
         helper.status = '승인 완료';
         return await this.helperRepository.save(helper);
+    }
+
+    // 정식 도우미 승인 반려
+
+    // const helper = await this.helperRepository.find({ where: {user: {id: In(userIds)}} });
+    // const updateHelper = helper.map(x =>{
+    //     x.status = '승인 반려';
+    //     return x;
+    // })
+
+    // return await this.helperRepository.save(updateHelper);
+
+    // 도우미 삭제
+    async helperDel(userIds: number[]){
+        if (!userIds || userIds.length === 0) {
+            throw new Error('삭제할 유저 ID가 없습니다.');
+        }
+
+        return await this.userRepository.delete({id: In(userIds)});
     }
 }
