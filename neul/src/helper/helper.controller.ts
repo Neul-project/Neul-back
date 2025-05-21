@@ -20,7 +20,16 @@ export class HelperController {
             [{ name: 'profileImage', maxCount: 1 }, { name: 'certificate', maxCount: 1 }],
             {
                 storage: diskStorage({
-                    destination: join(process.cwd(), 'uploads/file'),
+                    destination: (req, file, callback) =>{
+                        let dest = '';
+                        if(file.fieldname === 'profileImage'){
+                            dest = join(process.cwd(), 'uploads/image')
+                        }
+                        if(file.fieldname === 'certificate'){
+                            dest = join(process.cwd(), 'uploads/file')
+                        }
+                        callback(null, dest);
+                    },
                     filename: (req, file, callback) => {
                         const uniqueName = `${file.originalname}`;
                         callback(null, uniqueName);
