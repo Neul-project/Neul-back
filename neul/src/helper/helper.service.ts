@@ -57,4 +57,15 @@ export class HelperService {
 
         return helper;
     }
+
+    // 정식 도우미 승인
+    async helperYes(userId: number){
+        const helper = await this.helperRepository.findOne({ where: {user: {id: userId}}});
+        if(!helper){
+            throw new Error('해당 정보가 없습니다.')
+        }
+        
+        helper.status = '승인 완료';
+        return await this.helperRepository.save(helper);
+    }
 }

@@ -6,6 +6,7 @@ import { join } from 'path';
 import { HelperSignupDto } from 'src/helper/dto/req/helper-signup.dto';
 import { ApiResponse } from '@nestjs/swagger';
 import { HelperInfoDto } from './dto/res/helper-info.dto';
+import { UserIdDto } from 'src/auth/dto/res/user-id.dto';
 
 @Controller('helper')
 export class HelperController {
@@ -43,5 +44,11 @@ export class HelperController {
     @ApiResponse({type: HelperInfoDto})
     async helperOne(@Query('id') id: number){
         return this.helperService.helperOne(id);
+    }
+
+    // 정식 도우미 승인
+    @Post('/registration')
+    async helperYes(@Body() dto: UserIdDto){
+        return this.helperService.helperYes(dto.userId);
     }
 }
