@@ -42,6 +42,13 @@ export class HelperController {
         return this.helperService.helperSign(dto, files);
     }
 
+    // 도우미 전체 전달
+    @Get('/info')
+    @ApiResponse({type: HelperInfoDto})
+    async helperAll(){
+        return this.helperService.helperAll();
+    }
+
     // 승인대기 도우미 전체 전달
     @Get('/applylist')
     @ApiResponse({type: HelperInfoDto})

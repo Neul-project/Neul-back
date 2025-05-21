@@ -41,6 +41,15 @@ export class HelperService {
         return {ok: true};
     }
 
+    // 도우미 전체 전달
+    async helperAll(){
+        const helpers = await this.helperRepository.find({ 
+            relations: ['user']
+        });
+
+        return helpers;
+    }
+
     // 승인대기 도우미 전체 전달
     async helperApply(){
         const helpers = await this.helperRepository.find({ 
