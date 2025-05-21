@@ -10,6 +10,7 @@ import { UserIdDto } from 'src/auth/dto/res/user-id.dto';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { join } from 'path';
+import { HelperSignupDto } from './dto/req/helper-signup.dto';
 @Controller('user')
 export class UserController {
     constructor(private readonly userService: UserService) {}
@@ -45,9 +46,8 @@ export class UserController {
             },
         )
     )
-    async helperSignup(@Body() body, @UploadedFiles() files: { profileImage?: Express.Multer.File[]; certificate?: Express.Multer.File[]; }){
-        console.log(body, '받은폼텍스트', files, '파일이름');
-        // return this.userService.helperSign();
+    async helperSignup(@Body() dto: HelperSignupDto, @UploadedFiles() files: {profileImage: Express.Multer.File[]; certificate: Express.Multer.File[]}){
+        return this.userService.helperSign(dto, files);
     }
 
     // 회원탈퇴

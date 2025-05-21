@@ -4,6 +4,8 @@ import { Users } from 'entities/users';
 import { Repository } from 'typeorm';
 import { Match } from 'entities/match';
 import { FindEmailDto } from 'src/auth/dto/req/find-email.dto';
+import { Helper } from 'entities/helpers';
+import { HelperSignupDto } from './dto/req/helper-signup.dto';
 
 @Injectable()
 export class UserService {
@@ -11,7 +13,9 @@ export class UserService {
         @InjectRepository(Users)
         private userRepository: Repository<Users>,
         @InjectRepository(Match)
-        private matchRepository: Repository<Match>
+        private matchRepository: Repository<Match>,
+        @InjectRepository(Helper)
+        private helperRepository: Repository<Helper>,
     ) {}
 
     // 소셜로그인 사용자 추가정보 입력
@@ -43,6 +47,30 @@ export class UserService {
             value: x.id,
             label: x.name,
         }));
+    }
+
+    // 도우미 프로필 정보 저장
+    async helperSign(dto: HelperSignupDto, files: {profileImage: Express.Multer.File[]; certificate: Express.Multer.File[]}){
+        const user = await this.userRepository.findOne({ where: {id: Number(dto.userId)}});
+        if(!user){
+            throw new Error('사용자를 찾을 수 없습니다.');
+        }
+
+        const helper = this.helperRepository.create({
+            user,
+            desiredPay: Number(dto.desiredPay),
+            experience: dto.experience,
+            birth: dto.birth,
+            gender: dto.gender,
+            certificateName: dto.certificateName_01,
+            certificateName2: dto.certificateName_02,
+            certificateName3: dto.certificateName_03,
+            profileImage: files.profileImage?.[0].originalname ?? '',
+            certificate: files.certificate?.[0].originalname ?? '',
+        });
+        await this.helperRepository.save(helper);
+
+        return {ok: true};
     }
 
     // 회원 탈퇴
