@@ -10,6 +10,7 @@ import { SearchUserDto } from './dto/req/search-user.dto';
 import { Match } from 'entities/match';
 import { Helper } from 'entities/helpers';
 import { Apply } from 'entities/apply';
+import { MatchSubmitDto } from './dto/req/match-submit.dto';
 
 @Injectable()
 export class MatchingService {
@@ -86,12 +87,38 @@ export class MatchingService {
         return await this.userRepository.delete(ids);
     }
 
+    // 사용자 매칭 신청 + 알림 추가
+    async submitReq(userId: number, dto: MatchSubmitDto){
+        const user = await this.userRepository.findOne({where: {id: userId}});
+        const admin = await this.userRepository.findOne({where: {id: dto.helperId}});
+        if(!admin || !user){
+            throw new Error('해당 도우미/유저를 찾을 수 없습니다.');
+        }
+
+        const apply = this.applyRepository.create({
+            user,
+            admin,
+            startDate: dto.startDate,
+            endDate: dto.endDate
+        });
+        await this.applyRepository.save(apply); // 매칭 신청
+
+        const alert = this.alertRepository.create({
+            user,
+            admin,
+            message: 'match_apply'
+        });
+        await this.alertRepository.save(alert); // 알림 추가
+
+        return {ok: true};
+    }
+
     // 도우미 매칭 수락 + 알림 추가
     async helperAccept(adminId: number, userId: number){
         const user = await this.userRepository.findOne({where: {id: userId}});
         const admin = await this.applyRepository.findOne({where: {admin: {id: adminId}}});
         if(!admin || !user){
-            throw new Error('해당 도우미/유저가 없습니다.');
+            throw new Error('해당 도우미/유저를 찾을 수 없습니다.');
         }
 
         admin.status = '결제 대기';

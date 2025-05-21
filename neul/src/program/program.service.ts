@@ -254,7 +254,7 @@ export class ProgramService {
         const alert = this.alertRepository.create({ // 알림 추가
             user,
             admin: match.admin,
-            message: 'pay'
+            message: 'pay_program'
         });
         await this.alertRepository.save(alert);
 
@@ -313,7 +313,7 @@ export class ProgramService {
         const alert = this.alertRepository.create({ // 알림 추가
             user: refund.user,
             admin: match.admin,
-            message: 'refund'
+            message: 'refund_program'
         });
         await this.alertRepository.save(alert);
 

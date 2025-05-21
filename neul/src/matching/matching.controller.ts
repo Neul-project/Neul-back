@@ -7,6 +7,7 @@ import { MatchOKDto } from './dto/req/match-ok.dto';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { SearchUserDto } from './dto/req/search-user.dto';
 import { MatchCancelDto } from './dto/req/match-cancel.dto';
+import { MatchSubmitDto } from './dto/req/match-submit.dto';
 
 @Controller('matching')
 export class MatchingController {
@@ -35,11 +36,12 @@ export class MatchingController {
         return this.matchingService.userDel(body);
     };
 
-    // 매칭 신청 (사용자)
+    // 사용자 매칭 신청 + 알림 추가
     @Post('/submit-request')
-    async submitRequest(@Body() body){
-        console.log(body, '받은정보');
-        // return this.matchingService.submitReq(body);
+    @UseGuards(JwtAuthGuard)
+    async submitRequest(@Body() dto: MatchSubmitDto, @Req() req){
+        const userId = req.user.id;
+        return this.matchingService.submitReq(userId, dto);
     }
 
     // 도우미 매칭 수락 + 알림 추가
@@ -53,6 +55,9 @@ export class MatchingController {
     async helperCancel(@Body() dto: MatchCancelDto){
         return this.matchingService.helperCancel(dto.adminId, dto.userId, dto.content);
     }
+
+    // 사용자 매칭 결제 완료 + 알림 추가
+
 
     // async userMatching(@Body() dto: MatchUserDto){
     //     return this.matchingService.userMatch(dto.adminId, dto.userId, dto.patientId);

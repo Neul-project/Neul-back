@@ -9,9 +9,10 @@ import { Alert } from 'entities/alert';
 import { Chats } from 'entities/chats';
 import { Match } from 'entities/match';
 import { Helper } from 'entities/helpers';
+import { Apply } from 'entities/apply';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Users, Patients, ChatRoom, Alert, Chats, Match, Helper])],
+  imports: [TypeOrmModule.forFeature([Users, Patients, ChatRoom, Alert, Chats, Match, Helper, Apply])],
   providers: [MatchingService],
   controllers: [MatchingController]
 })

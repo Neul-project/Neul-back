@@ -8,6 +8,7 @@ import { ApiResponse } from '@nestjs/swagger';
 import { HelperInfoDto } from './dto/res/helper-info.dto';
 import { UserIdDto } from 'src/auth/dto/res/user-id.dto';
 import { UserIdsDto } from './dto/req/user-ids.dto';
+import { HelperCancelDto } from './dto/req/helper-cancel.dto';
 
 @Controller('helper')
 export class HelperController {
@@ -78,9 +79,8 @@ export class HelperController {
 
     // 정식 도우미 승인 반려 + 알림 추가
     @Post('/return')
-    async helperNo(@Body() body){
-        console.log(body, '반려 받은거')
-        return this.helperService.helperNo(body.id, body.content);
+    async helperNo(@Body() dto: HelperCancelDto){
+        return this.helperService.helperNo(dto.id, dto.content);
     }
     
     // 도우미 삭제

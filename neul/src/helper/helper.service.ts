@@ -92,11 +92,11 @@ export class HelperService {
         }
 
         helper.status = '승인 완료';
-        await this.helperRepository.save(helper); // 승인 완료 상태
+        await this.helperRepository.save(helper); // 승인 완료 상태 변경
 
         const alert = this.alertRepository.create({
             user: helper.user,
-            message: 'helper',
+            message: 'helper_ok',
         });
         return await this.alertRepository.save(alert); // 알림 추가
     }
@@ -113,7 +113,7 @@ export class HelperService {
         }
 
         helper.status = '승인 반려';
-        await this.helperRepository.save(helper); // 승인 반려 상태
+        await this.helperRepository.save(helper); // 승인 반려 상태 변경
 
         const alert = this.alertRepository.create({
             user: helper.user,
