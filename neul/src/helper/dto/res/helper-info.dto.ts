@@ -37,4 +37,7 @@ export class HelperInfoDto {
 
   @ApiProperty({ example: '승인 대기', description: '승인 상태' })
   status: string;
+
+  @ApiProperty({ example: '서류 부족', required: false, description: '승인 반려 사유 (status가 승인 반려일 경우에만 존재)' })
+  reason?: string;
 }

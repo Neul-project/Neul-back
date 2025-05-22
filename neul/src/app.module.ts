@@ -37,6 +37,7 @@ import { PayPrograms } from 'entities/pay_program';
 import { Helper } from 'entities/helpers';
 import { Apply } from 'entities/apply';
 import { Shift } from 'entities/shift';
+import { Charge } from 'entities/charge';
 
 @Module({
   imports: [
@@ -51,7 +52,7 @@ import { Shift } from 'entities/shift';
       username: process.env.DB_USER,
       password: process.env.DB_PASS,
       database: process.env.DB_NAME,
-      entities: [Users, Patients, UserCheck, Activities, Feedback, Programs, Pay, Refund, Status, Chats, Match, Banners, ChatRoom, Cart, Alert, PayPrograms, Helper, Apply, Shift],
+      entities: [Users, Patients, UserCheck, Activities, Feedback, Programs, Pay, Refund, Status, Chats, Match, Banners, ChatRoom, Cart, Alert, PayPrograms, Helper, Apply, Shift, Charge],
       charset: 'utf8mb4',
       synchronize: true,
     }),
