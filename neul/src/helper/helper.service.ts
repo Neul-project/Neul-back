@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Alert } from 'entities/alert';
 import { Helper } from 'entities/helpers';
@@ -59,6 +59,19 @@ export class HelperService {
             week: dto.week.join(','),
         });
         
+        return await this.shiftRepository.save(shift);
+    }
+
+    // 도우미 가능 날짜 수정
+    async helperPossibleUpdate(userId: number, dto: HelperPossibleDto){
+        const shift = await this.shiftRepository.findOne({ where: {admin: {id: userId}} })
+        if (!shift) {
+            throw new NotFoundException('도우미 가능 날짜 정보가 존재하지 않습니다.');
+        }
+        shift.startDate = dto.startDate;
+        shift.endDate = dto.endDate;
+        shift.week = dto.week.join(',');
+
         return await this.shiftRepository.save(shift);
     }
 

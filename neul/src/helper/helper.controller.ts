@@ -59,6 +59,14 @@ export class HelperController {
         return this.helperService.helperPossible(userId, dto);
     }
 
+    // 도우미 가능 날짜 수정
+    @Patch('/posibledate')
+    @UseGuards(JwtAuthGuard)
+    async helperPossibleUpdate(@Req() req, @Body() dto: HelperPossibleDto){
+        const userId = req.user.id;
+        return this.helperService.helperPossibleUpdate(userId, dto);
+    }
+
     // 도우미 가능 날짜 전달 (도우미)
     @Get('/posibledate')
     @UseGuards(JwtAuthGuard)
