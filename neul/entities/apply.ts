@@ -14,11 +14,8 @@ export class Apply {
   @ManyToOne(() => Users, (user) => user.carePatients, {onDelete: 'CASCADE'})
   admin: Users;
 
-  @Column('varchar', { comment: '매칭 시작날짜', nullable: true })
-  startDate?: string;
-
-  @Column('varchar', { comment: '매칭 마지막날짜', nullable: true })
-  endDate?: string;
+  @Column('text', { comment: '매칭신청 날짜들', nullable: true })
+  dates?: string;
 
   @Column('enum', { enum: ['승인 대기', '결제 대기', '승인 반려', '결제 완료'], comment:'승인 상태', default: '승인 대기' })
   status: string;

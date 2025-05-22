@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post, Query, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Patch, Post, Query, Req, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { HelperService } from './helper.service';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -9,6 +9,8 @@ import { HelperInfoDto } from './dto/res/helper-info.dto';
 import { UserIdDto } from 'src/auth/dto/res/user-id.dto';
 import { UserIdsDto } from './dto/req/user-ids.dto';
 import { HelperCancelDto } from './dto/req/helper-cancel.dto';
+import { JwtAuthGuard } from 'src/auth/auth.guard';
+import { HelperPossibleDto } from './dto/req/helper-possible.dto';
 
 @Controller('helper')
 export class HelperController {
@@ -41,6 +43,30 @@ export class HelperController {
     )
     async helperSignup(@Body() dto: HelperSignupDto, @UploadedFiles() files: {profileImage: Express.Multer.File[]; certificate: Express.Multer.File[]}){
         return this.helperService.helperSign(dto, files);
+    }
+
+    // 도우미 프로필 정보 수정
+    @Patch('/edit-profile')
+    async helperUpdate(@Body() dto){
+
+    }
+
+    // 도우미 가능 날짜 저장
+    @Post('/posibledate')
+    @UseGuards(JwtAuthGuard)
+    async helperPossible(@Req() req, @Body() dto: HelperPossibleDto){
+        console.log(dto, '받은값');
+        const userId = req.user.id;
+        return this.helperService.helperPossible(userId, dto);
+    }
+
+    // 도우미 가능 날짜 전달
+    @Get('/posibledate')
+    @UseGuards(JwtAuthGuard)
+    @ApiResponse({type: HelperPossibleDto})
+    async getHelperPossible(@Req() req){
+        const userId = req.user.id;
+        return this.helperService.getHelperPossible(userId);
     }
 
     // 도우미 전체 전달

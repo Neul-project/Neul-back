@@ -98,8 +98,7 @@ export class MatchingService {
         const apply = this.applyRepository.create({
             user,
             admin,
-            startDate: dto.startDate,
-            endDate: dto.endDate
+            dates: dto.dates.join(',')
         });
         await this.applyRepository.save(apply); // 매칭 신청
 

@@ -2,9 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Alert } from 'entities/alert';
 import { Helper } from 'entities/helpers';
+import { Shift } from 'entities/shift';
 import { Users } from 'entities/users';
 import { HelperSignupDto } from 'src/helper/dto/req/helper-signup.dto';
 import { In, Repository } from 'typeorm';
+import { HelperPossibleDto } from './dto/req/helper-possible.dto';
 
 @Injectable()
 export class HelperService {
@@ -14,7 +16,9 @@ export class HelperService {
         @InjectRepository(Users)
         private userRepository: Repository<Users>,
         @InjectRepository(Alert)
-        private alertRepository: Repository<Alert>
+        private alertRepository: Repository<Alert>,
+        @InjectRepository(Shift)
+        private shiftRepository: Repository<Shift>
     ) {}
 
     // 도우미 프로필 정보 저장
@@ -39,6 +43,33 @@ export class HelperService {
         await this.helperRepository.save(helper);
 
         return {ok: true};
+    }
+
+    // 도우미 가능 날짜 저장
+    async helperPossible(userId: number, dto: HelperPossibleDto){
+        const user = await this.userRepository.findOne({ where: {id: userId} });
+        if(!user){
+            throw new Error('사용자를 찾을 수 없습니다.');
+        }
+
+        const shift = this.shiftRepository.create({
+            admin: user,
+            startDate: dto.startDate,
+            endDate: dto.endDate,
+            week: dto.week.join(','),
+        });
+        
+        return await this.shiftRepository.save(shift);
+    }
+
+    // 도우미 가능 날짜 전달
+    async getHelperPossible(userId: number){
+        const shift = this.shiftRepository.findOne({ 
+            where: {admin: {id: userId}},
+            select: ['startDate', 'endDate', 'week']
+        });
+
+        return shift;
     }
 
     // 도우미 전체 전달
