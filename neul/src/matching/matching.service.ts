@@ -320,6 +320,7 @@ export class MatchingService {
                 email: apply.user.email,
                 name: apply.user.name,
                 phone: apply.user.phone,
+                dates: apply.dates,
 
                 patient_id: patient.id,
                 patient_name: patient.name || '없음',
