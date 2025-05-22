@@ -115,13 +115,17 @@ export class MatchingService {
     // 도우미 매칭 수락 + 알림 추가
     async helperAccept(adminId: number, userId: number){
         const user = await this.userRepository.findOne({where: {id: userId}});
-        const admin = await this.applyRepository.findOne({where: {admin: {id: adminId}}});
+        const admin = await this.userRepository.findOne({where: {id: adminId}});
+        const apply = await this.applyRepository.findOne({
+            where: { admin: {id: adminId}, user: {id: userId}}
+        });
+
         if(!admin || !user){
             throw new Error('해당 도우미/유저를 찾을 수 없습니다.');
         }
 
-        admin.status = '결제 대기';
-        await this.helperRepository.save(admin); // 결제 대기 상태 변경
+        apply.status = '결제 대기';
+        await this.applyRepository.save(apply); // 결제 대기 상태 변경
 
         const alert = this.alertRepository.create({
             user,
@@ -140,7 +144,7 @@ export class MatchingService {
         }
 
         admin.status = '승인 반려';
-        await this.helperRepository.save(admin); // 승인 반려 상태 변경
+        await this.applyRepository.save(admin); // 승인 반려 상태 변경
 
         const alert = this.alertRepository.create({
             user,

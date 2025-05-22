@@ -80,7 +80,6 @@ export class HelperController {
     @Get('/time/:helperId')
     @ApiResponse({type: HelperPossibleDto})
     async getHelperPossible2(@Param('helperId') helperId: number){
-        console.log(helperId, '도우미아이디확인이용');
         return this.helperService.getHelperPossible2(helperId);
     }
 

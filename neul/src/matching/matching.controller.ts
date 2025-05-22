@@ -47,6 +47,7 @@ export class MatchingController {
     // 도우미 매칭 수락 + 알림 추가
     @Post('/accept')
     async helperAccept(@Body() dto: MatchOKDto){
+        console.log(dto, '매칭수락임')
         return this.matchingService.helperAccept(dto.adminId, dto.userId);
     }
 
