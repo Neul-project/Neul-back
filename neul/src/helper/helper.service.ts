@@ -64,19 +64,23 @@ export class HelperService {
 
     // 도우미 가능 날짜 전달 (도우미)
     async getHelperPossible(userId: number){
-        const shift = this.shiftRepository.findOne({ 
+        const shift = await this.shiftRepository.findOne({ 
             where: {admin: {id: userId}},
-            select: ['startDate', 'endDate', 'week']
+            relations: ['admin']
         });
 
-        return shift;
+        return {
+            startDate: shift.startDate,
+            endDate: shift.endDate,
+            week: shift.week
+        };
     }
 
     // 도우미 가능 날짜 전달 (사용자)
     async getHelperPossible2(helperId: number){
         const shift = await this.shiftRepository.findOne({ 
             where: {admin: {id: helperId}},
-            select: ['startDate', 'endDate', 'week']
+            relations: ['admin'],
         });
         
         return {

@@ -55,7 +55,6 @@ export class HelperController {
     @Post('/posibledate')
     @UseGuards(JwtAuthGuard)
     async helperPossible(@Req() req, @Body() dto: HelperPossibleDto){
-        console.log(dto, '받은값');
         const userId = req.user.id;
         return this.helperService.helperPossible(userId, dto);
     }
@@ -73,6 +72,7 @@ export class HelperController {
     @Get('/time/:helperId')
     @ApiResponse({type: HelperPossibleDto})
     async getHelperPossible2(@Param('helperId') helperId: number){
+        console.log(helperId, '도우미아이디확인이용');
         return this.helperService.getHelperPossible2(helperId);
     }
 
