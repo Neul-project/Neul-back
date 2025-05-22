@@ -87,6 +87,29 @@ export class MatchingService {
         return await this.userRepository.delete(ids);
     }
 
+    // 선택한 도우미 리스트 전달
+    async myHelperList(userId: number){
+        const helpers = await this.helperRepository.find({ 
+            where: {status: '승인 완료'}, 
+            relations: ['user'],
+        });
+
+        const applys = await this.applyRepository.find({
+            where: {user: {id: userId}},
+            relations: ['admin']
+        })
+
+        return helpers.map(helper => {
+            const matchedOK = applys.find(
+                apply => apply.admin.id === helper.user.id // 유저가 선택한 도우미일 경우만
+            );
+
+            if(!matchedOK) return;
+
+            return {...helper, apply_status: matchedOK.status, apply_dates: matchedOK.dates};
+        })
+    }
+
     // 사용자 매칭 신청 + 알림 추가
     async submitReq(userId: number, dto: MatchSubmitDto){
         const user = await this.userRepository.findOne({where: {id: userId}});

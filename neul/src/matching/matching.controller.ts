@@ -8,6 +8,7 @@ import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { SearchUserDto } from './dto/req/search-user.dto';
 import { MatchCancelDto } from './dto/req/match-cancel.dto';
 import { MatchSubmitDto } from './dto/req/match-submit.dto';
+import { ApplyUserDto } from './dto/res/apply-user.dto';
 
 @Controller('matching')
 export class MatchingController {
@@ -35,6 +36,14 @@ export class MatchingController {
     async slectUserDelete(@Body() body: number[]){
         return this.matchingService.userDel(body);
     };
+
+    // 신청한 도우미 리스트 전달
+    @Get('/myapplication-list')
+    @UseGuards(JwtAuthGuard)
+    async myHelperList(@Req() req){
+        const userId = req.user.id;
+        return this.matchingService.myHelperList(userId);
+    }
 
     // 사용자 매칭 신청 + 알림 추가
     @Post('/submit-request')
@@ -80,6 +89,7 @@ export class MatchingController {
     // 해당 도우미에게 매칭 신청한 유저 전달
     @Get('/applyuser')
     @UseGuards(JwtAuthGuard)
+    @ApiResponse({type: ApplyUserDto})
     async applyUser(@Req() req){
         const userId = req.user.id;
         return this.matchingService.applyUser(userId);
