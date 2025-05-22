@@ -145,7 +145,8 @@ export class MatchingService {
         const alert = this.alertRepository.create({
             user,
             admin,
-            message: 'match_cancel'
+            message: 'match_cancel',
+            reason
         });
         return await this.alertRepository.save(alert); // 알림 추가
     }

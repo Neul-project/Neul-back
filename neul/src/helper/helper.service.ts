@@ -5,7 +5,7 @@ import { Helper } from 'entities/helpers';
 import { Shift } from 'entities/shift';
 import { Users } from 'entities/users';
 import { HelperSignupDto } from 'src/helper/dto/req/helper-signup.dto';
-import { In, Repository } from 'typeorm';
+import { In, IsNull, Not, Repository } from 'typeorm';
 import { HelperPossibleDto } from './dto/req/helper-possible.dto';
 
 @Injectable()
@@ -126,7 +126,24 @@ export class HelperService {
             relations: ['user'],
         });
 
-        return helper;
+        let reason;
+
+        if(helper.status === '승인 반려'){
+            const alert = await this.alertRepository.findOne({
+                where: { 
+                    user: {id: userId},
+                    message: 'helper_cancel',
+                    reason: Not(IsNull())
+                },
+                order: {created_at: 'DESC'} // 최신알림 1개만
+            });
+
+            if(alert.reason){
+                reason = alert.reason;
+            }
+        }
+
+        return { ...helper, reason };
     }
 
     // 정식 도우미 승인 + 알림 추가
