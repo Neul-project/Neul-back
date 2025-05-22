@@ -11,6 +11,9 @@ import { Match } from 'entities/match';
 import { Helper } from 'entities/helpers';
 import { Apply } from 'entities/apply';
 import { MatchSubmitDto } from './dto/req/match-submit.dto';
+import { MatchPayDto } from './dto/req/match-pay.dto';
+import { Charge } from 'entities/charge';
+import { MatchPayOKDto } from './dto/req/match-pay-ok.dto';
 
 @Injectable()
 export class MatchingService {
@@ -30,7 +33,9 @@ export class MatchingService {
         @InjectRepository(Helper)
         private helperRepository: Repository<Helper>,
         @InjectRepository(Apply)
-        private applyRepository: Repository<Apply>
+        private applyRepository: Repository<Apply>,
+        @InjectRepository(Charge)
+        private chargeRepository: Repository<Charge>
     ) {}
 
     // 전체 유저 전달
@@ -182,52 +187,60 @@ export class MatchingService {
         return await this.alertRepository.save(alert); // 알림 추가
     }
 
-    // // 피보호자-관리자 매칭 + 채팅방 생성 + 알림 추가
-    // async userMatch(adminId: number, userId: number, patientId: number){
-    //     const admin = await this.userRepository.findOne({where:{ id: adminId }});
-    //     const user = await this.userRepository.findOne({where: { id: userId }});
-    //     const patient = await this.patientRepository.findOne({where: { id: patientId }});
-        
-    //     if (!admin || !user || !patient){
-    //         throw new NotFoundException('해당 관리자/보호자/피보호자 계정을 찾을 수 없습니다.');
-    //     }
+    // 사용자 매칭 결제 요청
+    async helperMatch(userId: number, dto: MatchPayDto){
+        const user = await this.userRepository.findOne({where: {id: userId}});
+        if(!user){
+            throw new Error('해당 유저를 찾을 수 없습니다.');
+        }
 
-    //     const existingMatch = await this.matchRepository.findOne({
-    //         where: { admin: { id: adminId }, user: { id: userId } }
-    //     });
+        const charge = this.chargeRepository.create({
+            user,
+            price: dto.amount,
+            orderId: dto.orderId
+        })
+        return await this.chargeRepository.save(charge); // 매칭 결제 테이블 저장
+    }
+    
+    // 사용자 매칭 결제 완료 + 매칭테이블 추가 + 채팅방 생성 + 알림 추가
+    async helperMatchOK(userId: number, dto: MatchPayOKDto){
+        const user = await this.userRepository.findOne({where: {id: userId}});
+        const admin = await this.userRepository.findOne({where: {id: dto.helperId}});
+        if(!admin || !user){
+            throw new Error('해당 도우미/유저를 찾을 수 없습니다.');
+        }
 
-    //     if (!existingMatch) { // 보호자와 관리자 매칭
-    //         const match = this.matchRepository.create({ user, admin });
-    //         await this.matchRepository.save(match);
-    //     }
+        const charge = await this.chargeRepository.findOne({
+            where: {orderId: dto.orderId, user: {id: userId}}
+        });
+        charge.paymentKey = dto.paymentKey;
+        await this.chargeRepository.save(charge); // paymentKey 저장
 
-    //     patient.admin = admin;
-    //     await this.patientRepository.save(patient); // 피보호자와 관리자 매칭
+        const apply = await this.applyRepository.findOne({
+            where: {admin: {id: dto.helperId}, user: {id: userId}}
+        });
+        apply.status = '결제 완료';
+        await this.applyRepository.save(apply); // 결제 완료 상태 변경
 
-    //     const existingRoom = await this.chatRoomRepository.findOne({
-    //         where: {
-    //             user: { id: userId },
-    //             admin: { id: adminId },
-    //         },
-    //     });
+        const match = this.matchRepository.create({user, admin});
+        await this.matchRepository.save(match) // 보호자와 관리자 매칭 (매칭테이블 추가)
 
-    //     if (!existingRoom) { // 채팅방 생성
-    //         const newRoom = this.chatRoomRepository.create({
-    //             user: user,
-    //             admin: admin,
-    //         });
-    //         await this.chatRoomRepository.save(newRoom);
-    //     };
+        const patient = await this.patientRepository.findOne({where: {user: {id: userId}}});
+        patient.admin = admin;
+        await this.patientRepository.save(patient); // 피보호자와 관리자 매칭 (피보호자 테이블 업데이트)
 
-    //     const alert = this.alertRepository.create({ // 알림 추가
-    //         user: user,
-    //         admin: admin,
-    //         message: 'match'
-    //     });
-    //     await this.alertRepository.save(alert);
+        const room = this.chatRoomRepository.create({user, admin});
+        await this.chatRoomRepository.save(room); // 채팅방 생성
 
-    //     return { ok: true };
-    // }
+        const alert = this.alertRepository.create({
+            user,
+            admin,
+            message: 'pay_match',
+        });
+        await this.alertRepository.save(alert); // 알림 추가
+
+        return {ok: true};
+    }
 
     // // 피보호자-관리자 매칭 취소 + 사용자쪽 채팅 내역 삭제 + 알림 추가
     // async userNotMatch(adminId: number, userId: number, patientId: number){

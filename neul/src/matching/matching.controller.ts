@@ -9,6 +9,8 @@ import { SearchUserDto } from './dto/req/search-user.dto';
 import { MatchCancelDto } from './dto/req/match-cancel.dto';
 import { MatchSubmitDto } from './dto/req/match-submit.dto';
 import { ApplyUserDto } from './dto/res/apply-user.dto';
+import { MatchPayDto } from './dto/req/match-pay.dto';
+import { MatchPayOKDto } from './dto/req/match-pay-ok.dto';
 
 @Controller('matching')
 export class MatchingController {
@@ -66,16 +68,26 @@ export class MatchingController {
         return this.matchingService.helperCancel(dto.adminId, dto.userId, dto.content);
     }
 
-    // 사용자 매칭 결제 완료 + 알림 추가
+    // 사용자 매칭 결제 요청
+    @Post('/create-payment')
+    @UseGuards(JwtAuthGuard)
+    async helperMatch(@Body() dto: MatchPayDto, @Req() req){
+        const userId = req.user.id;
+        return this.matchingService.helperMatch(userId, dto);
+    }
 
+    // 사용자 매칭 결제 완료 + 매칭테이블 추가 + 채팅방 생성 + 알림 추가
+    @Post('/confirm')
+    @UseGuards(JwtAuthGuard)
+    async helperMatchOK(@Body() dto: MatchPayOKDto, @Req() req){
+        const userId = req.user.id;
+        return this.matchingService.helperMatchOK(userId, dto);
+    }
 
-    // async userMatching(@Body() dto: MatchUserDto){
-    //     return this.matchingService.userMatch(dto.adminId, dto.userId, dto.patientId);
-    // }
 
     // // 피보호자-관리자 매칭 취소 + 사용자쪽 채팅 내역 삭제 + 알림 추가
     // @Patch('/cancel')
-    // async userNotMatching(@Body() dto: MatchUserDto){
+    // async userNotMatching(@Body() dto: ){
     //     return this.matchingService.userNotMatch(dto.adminId, dto.userId, dto.patientId);
     // }
 
