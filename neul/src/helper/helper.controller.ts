@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Patch, Post, Query, Req, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Req, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { HelperService } from './helper.service';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -60,13 +60,20 @@ export class HelperController {
         return this.helperService.helperPossible(userId, dto);
     }
 
-    // 도우미 가능 날짜 전달
+    // 도우미 가능 날짜 전달 (도우미)
     @Get('/posibledate')
     @UseGuards(JwtAuthGuard)
     @ApiResponse({type: HelperPossibleDto})
     async getHelperPossible(@Req() req){
         const userId = req.user.id;
         return this.helperService.getHelperPossible(userId);
+    }
+
+    // 도우미 가능 날짜 전달 (사용자)
+    @Get('/time/:helperId')
+    @ApiResponse({type: HelperPossibleDto})
+    async getHelperPossible2(@Param('helperId') helperId: number){
+        return this.helperService.getHelperPossible2(helperId);
     }
 
     // 도우미 전체 전달
