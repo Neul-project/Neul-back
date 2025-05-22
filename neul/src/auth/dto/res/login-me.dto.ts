@@ -9,4 +9,7 @@ export class LoginMeDto {
 
   @ApiProperty({ example: 'local', description: '가입 경로' })
   provider: string;
+
+  @ApiProperty({ example: 'user', description: '역할'})
+  role: string;
 }

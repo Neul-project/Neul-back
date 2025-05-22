@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserInfoDto } from 'src/user/dto/res/user-info.dto';
+import { UserInfoAllDto } from './user-info-all.dto';
 
 export class HelperInfoDto {
   @ApiProperty({ example: 1, description: '도우미 ID' })
   id: number;
 
-  @ApiProperty({ type: UserInfoDto, description: '유저 정보' })
-  user: UserInfoDto;
+  @ApiProperty({ type: UserInfoAllDto, description: '유저 정보' })
+  user: UserInfoAllDto;
 
   @ApiProperty({ example: 50000, description: '희망 일당' })
   desiredPay: number;
