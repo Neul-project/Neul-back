@@ -1,10 +1,11 @@
-import { Body, Controller, Delete, Get, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { ApiResponse } from '@nestjs/swagger';
 import { ChatListDTO } from './dto/res/chat-list.dto';
 import { ChatRoomListDto } from './dto/res/chatroom-list.dto';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { RoomIdDto } from './dto/req/room-id.dto';
+import { ExitRoomDto } from './dto/req/exit-room.dto';
 
 @Controller('chat')
 export class ChatController {
@@ -60,8 +61,8 @@ export class ChatController {
     }
 
     // 채팅방 삭제
-    @Delete('/exitRoom')
-    async roomExit(@Query('roomId') roomId: number){
-        return this.chatService.roomExit(roomId);
+    @Patch('/exitRoom')
+    async roomExit(@Body() dto: ExitRoomDto){
+        return this.chatService.roomExit(dto.roomId, dto.type);
     }
 }

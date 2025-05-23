@@ -220,6 +220,8 @@ export class ChatService {
             }
         }); // 해당 채팅방의 'admin'이 보낸 메시지 중 아직 읽지 않은 것의 개수
         
+        if(!unreadCount) return;
+
         return unreadCount;
     }
 
@@ -268,12 +270,23 @@ export class ChatService {
     }
 
     // 채팅방 삭제
-    async roomExit(roomId: number){
+    async roomExit(roomId: number, type: 'user' | 'admin'){
         const room = await this.chatRoomRepository.findOne({ where: {id: roomId} });
         if(!room){
             throw new Error('채팅방이 존재하지 않습니다.')
         }
 
-        return await this.chatRoomRepository.remove(room);
+        if(type === 'user'){
+            room.userDel = true;
+        }
+        if(type === 'admin'){
+            room.adminDel = true;
+        }
+
+        if(room.userDel && room.adminDel){ // 사용자/도우미 둘 다 삭제했을 경우 채팅방/내역 삭제
+            return await this.chatRoomRepository.remove(room);
+        }
+
+        return await this.chatRoomRepository.save(room);
     }
 }
