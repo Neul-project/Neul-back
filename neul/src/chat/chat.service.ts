@@ -158,9 +158,7 @@ export class ChatService {
                 'scroll',
                 'scroll.id = room.id'
             )
-            .leftJoin('room.user', 'user') // 보호자
             .leftJoin('room.admin', 'admin') // 관리자
-            .leftJoin('user.familyPatients', 'patient') // 보호자의 피보호자
             .leftJoin('room.chats', 'chat')
             .leftJoin('match', 'match', 'match.userId = :paramUserId AND match.adminId = room.adminId', { paramUserId: userId })            
             .leftJoin(
@@ -174,9 +172,8 @@ export class ChatService {
             })            
             .select([
                 'room.id AS id', // 고유 id
-                'user.id AS userId', // 보호자 id
-                'user.name AS userName', // 관리자가 담당하고 있는 보호자 이름
-                'patient.name AS patientName', // 해당 보호자의 피보호자 이름
+                'admin.id AS adminId', // 도우미 id
+                'admin.name AS adminName', // 도우미 이름
                 'COALESCE(latest.lastTime, room.created_at) AS lastTime', // 마지막 채팅 보낸 시각
                 `COALESCE(latest.lastMessage, '') AS lastMessage`, // 마지막으로 보낸 채팅 내용
                 `COALESCE(SUM(CASE 
@@ -185,9 +182,8 @@ export class ChatService {
                 'CASE WHEN match.id IS NOT NULL THEN 1 ELSE 0 END AS isMatched' // 매칭여부
             ])
             .groupBy('room.id')
-            .addGroupBy('user.id')
-            .addGroupBy('user.name')
-            .addGroupBy('patient.name')
+            .addGroupBy('admin.id')
+            .addGroupBy('admin.name')
             .addGroupBy('latest.lastTime')
             .addGroupBy('latest.lastMessage')
             .addGroupBy('match.id')

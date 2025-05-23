@@ -1,6 +1,6 @@
 import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Patch, Post, Query, UploadedFile, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { ActivityService } from './activity.service';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { join } from 'path';
 import { CreateActivityDto } from './dto/req/create-activity.dto';
 import { diskStorage } from 'multer';
