@@ -140,7 +140,8 @@ export class ChatService {
                 'chat.message AS lastMessage',
                 'chat.created_at AS lastTime',
                 'ROW_NUMBER() OVER (PARTITION BY chat.roomId ORDER BY chat.created_at DESC) AS sub',
-            ]);
+            ])
+            .where('chat.userDel = false');
 
         const scrollSubquery = this.chatRoomRepository
             .createQueryBuilder('sub')
