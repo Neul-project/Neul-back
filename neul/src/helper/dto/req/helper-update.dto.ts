@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class HelperSignupDto {
+export class HelperUpdateDto {
   @ApiProperty({ example: '27', description: '유저 ID' })
   userId: string;
 
@@ -9,12 +9,6 @@ export class HelperSignupDto {
 
   @ApiProperty({ example: '~경험', description: '경력 사항' })
   experience: string;
-
-  @ApiProperty({ example: '2000-03-01', description: '생년월일' })
-  birth: string;
-
-  @ApiProperty({ example: 'male', description: '성별' })
-  gender: string;
 
   @ApiProperty({ example: '자격증 1', description: '자격증 이름 1' })
   certificateName_01: string;

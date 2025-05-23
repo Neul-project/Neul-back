@@ -11,6 +11,7 @@ import { UserIdsDto } from './dto/req/user-ids.dto';
 import { HelperCancelDto } from './dto/req/helper-cancel.dto';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { HelperPossibleDto } from './dto/req/helper-possible.dto';
+import { HelperUpdateDto } from './dto/req/helper-update.dto';
 
 @Controller('helper')
 export class HelperController {
@@ -34,7 +35,7 @@ export class HelperController {
                         callback(null, dest);
                     },
                     filename: (req, file, callback) => {
-                        const uniqueName = `${file.originalname}`;
+                        const uniqueName = `${Date.now()}_${file.originalname}`;
                         callback(null, uniqueName);
                     },
                 }),
@@ -47,8 +48,32 @@ export class HelperController {
 
     // 도우미 프로필 정보 수정
     @Patch('/edit-profile')
-    async helperUpdate(@Body() dto){
-
+    @UseInterceptors(
+        FileFieldsInterceptor(
+            [{ name: 'profileImage', maxCount: 1 }, { name: 'certificate', maxCount: 1 }],
+            {
+                storage: diskStorage({
+                    destination: (req, file, callback) =>{
+                        let dest = '';
+                        if(file.fieldname === 'profileImage'){
+                            dest = join(process.cwd(), 'uploads/image')
+                        }
+                        if(file.fieldname === 'certificate'){
+                            dest = join(process.cwd(), 'uploads/file')
+                        }
+                        callback(null, dest);
+                    },
+                    filename: (req, file, callback) => {
+                        const uniqueName = `${Date.now()}_${file.originalname}`;
+                        callback(null, uniqueName);
+                    },
+                }),
+            },
+        )
+    )
+    async helperUpdate(@Body() dto: HelperUpdateDto, @UploadedFiles() files: {profileImage: Express.Multer.File[]; certificate: Express.Multer.File[]}){
+        console.log(dto, '정보수정 어케오냐', files, '얜이미지임');
+        return this.helperService.helperUpdate(dto, files);
     }
 
     // 도우미 가능 날짜 저장

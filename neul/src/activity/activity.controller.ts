@@ -26,7 +26,7 @@ export class ActivityController {
             storage: diskStorage({
                 destination: join(process.cwd(), 'uploads/image'),
                 filename: (req, file, callback) => {
-                    const filename = `${file.originalname}`;
+                    const filename = `${Date.now()}_${file.originalname}`;
                     callback(null, filename);
                 },
             }),
@@ -44,7 +44,7 @@ export class ActivityController {
             storage: diskStorage({
                 destination: join(process.cwd(), 'uploads/image'),
                 filename: (req, file, callback) => {
-                    const filename = `${file.originalname}`;
+                    const filename = `${Date.now()}_${file.originalname}`;
                     callback(null, filename);
                 },
             }),

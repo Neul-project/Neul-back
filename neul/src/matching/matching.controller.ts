@@ -99,6 +99,14 @@ export class MatchingController {
         return this.matchingService.getSerchUser(dto);
     }
 
+    // 담당 회원 검색
+    @Get('/search')
+    @UseGuards(JwtAuthGuard)
+    async searchUserSelected(@Req() req, @Query() dto: SearchUserDto){
+        const userId = req.user.id;
+        return this.matchingService.getSerchUserSelected(userId, dto);
+    }
+
     // 해당 도우미에게 매칭 신청한 유저 전달
     @Get('/applyuser')
     @UseGuards(JwtAuthGuard)

@@ -353,6 +353,11 @@ export class MatchingService {
         }));
     }
 
+    // 담당 회원 검색
+    async getSerchUserSelected(adminId: number, dto: SearchUserDto){
+
+    }
+
     // 해당 도우미에게 매칭 신청한 유저 전달
     async applyUser(adminId: number){
         const users = await this.applyRepository.find({

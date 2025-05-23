@@ -18,7 +18,7 @@ export class BannerController {
           storage: diskStorage({
             destination: join(process.cwd(), 'uploads/image'),
             filename: (req, file, callback) => {
-              const filename = `${file.originalname}`;
+              const filename = `${Date.now()}_${file.originalname}`;
               callback(null, filename);
             },
           }),

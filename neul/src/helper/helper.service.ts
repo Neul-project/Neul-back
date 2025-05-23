@@ -7,6 +7,7 @@ import { Users } from 'entities/users';
 import { HelperSignupDto } from 'src/helper/dto/req/helper-signup.dto';
 import { In, IsNull, Not, Repository } from 'typeorm';
 import { HelperPossibleDto } from './dto/req/helper-possible.dto';
+import { HelperUpdateDto } from './dto/req/helper-update.dto';
 
 @Injectable()
 export class HelperService {
@@ -37,9 +38,30 @@ export class HelperService {
             certificateName: dto.certificateName_01,
             certificateName2: dto.certificateName_02,
             certificateName3: dto.certificateName_03,
-            profileImage: files.profileImage?.[0].originalname ?? '',
-            certificate: files.certificate?.[0].originalname ?? '',
+            profileImage: files.profileImage?.[0].filename ?? '',
+            certificate: files.certificate?.[0].filename ?? '',
         });
+        await this.helperRepository.save(helper);
+
+        return {ok: true};
+    }
+
+    // 도우미 프로필 정보 수정
+    async helperUpdate(dto: HelperUpdateDto, files: {profileImage: Express.Multer.File[]; certificate: Express.Multer.File[]}){
+        const helper = await this.helperRepository.findOne({ where: {user: {id: Number(dto.userId)}}})
+        if(!helper){
+            throw new Error('도우미 정보를 찾을 수 없습니다.')
+        }
+        
+        helper.status = '승인 대기'
+        helper.desiredPay = Number(dto.desiredPay);
+        helper.experience = dto.experience;
+        helper.certificateName = dto.certificateName_01;
+        helper.certificateName2 = dto.certificateName_02;
+        helper.certificateName3 = dto.certificateName_03;
+        helper.profileImage = files.profileImage?.[0].filename ?? '';
+        helper.certificate = files.certificate?.[0].filename ?? '';
+
         await this.helperRepository.save(helper);
 
         return {ok: true};
