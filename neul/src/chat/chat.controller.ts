@@ -6,6 +6,7 @@ import { ChatRoomListDto } from './dto/res/chatroom-list.dto';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { RoomIdDto } from './dto/req/room-id.dto';
 import { ExitRoomDto } from './dto/req/exit-room.dto';
+import { ChatRoomList2Dto } from './dto/res/chatroom-list2.dto';
 
 @Controller('chat')
 export class ChatController {
@@ -15,7 +16,6 @@ export class ChatController {
     @Get('/list')
     @ApiResponse({type: ChatListDTO})
     async chatList(@Query('roomId') roomId: number, @Query('page') page: number, @Query('limit') limit: number){
-        console.log(roomId, '방아이디전달')
         return this.chatService.getChatList(roomId, +page, +limit);
     }
 
@@ -28,7 +28,7 @@ export class ChatController {
 
     // 채팅방목록 전달 (사용자)
     @Get('/user/rooms')
-    @ApiResponse({type: ChatRoomListDto})
+    @ApiResponse({type: ChatRoomList2Dto})
     async chatroomListUser(@Query('userId') userId: number, @Query('page') page: number, @Query('limit') limit: number){
         return this.chatService.getChatroomListUser(userId, +page, +limit);
     }

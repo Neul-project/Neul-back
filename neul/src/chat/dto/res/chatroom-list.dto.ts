@@ -22,6 +22,9 @@ export class ChatRoomListDto {
   @ApiProperty({ example: 3, description: '안 읽은 메시지 수' })
   unreadCount: number;
 
-  @ApiProperty({ example: true, description: '매칭 여부'})
+  @ApiProperty({ example: true, description: '매칭된 상태 여부'})
   isMatched: boolean;
+
+  @ApiProperty({ example: false, description: '사용자가 채팅방을 삭제했는지 여부' })
+  roomDel: boolean;
 }

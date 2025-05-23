@@ -112,7 +112,8 @@ export class ChatService {
                 `COALESCE(SUM(CASE 
                     WHEN chat.read = false AND chat.adminId = :adminId AND chat.sender = 'user' 
                     THEN 1 ELSE 0 END), 0) AS unreadCount`, // 안 읽은 알림 개수
-                'CASE WHEN match.id IS NOT NULL THEN 1 ELSE 0 END AS isMatched' // 매칭여부
+                'CASE WHEN match.id IS NOT NULL THEN 1 ELSE 0 END AS isMatched', // 매칭여부
+                'room.adminDel AS roomDel' // 삭제 여부
             ])
             .groupBy('room.id')
             .addGroupBy('user.id')
@@ -178,7 +179,8 @@ export class ChatService {
                 `COALESCE(SUM(CASE 
                     WHEN chat.read = false AND chat.adminId = room.adminId AND chat.sender = 'admin' 
                     THEN 1 ELSE 0 END), 0) AS unreadCount`, // 안 읽은 알림 개수
-                'CASE WHEN match.id IS NOT NULL THEN 1 ELSE 0 END AS isMatched' // 매칭여부
+                'CASE WHEN match.id IS NOT NULL THEN 1 ELSE 0 END AS isMatched', // 매칭여부
+                'room.userDel AS roomDel' // 삭제 여부
             ])
             .groupBy('room.id')
             .addGroupBy('admin.id')
