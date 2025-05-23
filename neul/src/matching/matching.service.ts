@@ -152,7 +152,7 @@ export class MatchingService {
         });
         await this.alertRepository.save(alert); // 알림 추가
 
-        return {ok: true};
+        return {ok: true, confirmedDates: apply.dates};
     }
 
     // 도우미 매칭 수락 + 알림 추가
