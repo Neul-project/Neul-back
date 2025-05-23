@@ -11,6 +11,7 @@ import { MatchSubmitDto } from './dto/req/match-submit.dto';
 import { ApplyUserDto } from './dto/res/apply-user.dto';
 import { MatchPayDto } from './dto/req/match-pay.dto';
 import { MatchPayOKDto } from './dto/req/match-pay-ok.dto';
+import { ScheduleDto } from './dto/res/schedule.dto';
 
 @Controller('matching')
 export class MatchingController {
@@ -105,5 +106,14 @@ export class MatchingController {
     async applyUser(@Req() req){
         const userId = req.user.id;
         return this.matchingService.applyUser(userId);
+    }
+
+    // 매칭된 일정 전달 (도우미)
+    @Get('/schedule')
+    @UseGuards(JwtAuthGuard)
+    @ApiResponse({type: ScheduleDto})
+    async helperSchedule(@Req() req){
+        const userId = req.user.id;
+        return this.matchingService.helperSchedule(userId);
     }
 }

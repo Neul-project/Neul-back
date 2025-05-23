@@ -381,4 +381,27 @@ export class MatchingService {
             };
         });
     }
+
+    // 매칭된 일정 전달 (도우미)
+    async helperSchedule(adminId: number){
+        const applys = await this.applyRepository.find({
+            where: {admin: {id: adminId}, status: '결제 완료'},
+            relations: ['user', 'user.familyPatients']
+        });
+
+        return applys.map(apply =>{
+            const user = apply.user;
+            const patient = user.familyPatients?.[0]
+
+            return {
+                id: apply.id,
+                userId: user.id,
+                userName: user.name,
+                phone: user.phone,
+                patientId: patient.id,
+                patientName: patient.name,
+                availableDate: apply.dates,
+            };
+        })
+    }
 }
