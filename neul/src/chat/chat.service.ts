@@ -196,14 +196,8 @@ export class ChatService {
     }
 
     // 읽음처리 (관리자)
-    async chatRead(adminId: number, userId: number){
-        const room = await this.chatRoomRepository.findOne({
-            where: {
-                admin: { id: adminId },
-                user: { id: userId },
-            },
-        });
-
+    async chatRead(roomId: number){
+        const room = await this.chatRoomRepository.findOne({where: {id: roomId}});
         if (!room) {
             throw new NotFoundException('해당 채팅방이 존재하지 않습니다.');
         }
@@ -213,7 +207,7 @@ export class ChatService {
             .createQueryBuilder()
             .update()
             .set({ read: true })
-            .where('roomId = :roomId', { roomId: room.id })
+            .where('roomId = :roomId', { roomId })
             .andWhere('sender = :sender', { sender: 'user' })
             .andWhere('read = false')
             .execute();
@@ -226,7 +220,7 @@ export class ChatService {
             throw new NotFoundException('해당 채팅방이 존재하지 않습니다.');
         }
 
-        // 해당 채팅방의 'user'가 보낸 메시지 중 아직 읽지 않은 것들을 읽음 처리
+        // 해당 채팅방의 'admin'이 보낸 메시지 중 아직 읽지 않은 것들을 읽음 처리
         return await this.chatRepository
             .createQueryBuilder()
             .update()
@@ -235,13 +229,12 @@ export class ChatService {
             .andWhere('sender = :sender', { sender: 'admin' })
             .andWhere('read = false')
             .execute();
-
     }
 
     // 채팅내역 삭제 (사용자)
-    async chatDel(userId: number){
+    async chatDel(roomId: number){
         return await this.chatRepository.update(
-            { user: { id: userId } },
+            { room: { id: roomId } },
             { userDel: true },
         );
     }

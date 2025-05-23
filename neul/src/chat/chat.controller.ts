@@ -35,7 +35,7 @@ export class ChatController {
     // 읽음처리 (관리자)
     @Post('/read')
     async chattingRead(@Body() dto: RoomIdDto){
-        // return this.chatService.chatRead(dto.roomId);
+        return this.chatService.chatRead(dto.roomId);
     }
 
     // 읽음처리 (사용자)
@@ -46,8 +46,8 @@ export class ChatController {
 
     // 채팅내역 삭제 (사용자)
     @Delete('/alldelete')
-    async chatDelete(@Query('userId') userId: number){
-        return this.chatService.chatDel(userId);
+    async chatDelete(@Query('roomId') roomId: number){
+        return this.chatService.chatDel(roomId);
     }
 
     // 채팅방 삭제
