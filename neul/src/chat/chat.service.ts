@@ -196,6 +196,33 @@ export class ChatService {
         }));
     }
 
+    // 안 읽은 채팅 개수 전달 (사용자)
+    async chatCount(userId: number){
+        const match = await this.matchRepository.findOne({
+            where: {user: {id: userId}},
+            relations: ['admin']
+        });
+
+        if(!match) return;
+
+        const room = await this.chatRoomRepository.findOne({
+            where: { user: { id: userId }, admin: { id: match.admin.id }},
+        }); // 보호자-관리자 속한 채팅방 찾기
+
+        if (!room) return;
+
+        const unreadCount = await this.chatRepository.count({
+            where: {
+                room: {id: room.id},
+                sender: 'admin',
+                read: false,
+                userDel: false
+            }
+        }); // 해당 채팅방의 'admin'이 보낸 메시지 중 아직 읽지 않은 것의 개수
+        
+        return unreadCount;
+    }
+
     // 읽음처리 (관리자)
     async chatRead(roomId: number){
         const room = await this.chatRoomRepository.findOne({where: {id: roomId}});

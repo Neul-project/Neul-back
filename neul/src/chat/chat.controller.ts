@@ -32,6 +32,15 @@ export class ChatController {
         return this.chatService.getChatroomListUser(userId, +page, +limit);
     }
 
+    // 안 읽은 채팅 개수 전달 (사용자)
+    @Get('/unreadCount')
+    @UseGuards(JwtAuthGuard)
+    @ApiResponse({schema: {example: {unreadCount: 3}}})
+    async chatCount(@Req() req){
+        const userId = req.user.id
+        return this.chatService.chatCount(userId);
+    }
+
     // 읽음처리 (관리자)
     @Post('/read')
     async chattingRead(@Body() dto: RoomIdDto){

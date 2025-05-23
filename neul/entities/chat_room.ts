@@ -19,6 +19,12 @@ export class ChatRoom {
   @OneToMany(() => Chats, (chat) => chat.room, {cascade: true, onDelete: 'CASCADE'})
   chats: Chats[];
 
+  @Column({ comment: '사용자 삭제', default: false })
+  userDel: boolean;
+
+  @Column({ comment: '관리자 삭제', default: false })
+  adminDel: boolean;
+
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
 }
