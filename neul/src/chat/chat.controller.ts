@@ -4,7 +4,7 @@ import { ApiResponse } from '@nestjs/swagger';
 import { ChatListDTO } from './dto/res/chat-list.dto';
 import { ChatRoomListDto } from './dto/res/chatroom-list.dto';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
-import { UsersIdDto } from './dto/req/users-id.dto';
+import { RoomIdDto } from './dto/req/room-id.dto';
 
 @Controller('chat')
 export class ChatController {
@@ -17,23 +17,30 @@ export class ChatController {
         return this.chatService.getChatList(userId, +page, +limit);
     }
 
-    // 채팅방목록 전달
+    // 채팅방목록 전달 (관리자)
     @Get('/rooms')
     @ApiResponse({type: ChatRoomListDto})
     async chatroomList(@Query('adminId') adminId: number, @Query('page') page: number, @Query('limit') limit: number){
         return this.chatService.getChatroomList(adminId, +page, +limit);
     }
 
+    // 채팅방목록 전달 (사용자)
+    @Get('/user/rooms')
+    @ApiResponse({type: ChatRoomListDto})
+    async chatroomListUser(@Query('userId') userId: number, @Query('page') page: number, @Query('limit') limit: number){
+        return this.chatService.getChatroomListUser(userId, +page, +limit);
+    }
+
     // 읽음처리 (관리자)
     @Post('/read')
-    async chattingRead(@Body() dto: UsersIdDto){
-        return this.chatService.chatRead(dto.adminId, dto.userId);
+    async chattingRead(@Body() dto: RoomIdDto){
+        // return this.chatService.chatRead(dto.roomId);
     }
 
     // 읽음처리 (사용자)
     @Post('/user/read')
-    async chattingReadUser(@Body() dto: UsersIdDto){
-        return this.chatService.chatReadUser(dto.adminId, dto.userId);
+    async chattingReadUser(@Body() dto: RoomIdDto){
+        return this.chatService.chatReadUser(dto.roomId);
     }
 
     // 채팅내역 삭제 (사용자)
