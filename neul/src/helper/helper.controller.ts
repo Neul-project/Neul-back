@@ -92,19 +92,19 @@ export class HelperController {
     }
 
     // 도우미 가능 날짜 전달 (도우미)
-    @Get('/posibledate')
-    @UseGuards(JwtAuthGuard)
-    @ApiResponse({type: HelperPossibleDto})
-    async getHelperPossible(@Req() req){
-        const userId = req.user.id;
-        return this.helperService.getHelperPossible(userId);
-    }
+    // @Get('/posibledate')
+    // @UseGuards(JwtAuthGuard)
+    // @ApiResponse({type: HelperPossibleDto})
+    // async getHelperPossible(@Req() req){
+    //     const userId = req.user.id;
+    //     return this.helperService.getHelperPossible(userId);
+    // }
 
-    // 도우미 가능 날짜 전달 (사용자)
+    // 도우미 가능 날짜 전달
     @Get('/time/:helperId')
     @ApiResponse({type: HelperPossibleDto})
-    async getHelperPossible2(@Param('helperId') helperId: number){
-        return this.helperService.getHelperPossible2(helperId);
+    async getHelperPossible(@Param('helperId') helperId: number){
+        return this.helperService.getHelperPossible(helperId);
     }
 
     // 도우미 전체 전달

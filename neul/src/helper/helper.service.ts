@@ -98,21 +98,21 @@ export class HelperService {
     }
 
     // 도우미 가능 날짜 전달 (도우미)
-    async getHelperPossible(userId: number){
-        const shift = await this.shiftRepository.findOne({ 
-            where: {admin: {id: userId}},
-            relations: ['admin']
-        });
+    // async getHelperPossible(userId: number){
+    //     const shift = await this.shiftRepository.findOne({ 
+    //         where: {admin: {id: userId}},
+    //         relations: ['admin']
+    //     });
 
-        return {
-            startDate: shift.startDate,
-            endDate: shift.endDate,
-            week: shift.week
-        };
-    }
+    //     return {
+    //         startDate: shift.startDate,
+    //         endDate: shift.endDate,
+    //         week: shift.week
+    //     };
+    // }
 
-    // 도우미 가능 날짜 전달 (사용자)
-    async getHelperPossible2(helperId: number){
+    // 도우미 가능 날짜 전달
+    async getHelperPossible(helperId: number){
         const shift = await this.shiftRepository.findOne({ 
             where: {admin: {id: helperId}},
             relations: ['admin'],
@@ -121,7 +121,7 @@ export class HelperService {
         return {
             startDate: shift.startDate,
             endDate: shift.endDate,
-            week: shift.week.split(',')
+            week: shift.week
         };
     }
 
