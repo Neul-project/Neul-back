@@ -69,22 +69,37 @@ export class MatchingService {
             relations: ['user', 'admin']
         });
 
-        return patients.map(x => ({
-            user_id: x.user?.id || null,
-            user_name: x.user?.name || null,
-            user_email: x.user?.email || null,
-            user_phone: x.user?.phone || null,
-            user_create: x.user?.created_at || null,
+        const applys = await this.applyRepository.find({
+            where: {admin: {id: userId}},
+            relations: ['user']
+        });
 
-            admin_id: x.admin?.id || null,
-            admin_name: x.admin?.name || null,
+        return patients.map(p => {
+            const result = applys.filter(a => a.user.id === p.user.id);
 
-            patient_id: x.id,
-            patient_name: x.name || '없음',
-            patient_gender: x.gender || '없음',
-            patient_birth: x.birth || '없음',
-            patient_note: x.note || '없음'
-        }));
+            // 한 명의 보호자가 같은 담당자한테 여러번 신청할 경우 고려
+            // 결과 예시 2025-05-26,2025-05-27/2025-06-01
+            const dates = result.map(r => r.dates).join('/') || null;
+
+            return {
+                user_id: p.user?.id || null,
+                user_name: p.user?.name || null,
+                user_email: p.user?.email || null,
+                user_phone: p.user?.phone || null,
+                user_create: p.user?.created_at || null,
+
+                admin_id: p.admin?.id || null,
+                admin_name: p.admin?.name || null,
+
+                patient_id: p.id,
+                patient_name: p.name || '없음',
+                patient_gender: p.gender || '없음',
+                patient_birth: p.birth || '없음',
+                patient_note: p.note || '없음',
+
+                dates
+            }
+        });
     }
 
     // 선택 유저 삭제
