@@ -23,13 +23,11 @@ export class ChatService {
     ) {}
 
     // 채팅 저장
-    async saveChat({userId, message, sender}){
-        const user = await this.userRepository.findOne({ where: {id: userId} });
-        
+    async saveChat({roomId, message, sender}){        
         // 해당 유저-관리자 채팅방
         let room = await this.chatRoomRepository.findOne({
-            where: { user: {id: userId} },
-            relations: ['admin'],
+            where: { id: roomId },
+            relations: ['user', 'admin'],
         });
 
         if (!room) {
@@ -37,7 +35,7 @@ export class ChatService {
         }
 
         const chat = this.chatRepository.create({
-            user,
+            user: room.user,
             admin: room.admin,
             message,
             room,
@@ -47,9 +45,9 @@ export class ChatService {
     }
 
     // 채팅목록 전달 (사용자+관리자)
-    async getChatList(userId: number, page: number, limit: number){
+    async getChatList(roomId: number, page: number, limit: number){
         const room = await this.chatRoomRepository.findOne({
-            where:{ user: {id: userId} }
+            where:{ id: roomId }
         });
 
         const chat = await this.chatRepository.find({
@@ -246,41 +244,6 @@ export class ChatService {
             { user: { id: userId } },
             { userDel: true },
         );
-    }
-
-    // 안 읽은 채팅 개수 전달 (사용자)
-    async chatCount(userId: number){
-        const patient = await this.patientRepository.findOne({
-            where: {user: {id: userId}},
-            relations: ['admin']
-        });
-
-        if (!patient || !patient.admin) {
-            throw new Error('연결된 관리자가 없습니다.');
-        }
-
-        const adminId = patient.admin.id; // 연결된 환자로 관리자id 찾기
-
-        const room = await this.chatRoomRepository.findOne({
-            where: {
-                user: { id: userId },
-                admin: { id: adminId },
-            },
-        }); // 보호자-관리자 속한 채팅방 찾기
-
-        if (!room) {
-            throw new Error('연결된 채팅방이 없습니다.');
-        }
-
-        const unreadCount = await this.chatRepository.count({
-            where: {
-                room: {id: room.id},
-                sender: 'admin',
-                read: false
-            }
-        }); // 해당 채팅방의 'admin'이 보낸 메시지 중 아직 읽지 않은 것의 개수
-        
-        return unreadCount;
     }
 
     // 채팅방 삭제

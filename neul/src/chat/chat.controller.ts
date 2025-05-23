@@ -13,8 +13,9 @@ export class ChatController {
     // 채팅목록 전달
     @Get('/list')
     @ApiResponse({type: ChatListDTO})
-    async chatList(@Query('userId') userId: number, @Query('page') page: number, @Query('limit') limit: number){
-        return this.chatService.getChatList(userId, +page, +limit);
+    async chatList(@Query('roomId') roomId: number, @Query('page') page: number, @Query('limit') limit: number){
+        console.log(roomId, '방아이디전달')
+        return this.chatService.getChatList(roomId, +page, +limit);
     }
 
     // 채팅방목록 전달 (관리자)
@@ -47,15 +48,6 @@ export class ChatController {
     @Delete('/alldelete')
     async chatDelete(@Query('userId') userId: number){
         return this.chatService.chatDel(userId);
-    }
-
-    // 안 읽은 채팅 개수 전달 (사용자)
-    @Get('/unreadCount')
-    @UseGuards(JwtAuthGuard)
-    @ApiResponse({schema: {example: {unreadCount: 3}}})
-    async chatCount(@Req() req){
-        const userId = req.user.id
-        return this.chatService.chatCount(userId);
     }
 
     // 채팅방 삭제

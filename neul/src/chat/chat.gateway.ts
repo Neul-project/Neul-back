@@ -23,7 +23,7 @@ export class ChatGateway{
 
     @SubscribeMessage('send_message') // 메시지 수신 처리
     async handleMessage(
-        @MessageBody() data: { userId: number; message: string, sender: 'user' | 'admin' },
+        @MessageBody() data: { roomId: number; message: string, sender: 'user' | 'admin' },
         @ConnectedSocket() client: Socket,
     ){
         const saved = await this.chatService.saveChat(data); // db 저장
