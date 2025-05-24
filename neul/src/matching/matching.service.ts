@@ -116,15 +116,13 @@ export class MatchingService {
     }
 
     // 도우미 매칭 수락 + 알림 추가
-    async helperAccept(adminId: number, userId: number){
+    async helperAccept(applyId: number, adminId: number, userId: number){
         const user = await this.userRepository.findOne({where: {id: userId}});
         const admin = await this.userRepository.findOne({where: {id: adminId}});
-        const apply = await this.applyRepository.findOne({
-            where: { admin: {id: adminId}, user: {id: userId}}
-        });
+        const apply = await this.applyRepository.findOne({where: {id: applyId}});
 
-        if(!admin || !user){
-            throw new Error('해당 도우미/유저를 찾을 수 없습니다.');
+        if(!admin || !user || !apply){
+            throw new Error('해당 정보를 찾을 수 없습니다.');
         }
 
         apply.status = '결제 대기';
@@ -139,15 +137,13 @@ export class MatchingService {
     }
 
     // 도우미 매칭 거절 + 알림 추가
-    async helperCancel(adminId: number, userId: number, reason: string){
+    async helperCancel(applyId: number, adminId: number, userId: number, reason: string){
         const user = await this.userRepository.findOne({where: {id: userId}});
         const admin = await this.userRepository.findOne({where: {id: adminId}});
-        const apply = await this.applyRepository.findOne({
-            where: { admin: {id: adminId}, user: {id: userId}}
-        });
+        const apply = await this.applyRepository.findOne({where: {id: applyId}});
 
-        if(!admin || !user){
-            throw new Error('해당 도우미/유저가 없습니다.');
+        if(!admin || !user || !apply){
+            throw new Error('해당 정보를 찾을 수 없습니다.');
         }
 
         apply.status = '승인 반려';
@@ -359,29 +355,36 @@ export class MatchingService {
 
     // 해당 도우미에게 매칭 신청한 유저 전달
     async applyUser(adminId: number){
-        const users = await this.applyRepository.find({
-            where: {admin: {id: adminId}},
-            relations: ['user', 'user.familyPatients'],
-        });
+        const result = await this.applyRepository
+            .createQueryBuilder('apply')
+            .leftJoinAndSelect('apply.user', 'user')
+            .leftJoinAndSelect('user.familyPatients', 'patient')
+            .where('apply.admin.id = :adminId', { adminId })
+            .getMany();
 
-        return users.map((apply) =>{
+        return result.map((apply) =>{
             const patient = apply.user.familyPatients?.[0];
 
             return{
-                status: apply.status,
-                created_at: apply.created_at,
-
-                id: apply.user.id,
-                email: apply.user.email,
-                name: apply.user.name,
-                phone: apply.user.phone,
-                dates: apply.dates,
-
-                patient_id: patient.id,
-                patient_name: patient.name || '없음',
-                patient_gender: patient.gender || '없음',
-                patient_birth: patient.birth || '없음',
-                patient_note: patient.note || '없음',
+                user: {
+                    id: apply.user.id,
+                    email: apply.user.email,
+                    name: apply.user.name,
+                    phone: apply.user.phone
+                },
+                patient: patient ? {
+                    id: patient.id,
+                    name: patient.name,
+                    gender: patient.gender,
+                    birth: patient.birth,
+                    note: patient.note,
+                } : null,
+                apply: {
+                    id: apply.id,
+                    status: apply.status,
+                    dates: apply.dates,
+                    created_at: apply.created_at
+                },
             };
         });
     }

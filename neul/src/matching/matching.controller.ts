@@ -14,6 +14,7 @@ import { MatchPayOKDto } from './dto/req/match-pay-ok.dto';
 import { ScheduleDto } from './dto/res/schedule.dto';
 import { ApplyAllDto } from './dto/res/apply-all.dto';
 import { DeleteMatchDto } from './dto/req/delete-match.dto';
+import { SearchMatchDto } from './dto/res/search-match.dto';
 
 @Controller('matching')
 export class MatchingController {
@@ -52,13 +53,13 @@ export class MatchingController {
     // 도우미 매칭 수락 + 알림 추가
     @Post('/accept')
     async helperAccept(@Body() dto: MatchOKDto){
-        return this.matchingService.helperAccept(dto.adminId, dto.userId);
+        return this.matchingService.helperAccept(dto.applyId, dto.adminId, dto.userId);
     }
 
     // 도우미 매칭 거절 + 알림 추가
     @Post('/cancel')
     async helperCancel(@Body() dto: MatchCancelDto){
-        return this.matchingService.helperCancel(dto.adminId, dto.userId, dto.content);
+        return this.matchingService.helperCancel(dto.applyId, dto.adminId, dto.userId, dto.content);
     }
 
     // 사용자 매칭 결제 요청
@@ -100,6 +101,7 @@ export class MatchingController {
     // 담당 회원 검색
     @Get('/search')
     @UseGuards(JwtAuthGuard)
+    @ApiResponse({type: SearchMatchDto})
     async searchUserSelected(@Req() req, @Query() dto: SearchUserDto){
         const userId = req.user.id;
         return this.matchingService.getSerchUserSelected(userId, dto);
