@@ -5,7 +5,7 @@ import { Chats } from 'entities/chats';
 import { Match } from 'entities/match';
 import { Patients } from 'entities/patients';
 import { Users } from 'entities/users';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 @Injectable()
 export class ChatService {
@@ -198,32 +198,22 @@ export class ChatService {
         }));
     }
 
-    // 안 읽은 채팅 개수 전달 (사용자)
+    // 안 읽은 채팅 개수 전달 (메인)
     async chatCount(userId: number){
-        const match = await this.matchRepository.findOne({
-            where: {user: {id: userId}},
-            relations: ['admin']
-        });
+        const rooms = await this.chatRoomRepository.find({where: {user: {id: userId}}});
+        if (!rooms.length) return;
 
-        if(!match) return;
-
-        const room = await this.chatRoomRepository.findOne({
-            where: { user: { id: userId }, admin: { id: match.admin.id }},
-        }); // 보호자-관리자 속한 채팅방 찾기
-
-        if (!room) return;
+        const roomIds = rooms.map((room) => room.id); // 해당 사용자 모든 채팅방 찾기
 
         const unreadCount = await this.chatRepository.count({
             where: {
-                room: {id: room.id},
+                room: {id: In(roomIds)},
                 sender: 'admin',
                 read: false,
                 userDel: false
             }
-        }); // 해당 채팅방의 'admin'이 보낸 메시지 중 아직 읽지 않은 것의 개수
+        }); // 'admin'이 보낸 메시지 중 아직 읽지 않은 것의 개수
         
-        if(!unreadCount) return;
-
         return unreadCount;
     }
 
