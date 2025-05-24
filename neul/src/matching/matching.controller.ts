@@ -26,15 +26,6 @@ export class MatchingController {
         return this.matchingService.userAll();   
     }
 
-    // 담당 유저 전달
-    // @Get('/matchuser')
-    // @UseGuards(JwtAuthGuard)
-    // @ApiResponse({type: UserPatientDto})
-    // async userSelected(@Req() req){
-    //     const userId = req.user.id;
-    //     return this.matchingService.userSelect(userId);
-    // }
-
     // 선택한 유저 탈퇴
     @Delete('/userdelete')
     @ApiBody({type: DeleteStatusDto})
