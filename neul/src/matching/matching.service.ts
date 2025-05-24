@@ -344,7 +344,57 @@ export class MatchingService {
 
     // 담당 회원 검색
     async getSerchUserSelected(adminId: number, dto: SearchUserDto){
+        const query = this.userRepository
+            .createQueryBuilder('user')
+            .leftJoinAndSelect('user.familyPatients', 'patient')
+            .leftJoin('patient.admin', 'admin')
+            .leftJoinAndMapOne(
+                'user.apply', Apply, 'apply',
+                'apply.user.id = user.id AND apply.admin.id = :adminId', { adminId }
+            )
+            .leftJoinAndMapOne(
+                'user.match', Match, 'match',
+                'match.user.id = user.id AND match.admin.id = :adminId', { adminId }
+            )
+            .where('patient.admin.id = :adminId', { adminId });
 
+        if(dto.search === 'user_id'){
+            query.andWhere('user.id LIKE :word', {word: `%${dto.word}%`})
+        }
+        else if(dto.search === 'user_name'){
+            query.andWhere('user.name LIKE :word', {word: `%${dto.word}%`});
+        }
+        else if(dto.search === 'patient_name'){
+            query.andWhere('patient.name LIKE :word', {word: `%${dto.word}%`});
+        }
+        
+        const result = await query.getMany();
+
+        return result.map((user)=> {
+            const patient = user.familyPatients?.[0];
+            
+            return {
+                user: {
+                    id: user.id,
+                    email: user.email,
+                    name: user.name,
+                    phone: user.phone
+                },
+                patient: patient ? {
+                    id: patient.id,
+                    name: patient.name,
+                    gender: patient.gender,
+                    birth: patient.birth,
+                    note: patient.note,
+                } : null,
+                apply: {
+                    dates: user['apply']?.dates || null
+                },
+                match: {
+                    matching_at: user['match']?.matching_at || null
+                },
+            };
+        });
     }
 
     // 해당 도우미에게 매칭 신청한 유저 전달

@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn } from 'typeorm';
 import { Users } from './users';
   
 @Entity('match')
@@ -11,4 +11,7 @@ export class Match {
     
     @ManyToOne(() => Users, (user) => user.id, { onDelete: "CASCADE" })
     user: Users;
+
+    @CreateDateColumn({ type: 'timestamp' })
+    matching_at: Date;
 }
