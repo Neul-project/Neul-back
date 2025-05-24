@@ -12,6 +12,8 @@ import { ApplyUserDto } from './dto/res/apply-user.dto';
 import { MatchPayDto } from './dto/req/match-pay.dto';
 import { MatchPayOKDto } from './dto/req/match-pay-ok.dto';
 import { ScheduleDto } from './dto/res/schedule.dto';
+import { ApplyAllDto } from './dto/res/apply-all.dto';
+import { DeleteMatchDto } from './dto/req/delete-match.dto';
 
 @Controller('matching')
 export class MatchingController {
@@ -59,7 +61,6 @@ export class MatchingController {
     // 도우미 매칭 수락 + 알림 추가
     @Post('/accept')
     async helperAccept(@Body() dto: MatchOKDto){
-        console.log(dto, '매칭수락임')
         return this.matchingService.helperAccept(dto.adminId, dto.userId);
     }
 
@@ -85,12 +86,18 @@ export class MatchingController {
         return this.matchingService.helperMatchOK(userId, dto);
     }
 
-
-    // // 피보호자-관리자 매칭 취소 + 사용자쪽 채팅 내역 삭제 + 알림 추가
-    // @Patch('/cancel')
-    // async userNotMatching(@Body() dto: ){
-    //     return this.matchingService.userNotMatch(dto.adminId, dto.userId, dto.patientId);
-    // }
+    // 사용자 매칭 끝 (신청내역 전달)
+    @Get('/usercheck')
+    @ApiResponse({type: ApplyAllDto})
+    async applyAll(@Query('userId') userId: number){
+        return this.matchingService.getApplyAll(userId)
+    }
+    
+    // 사용자 매칭 끝2 (매칭테이블 취소 + 알림 추가)
+    @Post('/deletematch')
+    async deleteMatch(@Body() dto: DeleteMatchDto){
+        return this.matchingService.deleteMatch(dto.id, dto.userId, dto.adminId);
+    }
 
     // 전체 회원 검색
     @Get('/searchuser')

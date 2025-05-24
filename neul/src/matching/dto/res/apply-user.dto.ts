@@ -19,8 +19,8 @@ export class ApplyUserDto {
   @ApiProperty({ example: '01012345678', description: '신청한 유저 연락처' })
   phone: string;
 
-  @ApiProperty({ example: ['2025-06-01', '2025-06-05'], description: '신청 날짜 목록' })
-  dates: string[];
+  @ApiProperty({ example: '2025-06-01,2025-06-03', description: '신청 날짜 목록' })
+  dates: string;
 
   @ApiProperty({ example: 11, description: '가족 환자 ID' })
   patient_id: number;

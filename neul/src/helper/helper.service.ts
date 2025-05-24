@@ -97,26 +97,14 @@ export class HelperService {
         return await this.shiftRepository.save(shift);
     }
 
-    // 도우미 가능 날짜 전달 (도우미)
-    // async getHelperPossible(userId: number){
-    //     const shift = await this.shiftRepository.findOne({ 
-    //         where: {admin: {id: userId}},
-    //         relations: ['admin']
-    //     });
-
-    //     return {
-    //         startDate: shift.startDate,
-    //         endDate: shift.endDate,
-    //         week: shift.week
-    //     };
-    // }
-
     // 도우미 가능 날짜 전달
     async getHelperPossible(helperId: number){
         const shift = await this.shiftRepository.findOne({ 
             where: {admin: {id: helperId}},
             relations: ['admin'],
         });
+
+        if(!shift) return;
         
         return {
             startDate: shift.startDate,

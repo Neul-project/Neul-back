@@ -90,16 +90,7 @@ export class HelperController {
         const userId = req.user.id;
         return this.helperService.helperPossibleUpdate(userId, dto);
     }
-
-    // 도우미 가능 날짜 전달 (도우미)
-    // @Get('/posibledate')
-    // @UseGuards(JwtAuthGuard)
-    // @ApiResponse({type: HelperPossibleDto})
-    // async getHelperPossible(@Req() req){
-    //     const userId = req.user.id;
-    //     return this.helperService.getHelperPossible(userId);
-    // }
-
+    
     // 도우미 가능 날짜 전달
     @Get('/time/:helperId')
     @ApiResponse({type: HelperPossibleDto})
