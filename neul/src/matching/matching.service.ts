@@ -360,7 +360,7 @@ export class MatchingService {
             .leftJoinAndSelect('apply.user', 'user')
             .leftJoinAndSelect('user.familyPatients', 'patient')
             .where('apply.admin.id = :adminId', { adminId })
-            .andWhere('apply.status = :status', { status: '승인 대기' })
+            .andWhere('apply.status IN (:...statuses)', { statuses: ['승인 대기', '결제 대기'] })
             .getMany();
 
         return result.map((apply) =>{
