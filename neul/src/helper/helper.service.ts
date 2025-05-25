@@ -8,6 +8,7 @@ import { HelperSignupDto } from 'src/helper/dto/req/helper-signup.dto';
 import { In, IsNull, Not, Repository } from 'typeorm';
 import { HelperPossibleDto } from './dto/req/helper-possible.dto';
 import { HelperUpdateDto } from './dto/req/helper-update.dto';
+import { HelperQueryDto } from './dto/req/helper-query.dto';
 
 @Injectable()
 export class HelperService {
@@ -120,26 +121,30 @@ export class HelperService {
     }
 
     // 도우미 전체 전달
-    async helperAll(type?: string){
+    async helperAll(query: HelperQueryDto){
+        const { type, search, search_value } = query;
+
         let statusCondition: string | undefined;
-        
-        if (type === 'wait') {
-            statusCondition = '승인 대기';
-        }
-        else if (type === 'approve') {
-            statusCondition = '승인 완료';
-        }
-        else if (type === 'reject') {
-            statusCondition = '승인 반려';
+        if (type === 'wait') statusCondition = '승인 대기';
+        else if (type === 'approve') statusCondition = '승인 완료';
+        else if (type === 'reject') statusCondition = '승인 반려';
+
+        const queryBuilder = this.helperRepository
+            .createQueryBuilder('helper')
+            .leftJoinAndSelect('helper.user', 'user');
+
+        if(statusCondition){ // 도우미 승인 상태 조건 
+            queryBuilder.andWhere('helper.status = :status', { status: statusCondition });
         }
 
-        const whereCondition = statusCondition ? { status: statusCondition } : {};
+        if(search && search_value === 'id'){ // 도우미 id 검색
+            queryBuilder.andWhere('CAST(user.id AS CHAR) LIKE :search', { search: `%${search}%` })
+        }
+        else if(search && search_value === 'name'){ // 도우미 이름 검색
+            queryBuilder.andWhere('user.name LIKE :search', { search: `%${search}%` });
+        }
 
-        const helpers = await this.helperRepository.find({
-            where: whereCondition,
-            relations: ['user']
-        });
-
+        const helpers = await queryBuilder.getMany();
         return helpers;
     }
 

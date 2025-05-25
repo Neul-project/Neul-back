@@ -12,6 +12,7 @@ import { HelperCancelDto } from './dto/req/helper-cancel.dto';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { HelperPossibleDto } from './dto/req/helper-possible.dto';
 import { HelperUpdateDto } from './dto/req/helper-update.dto';
+import { HelperQueryDto } from './dto/req/helper-query.dto';
 
 @Controller('helper')
 export class HelperController {
@@ -102,8 +103,8 @@ export class HelperController {
     // 도우미 전체 전달
     @Get('/info')
     @ApiResponse({type: HelperInfoDto})
-    async helperAll(@Query('type') type?: string){
-        return this.helperService.helperAll(type);
+    async helperAll(@Query() query: HelperQueryDto){
+        return this.helperService.helperAll(query);
     }
 
     // 해당 도우미 데이터 전달
