@@ -24,6 +24,16 @@ export class BannerService {
         return await this.bannerRepository.save(banner);
     }
 
+    // 배너 삭제
+    async bannerDel(bannerId: number){
+        const banner = await this.bannerRepository.findOne({ where: {id: bannerId}})
+        if(!banner){
+            throw new Error('해당 배너가 없습니다.');
+        }
+
+        await this.bannerRepository.remove(banner);
+    }
+
     // 배너 제공
     async bannerList(){
         return await this.bannerRepository.find();

@@ -30,8 +30,8 @@ export class BannerController {
 
     // 배너 삭제
     @Delete('/delete')
-    async bannerDelete(){
-
+    async bannerDelete(@Body() dto){
+      return await this.bannerService.bannerDel(dto.id);
     }
 
     // 배너 전달
