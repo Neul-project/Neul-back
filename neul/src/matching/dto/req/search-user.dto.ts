@@ -10,4 +10,7 @@ export class SearchUserDto {
 
   @ApiProperty({ example: '홍길동', description: '검색어 (이름 또는 ID 일부)' })
   word: string;
+
+  @ApiProperty({ example: 3, description: '매칭할 관리자 ID' })
+  adminId?: number;
 }

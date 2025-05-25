@@ -7,12 +7,12 @@ import { HelperSignupDto } from 'src/helper/dto/req/helper-signup.dto';
 import { ApiResponse } from '@nestjs/swagger';
 import { HelperInfoDto } from './dto/res/helper-info.dto';
 import { UserIdDto } from 'src/auth/dto/res/user-id.dto';
-import { UserIdsDto } from './dto/req/user-ids.dto';
 import { HelperCancelDto } from './dto/req/helper-cancel.dto';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { HelperPossibleDto } from './dto/req/helper-possible.dto';
 import { HelperUpdateDto } from './dto/req/helper-update.dto';
 import { HelperQueryDto } from './dto/req/helper-query.dto';
+import { DeleteIdsDto } from 'src/status/dto/req/delete-ids.dto';
 
 @Controller('helper')
 export class HelperController {
@@ -128,7 +128,7 @@ export class HelperController {
     
     // 도우미 삭제
     @Delete('/userdelete')
-    async helperDelete(@Body() dto: UserIdsDto){
+    async helperDelete(@Body() dto: DeleteIdsDto){
         return this.helperService.helperDel(dto.ids);
     }
 }

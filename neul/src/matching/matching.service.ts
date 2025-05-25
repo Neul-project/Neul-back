@@ -38,30 +38,6 @@ export class MatchingService {
         private chargeRepository: Repository<Charge>
     ) {}
 
-    // 전체 유저 전달
-    async userAll(){
-        const patients = await this.patientRepository.find({
-            relations: ['user', 'admin']
-        });
-
-        return patients.map(x => ({
-            user_id: x.user?.id || null,
-            user_name: x.user?.name || null,
-            user_email: x.user?.email || null,
-            user_phone: x.user?.phone || null,
-            user_create: x.user?.created_at || null,
-
-            admin_id: x.admin?.id || null,
-            admin_name: x.admin?.name || null,
-
-            patient_id: x.id,
-            patient_name: x.name || '없음',
-            patient_gender: x.gender || '없음',
-            patient_birth: x.birth || '없음',
-            patient_note: x.note || '없음'
-        }));
-    }
-
     // 선택 유저 삭제
     async userDel(ids: number[]){
         return await this.userRepository.delete(ids);
@@ -258,71 +234,31 @@ export class MatchingService {
 
     }
 
-    // 전체 회원 검색
-    async getSerchUser(dto: SearchUserDto){
-        let patients: Patients[] = [];
-
-        if (dto.search === 'user_id' || dto.search === 'user_name') {
-            const userWhere = dto.search === 'user_id'
-                ? { id: Raw((alias) => `CAST(${alias} AS CHAR) LIKE '%${dto.word}%'`) }
-                : { name: Like(`%${dto.word}%`) };
-
-            const users = await this.userRepository.find({
-                where: userWhere,
-                relations: ['familyPatients']
-            });
-
-            // flatMap을 이용해 user와 연결된 환자들을 한 번에 정리
-            patients = users.flatMap(user =>
-                (user.familyPatients || []).map(patient => {
-                    patient.user = user;
-                    return patient;
-                })
-            );
-
-        } else if (dto.search === 'patient_name') {
-            patients = await this.patientRepository.find({
-                where: { name: Like(`%${dto.word}%`) },
-                relations: ['user', 'admin']
-            });
-        } else {
-            throw new Error('지원하지 않는 검색 기준입니다.');
-        }
-
-        return patients.map(x => ({
-            user_id: x.user?.id || null,
-            user_name: x.user?.name || null,
-            user_email: x.user?.email || null,
-            user_phone: x.user?.phone || null,
-            user_create: x.user?.created_at || null,
-
-            admin_id: x.admin?.id || null,
-            admin_name: x.admin?.name || null,
-
-            patient_id: x.id,
-            patient_name: x.name || '없음',
-            patient_gender: x.gender || '없음',
-            patient_birth: x.birth || '없음',
-            patient_note: x.note || '없음'
-        }));
-    }
-
-    // 담당 회원 검색
-    async getSerchUserSelected(adminId: number, dto: SearchUserDto){
+    // 회원 검색
+    async getSerchUserSelected(dto: SearchUserDto){
         const query = this.userRepository
             .createQueryBuilder('user')
             .leftJoinAndSelect('user.familyPatients', 'patient')
             .leftJoin('patient.admin', 'admin')
+        
+        if(dto.adminId){ // adminId가 있을 경우 담당 회원 검색
+            query
             .leftJoinAndMapOne(
                 'user.apply', Apply, 'apply',
-                'apply.user.id = user.id AND apply.admin.id = :adminId', { adminId }
+                'apply.user.id = user.id AND apply.admin.id = :adminId', { adminId: dto.adminId }
             )
             .leftJoinAndMapOne(
                 'user.match', Match, 'match',
-                'match.user.id = user.id AND match.admin.id = :adminId', { adminId }
+                'match.user.id = user.id AND match.admin.id = :adminId', { adminId: dto.adminId }
             )
-            .where('patient.admin.id = :adminId', { adminId });
-
+            .andWhere('patient.admin.id = :adminId', { adminId: dto.adminId });
+        }
+        else { // adminId 없을 경우 전체 검색
+            query
+            .leftJoinAndMapOne('user.apply', Apply, 'apply', 'apply.user.id = user.id')
+            .leftJoinAndMapOne('user.match', Match, 'match', 'match.user.id = user.id');
+        }
+        
         if(dto.search === 'user_id'){
             query.andWhere('user.id LIKE :word', {word: `%${dto.word}%`})
         }

@@ -4,7 +4,7 @@ import { CreateStatusDto } from './dto/req/create-status.dto';
 import { ApiBody, ApiResponse } from '@nestjs/swagger';
 import { ContectPatientDto } from './dto/res/contect-patient.dto';
 import { ListStatusDto } from './dto/res/list-status.dto';
-import { DeleteStatusDto } from './dto/req/delete-status.dto';
+import { DeleteIdsDto } from './dto/req/delete-ids.dto';
 import { StatusListQueryDto } from './dto/req/status-list-query.dto';
 
 @Controller('status')
@@ -43,7 +43,7 @@ export class StatusController {
 
     // 선택한 상태기록 삭제
     @Delete('/delete')
-    @ApiBody({type: DeleteStatusDto})
+    @ApiBody({type: DeleteIdsDto})
     async listDelete(@Body() body: number[]){
         return this.statusService.listDel(body);
     }

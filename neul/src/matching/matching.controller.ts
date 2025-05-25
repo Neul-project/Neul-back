@@ -1,8 +1,7 @@
 import { Body, Controller, Delete, Get, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { MatchingService } from './matching.service';
 import { ApiBody, ApiResponse } from '@nestjs/swagger';
-import { UserPatientDto } from './dto/res/user-patient.dto';
-import { DeleteStatusDto } from 'src/status/dto/req/delete-status.dto';
+import { DeleteIdsDto } from 'src/status/dto/req/delete-ids.dto';
 import { MatchOKDto } from './dto/req/match-ok.dto';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { SearchUserDto } from './dto/req/search-user.dto';
@@ -21,16 +20,9 @@ import { MatchPayOKResDto } from './dto/res/match-pay-ok-res.dto';
 export class MatchingController {
     constructor (private readonly matchingService: MatchingService) {}
 
-    // 전체 유저 전달
-    @Get('/alluser')
-    @ApiResponse({type: UserPatientDto})
-    async userAll(){
-        return this.matchingService.userAll();   
-    }
-
     // 선택한 유저 탈퇴
     @Delete('/userdelete')
-    @ApiBody({type: DeleteStatusDto})
+    @ApiBody({type: DeleteIdsDto})
     async slectUserDelete(@Body() body: number[]){
         return this.matchingService.userDel(body);
     };
@@ -93,20 +85,11 @@ export class MatchingController {
         return this.matchingService.deleteMatch(dto.id, dto.userId, dto.adminId);
     }
 
-    // 전체 회원 검색
-    @Get('/searchuser')
-    @ApiResponse({type: UserPatientDto})
-    async serchUser(@Query() dto: SearchUserDto){
-        return this.matchingService.getSerchUser(dto);
-    }
-
-    // 담당 회원 검색
+    // 회원 검색
     @Get('/search')
-    @UseGuards(JwtAuthGuard)
     @ApiResponse({type: SearchMatchDto})
-    async searchUserSelected(@Req() req, @Query() dto: SearchUserDto){
-        const userId = req.user.id;
-        return this.matchingService.getSerchUserSelected(userId, dto);
+    async searchUserSelected(@Query() dto: SearchUserDto){
+        return this.matchingService.getSerchUserSelected(dto);
     }
 
     // 해당 도우미에게 매칭 신청한 유저 전달

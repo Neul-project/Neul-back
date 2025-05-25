@@ -7,7 +7,7 @@ import { ApiConsumes, ApiResponse } from '@nestjs/swagger';
 import { CreateProgramDto } from './dto/req/create-program.dto';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { CreateRefundDto } from './dto/req/create-refund.dto';
-import { DeleteStatusDto } from 'src/status/dto/req/delete-status.dto';
+import { DeleteIdsDto } from 'src/status/dto/req/delete-ids.dto';
 import { UpdateProgramDto } from './dto/res/update-program.dto';
 import { PayProgramDto } from './dto/req/pay-program.dto';
 import { PayOrderIdDto } from './dto/res/pay-orderId.dto';
@@ -100,7 +100,7 @@ export class ProgramController {
 
     // 프로그램 삭제
     @Delete('/delete')
-    async deleteProgram(@Body() dto: DeleteStatusDto){
+    async deleteProgram(@Body() dto: DeleteIdsDto){
         return this.programService.deletePro(dto.ids);
     }
 

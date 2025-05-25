@@ -8,7 +8,7 @@ import { ApiConsumes, ApiResponse } from '@nestjs/swagger';
 import { SelectActivityDto } from './dto/res/select-activity.dto';
 import { CreateFeedbackDto } from './dto/req/create-feedback.dto';
 import { AllFeedbackDto } from './dto/res/all-feedback.dto';
-import { DeleteStatusDto } from 'src/status/dto/req/delete-status.dto';
+import { DeleteIdsDto } from 'src/status/dto/req/delete-ids.dto';
 import { UpdateActivityDto } from './dto/req/update-activity.dto';
 import { ActivityPatientQueryDto } from './dto/req/activity-patient-query.dto';
 import { FeedbackQueryDto } from './dto/req/feedback-query.dto';
@@ -69,7 +69,7 @@ export class ActivityController {
 
     // 선택한 활동기록 삭제 (사용자)
     @Delete('/delete')
-    async listDelete(@Body() dto: DeleteStatusDto){
+    async listDelete(@Body() dto: DeleteIdsDto){
         return this.activityService.listDelAct(dto.ids);
     }
 
