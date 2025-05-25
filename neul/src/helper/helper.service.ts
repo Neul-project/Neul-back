@@ -131,26 +131,25 @@ export class HelperService {
 
         const queryBuilder = this.helperRepository
             .createQueryBuilder('helper')
-            .leftJoinAndSelect('helper.user', 'user')
-            .leftJoinAndSelect('user.applyRequests', 'apply')
-            .addSelect(['apply.dates']);
+            .leftJoinAndSelect('helper.user', 'admin')
+            .leftJoinAndSelect('admin.applyRequests', 'apply')
 
         if(statusCondition){ // 도우미 승인 상태 조건 
             queryBuilder.andWhere('helper.status = :status', { status: statusCondition });
         }
 
         if(search && search_value === 'id'){ // 도우미 id 검색
-            queryBuilder.andWhere('CAST(user.id AS CHAR) LIKE :search', { search: `%${search}%` })
+            queryBuilder.andWhere('CAST(admin.id AS CHAR) LIKE :search', { search: `%${search}%` })
         }
         else if(search && search_value === 'name'){ // 도우미 이름 검색
-            queryBuilder.andWhere('user.name LIKE :search', { search: `%${search}%` });
+            queryBuilder.andWhere('admin.name LIKE :search', { search: `%${search}%` });
         }
 
         const helpers = await queryBuilder.getMany();
         return helpers.map(helper => {
             return {
                 ...helper,
-                user: {
+                admin: {
                     dates: helper.user.applyRequests?.map(apply => apply.dates) || []
                 }
             };
