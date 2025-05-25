@@ -120,29 +120,24 @@ export class HelperService {
     }
 
     // 도우미 전체 전달
-    async helperAll(){
-        const helpers = await this.helperRepository.find({ 
+    async helperAll(type?: string){
+        let statusCondition: string | undefined;
+        
+        if (type === 'wait') {
+            statusCondition = '승인 대기';
+        }
+        else if (type === 'approve') {
+            statusCondition = '승인 완료';
+        }
+        else if (type === 'reject') {
+            statusCondition = '승인 반려';
+        }
+
+        const whereCondition = statusCondition ? { status: statusCondition } : {};
+
+        const helpers = await this.helperRepository.find({
+            where: whereCondition,
             relations: ['user']
-        });
-
-        return helpers;
-    }
-
-    // 승인대기 도우미 전체 전달
-    async helperApply(){
-        const helpers = await this.helperRepository.find({ 
-            where: {status: '승인 대기'}, 
-            relations: ['user'],
-        });
-
-        return helpers;
-    }
-
-    // 승인완료 도우미 전체 전달
-    async helperApprove(){
-        const helpers = await this.helperRepository.find({ 
-            where: {status: '승인 완료'}, 
-            relations: ['user'],
         });
 
         return helpers;

@@ -102,22 +102,8 @@ export class HelperController {
     // 도우미 전체 전달
     @Get('/info')
     @ApiResponse({type: HelperInfoDto})
-    async helperAll(){
-        return this.helperService.helperAll();
-    }
-
-    // 승인대기 도우미 전체 전달
-    @Get('/applylist')
-    @ApiResponse({type: HelperInfoDto})
-    async helperApplyList(){
-        return this.helperService.helperApply();
-    }
-
-    // 승인완료 도우미 전체 전달
-    @Get('/approveduser')
-    @ApiResponse({type: HelperInfoDto})
-    async helperApproveList(){
-        return this.helperService.helperApprove();
+    async helperAll(@Query('type') type?: string){
+        return this.helperService.helperAll(type);
     }
 
     // 해당 도우미 데이터 전달
