@@ -5,7 +5,6 @@ import { ApiBody, ApiResponse } from '@nestjs/swagger';
 import { ContectPatientDto } from './dto/res/contect-patient.dto';
 import { ListStatusDto } from './dto/res/list-status.dto';
 import { DeleteStatusDto } from './dto/req/delete-status.dto';
-import { StatusInfoDto } from './dto/res/status-info.dto';
 import { StatusListQueryDto } from './dto/req/status-list-query.dto';
 
 @Controller('status')

@@ -9,6 +9,7 @@ import { CreateFeedbackDto } from './dto/req/create-feedback.dto';
 import { Feedback } from 'entities/feedback';
 import { UpdateActivityDto } from './dto/req/update-activity.dto';
 import { ActivityPatientQueryDto } from './dto/req/activity-patient-query.dto';
+import { FeedbackQueryDto } from './dto/req/feedback-query.dto';
 
 @Injectable()
 export class ActivityService {
@@ -144,37 +145,33 @@ export class ActivityService {
         return await this.feedbackRepository.save(feedback);
     }
 
-    // 전체 피드백 전달
-    async allFeed(){
-        const feedback = await this.feedbackRepository.find({
-            relations: ['activity'],
-            order: {recorded_at: 'DESC'}
-        });
-
-        return feedback;
-    }
-
     // 관리자 별 피드백 전달
-    async selectFeed(adminId: number){
-        const feedback = await this.feedbackRepository.find({
-            where: {admin: {id: adminId}},
+    async selectFeed(query: FeedbackQueryDto){
+        const {adminId, search} = query;
+
+        if(search){ // 활동기록 title 기준 검색
+            const activities = await this.activityRepository.find({
+                where: { title: Like(`%${search}%`) },
+            });
+
+            const activityIds = activities.map((act) => act.id);
+            if (activityIds.length === 0) return [];
+
+            return this.feedbackRepository.find({
+                where: { activity: In(activityIds) },
+                relations: ['activity', 'admin']
+            });
+        }
+
+        if(adminId && adminId != 0){ // 해당 adminId 전달
+            return this.feedbackRepository.find({
+                where: {admin: {id: adminId}},
+                relations: ['activity', 'admin']
+            });
+        }
+
+        return await this.feedbackRepository.find({ // 전체 전달
             relations: ['activity'],
-            order: {recorded_at: 'DESC'}
         });
-
-        return feedback;
-    }
-
-    // 피드백 검색 (관리자)
-    async searchAct(data: string){
-        const activities = await this.activityRepository.find({ where: { title: Like(`%${data}%`) } });
-        const activityIds = activities.map((act) => act.id);
-
-        const feedbacks = await this.feedbackRepository.find({
-            where: {activity: In(activityIds)},
-            relations: ['activity', 'admin'],
-        });
-
-        return feedbacks;
     }
 }

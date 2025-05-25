@@ -10,8 +10,8 @@ import { CreateFeedbackDto } from './dto/req/create-feedback.dto';
 import { AllFeedbackDto } from './dto/res/all-feedback.dto';
 import { DeleteStatusDto } from 'src/status/dto/req/delete-status.dto';
 import { UpdateActivityDto } from './dto/req/update-activity.dto';
-import { SearchFeedbackDto } from './dto/res/search-feedback.dto';
 import { ActivityPatientQueryDto } from './dto/req/activity-patient-query.dto';
+import { FeedbackQueryDto } from './dto/req/feedback-query.dto';
 
 @Controller('activity')
 export class ActivityController {
@@ -62,7 +62,8 @@ export class ActivityController {
     // 피보호자 활동기록 전달
     @Get('/selectlist')
     @ApiResponse({type: SelectActivityDto})
-    async selectList(@Query('query') query: ActivityPatientQueryDto){
+    async selectList(@Query() query: ActivityPatientQueryDto){
+        console.log(query, '받앗나')
         return this.activityService.selectList(query);
     }
 
@@ -78,24 +79,10 @@ export class ActivityController {
         return this.activityService.postFeed(dto);
     }
 
-    // 전체 피드백 전달
-    @Get('/feedback/views')
-    @ApiResponse({type: AllFeedbackDto})
-    async allFeedback(){
-        return this.activityService.allFeed();
-    }
-
     // 관리자 별 피드백 전달
     @Get('/feedback/view')
     @ApiResponse({type: AllFeedbackDto})
-    async selectFeedback(@Query('adminId') adminId: number){
-        return this.activityService.selectFeed(adminId);
-    }
-
-    // 피드백 검색 (관리자)
-    @Get('/search')
-    @ApiResponse({type: SearchFeedbackDto})
-    async searchActivity(@Query('data') data: string){
-        return this.activityService.searchAct(data);
+    async selectFeedback(@Query() query: FeedbackQueryDto){
+        return this.activityService.selectFeed(query);
     }
 }
