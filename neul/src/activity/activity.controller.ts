@@ -1,19 +1,17 @@
-import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Patch, Post, Query, UploadedFile, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UploadedFile, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { ActivityService } from './activity.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { join } from 'path';
 import { CreateActivityDto } from './dto/req/create-activity.dto';
 import { diskStorage } from 'multer';
-import { ListActivityDto } from './dto/res/list-activity.dto';
-import { plainToInstance } from 'class-transformer';
 import { ApiConsumes, ApiResponse } from '@nestjs/swagger';
-import { ContectPatientDto } from 'src/status/dto/res/contect-patient.dto';
 import { SelectActivityDto } from './dto/res/select-activity.dto';
 import { CreateFeedbackDto } from './dto/req/create-feedback.dto';
 import { AllFeedbackDto } from './dto/res/all-feedback.dto';
 import { DeleteStatusDto } from 'src/status/dto/req/delete-status.dto';
 import { UpdateActivityDto } from './dto/req/update-activity.dto';
 import { SearchFeedbackDto } from './dto/res/search-feedback.dto';
+import { ActivityPatientQueryDto } from './dto/req/activity-patient-query.dto';
 
 @Controller('activity')
 export class ActivityController {
@@ -54,42 +52,18 @@ export class ActivityController {
         return await this.activityService.updateAct(activityId, dto, files);
     }
 
-    // 활동기록 제공 (사용자)
-    @Get('list/:userid')
-    @UseInterceptors(ClassSerializerInterceptor)
-    @ApiResponse({type: ListActivityDto})
-    async listActivity(@Param('userid') userid: number){
-        const list = await this.activityService.listAct(userid);
-
-        return plainToInstance(ListActivityDto, list);
-    }
-
     // 담당 피보호자 목록
-    @Get('/targetlist')
-    @ApiResponse({type: ContectPatientDto})
-    async targetPatient(@Query('adminId') adminId: number){
-        return this.activityService.targetPat(adminId);
-    }
+    // @Get('/targetlist')
+    // @ApiResponse({type: ContectPatientDto})
+    // async targetPatient(@Query('adminId') adminId: number){
+    //     return this.activityService.targetPat(adminId);
+    // }
 
-    // 선택한 피보호자 활동기록 전달
+    // 피보호자 활동기록 전달
     @Get('/selectlist')
     @ApiResponse({type: SelectActivityDto})
-    async selectList(@Query('adminId') adminId: number, @Query('patientId') patientId: number){
-        return this.activityService.selectList(adminId, patientId);
-    }
-
-    // 전체 활동기록 전달 (관리자)
-    @Get('/selectlistall')
-    @ApiResponse({type: SelectActivityDto})
-    async allListActivity(@Query('adminId') adminId: number){
-        return this.activityService.getAllListAct(adminId);
-    }
-
-    // 해당 활동기록 정보 전달 (사용자)
-    @Get('/detail')
-    @ApiResponse({type: SelectActivityDto})
-    async detailActivity(@Query('userId') userId: number, @Query('id') id: number){
-        return this.activityService.detailAct(userId, id);
+    async selectList(@Query('query') query: ActivityPatientQueryDto){
+        return this.activityService.selectList(query);
     }
 
     // 선택한 활동기록 삭제 (사용자)

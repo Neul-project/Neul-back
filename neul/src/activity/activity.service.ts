@@ -8,6 +8,7 @@ import { Patients } from 'entities/patients';
 import { CreateFeedbackDto } from './dto/req/create-feedback.dto';
 import { Feedback } from 'entities/feedback';
 import { UpdateActivityDto } from './dto/req/update-activity.dto';
+import { ActivityPatientQueryDto } from './dto/req/activity-patient-query.dto';
 
 @Injectable()
 export class ActivityService {
@@ -70,58 +71,43 @@ export class ActivityService {
         return await this.activityRepository.save(activity);
     }
 
-    // 활동기록 제공
-    async listAct(userId: number){
-        const activities = await this.activityRepository.find({
-            where: {user: {id: userId}},
-            select: ['id', 'title', 'recorded_at'],
-            order: {recorded_at: 'DESC'}
-        });
-        
-        return activities;
-    }
+    // // 담당 피보호자 전달 (관리자)
+    // async targetPat(adminId: number){
+    //     const patients = await this.patientRepository.find({
+    //         where: {admin: {id: adminId}},
+    //         relations: ['admin']
+    //     });
 
-    // 담당 피보호자 전달 (관리자)
-    async targetPat(adminId: number){
-        const patients = await this.patientRepository.find({
-            where: {admin: {id: adminId}},
-            relations: ['admin']
-        });
-
-        return patients;
-    }
+    //     return patients;
+    // }
 
     // 선택한 피보호자 전달 (관리자)
-    async selectList(adminId: number, patientId: number){
+    async selectList(query: ActivityPatientQueryDto){
+        const {adminId, patientId, userId, activityId} = query;
+        const whereCondition: any = {};
+
+        if(adminId){
+            if(patientId){ // 1-1) adminId + patientId
+                whereCondition.admin = {id: adminId};
+                whereCondition.patient = {id: patientId};
+            }
+            else { // 1-2) adminId만
+                whereCondition.admin = {id: adminId};
+            }
+        }
+        else if(userId){ // 2-1) userId + activityId
+            if(activityId){
+                whereCondition.user = {id: userId};
+                whereCondition.id = activityId;
+            }
+            else { // 2-2) userId만
+                whereCondition.user = {id: userId};                
+            }
+        }
+
         const activity = await this.activityRepository.find({
-            where: {
-                admin: {id: adminId},
-                patient: {id: patientId}
-            },
-            relations: ['patient']
-        });
-
-        return activity;
-    }
-
-    // 전체 활동기록 전달 (관리자)
-    async getAllListAct(adminId: number){
-        const activities = await this.activityRepository.find({
-            where: {admin: {id: adminId}},
-            relations: ['patient']
-        });
-
-        return activities;
-    }
-
-    // 해당 활동기록 정보 전달 (사용자)
-    async detailAct(userId: number, activityId: number){
-        const activity = await this.activityRepository.findOne({
-            where: {
-                id: activityId,
-                user: {id: userId}
-            },
-            relations: ['patient']
+            where: whereCondition,
+            relations: ['patient', 'admin']
         });
 
         return activity;
