@@ -6,6 +6,7 @@ import { ContectPatientDto } from './dto/res/contect-patient.dto';
 import { ListStatusDto } from './dto/res/list-status.dto';
 import { DeleteStatusDto } from './dto/req/delete-status.dto';
 import { StatusInfoDto } from './dto/res/status-info.dto';
+import { StatusListQueryDto } from './dto/req/status-list-query.dto';
 
 @Controller('status')
 export class StatusController {
@@ -27,11 +28,11 @@ export class StatusController {
         return this.statusService.updateSta(id, dto);
     }
 
-    // 전체/선택한 피보호자 상태기록 전달
+    // 피보호자 상태기록 전달
     @Get('/selectList')
     @ApiResponse({type: ListStatusDto})
-    async selectList(@Query('adminId') adminId: number, @Query('patientId') patientId?: number){
-        return this.statusService.getSelectList(adminId, patientId);
+    async selectList(@Query() query: StatusListQueryDto){
+        return this.statusService.getSelectList(query);
     }
 
     // 담당 피보호자 목록
@@ -46,12 +47,5 @@ export class StatusController {
     @ApiBody({type: DeleteStatusDto})
     async listDelete(@Body() body: number[]){
         return this.statusService.listDel(body);
-    }
-
-    // 특정 날짜 상태기록 전달
-    @Get('/day')
-    @ApiResponse({type: StatusInfoDto})
-    async dateStatus(@Query('userId') userId: number, @Query('date') date: string){
-        return this.statusService.dateSta(userId, date);
     }
 }

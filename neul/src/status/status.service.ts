@@ -5,6 +5,7 @@ import { Between, Repository } from 'typeorm';
 import { CreateStatusDto } from './dto/req/create-status.dto';
 import { Patients } from 'entities/patients';
 import { Users } from 'entities/users';
+import { StatusListQueryDto } from './dto/req/status-list-query.dto';
 
 @Injectable()
 export class StatusService {
@@ -61,21 +62,36 @@ export class StatusService {
         return await this.statusRepository.save(existing);
     }
 
-    // 전체/선택한 피보호자 상태기록 전달 (관리자)
-    async getSelectList(adminId: number, patientId?: number){
-        
-        const whereCondition: any = { admin: {id: adminId} }
+    // 피보호자 상태기록 전달
+    async getSelectList(query: StatusListQueryDto){
+        const { adminId, patientId, userId, date } = query;
 
-        if(patientId){
-            whereCondition.patient = {id: patientId};
+        if(userId && date){ // 날짜 별 전달
+            const start = new Date(`${date}T00:00:00`);
+            const end = new Date(`${date}T23:59:59.999`);
+
+            return await this.statusRepository.find({
+                where: {user: {id: userId}, recorded_at: Between(start, end)},
+                relations: ['patient']
+            });
+        }
+        
+        if(adminId){ // 선택한 피보호자 전달
+            const whereCondition: any = { admin: {id: adminId} }
+            
+            if(patientId){
+                whereCondition.patient = {id: patientId};
+            }
+
+            return await this.statusRepository.find({
+                where: whereCondition,
+                relations: ['patient']
+            });
         }
 
-        const status = await this.statusRepository.find({
-            where: whereCondition,
+        return await this.statusRepository.find({ // 전체 전달
             relations: ['patient']
         });
-
-        return status;
     }
 
     // 담당 피보호자 전달 (관리자)
@@ -95,20 +111,5 @@ export class StatusService {
         }
         
         return await this.statusRepository.delete(ids);
-    }
-
-    // 특정 날짜 상태기록 전달 (사용자)
-    async dateSta(userId: number, date: string){
-        const start = new Date(`${date}T00:00:00`);
-        const end = new Date(`${date}T23:59:59.999`);
-
-        const day = await this.statusRepository.find({
-            where: { 
-                user: {id: userId},
-                recorded_at: Between(start, end)
-            },
-        });
-
-        return day;
     }
 }
