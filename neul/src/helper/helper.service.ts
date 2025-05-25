@@ -59,8 +59,14 @@ export class HelperService {
         helper.certificateName = dto.certificateName_01;
         helper.certificateName2 = dto.certificateName_02;
         helper.certificateName3 = dto.certificateName_03;
-        helper.profileImage = files.profileImage?.[0].filename ?? '';
-        helper.certificate = files.certificate?.[0].filename ?? '';
+
+        if (files.profileImage?.[0]) {
+            helper.profileImage = files.profileImage[0].filename;
+        }
+        
+        if (files.certificate?.[0]) {
+            helper.certificate = files.certificate[0].filename;
+        }
 
         await this.helperRepository.save(helper);
 
