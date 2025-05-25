@@ -61,23 +61,17 @@ export class StatusService {
         return await this.statusRepository.save(existing);
     }
 
-    // 전체 상태기록 전달 (관리자)
-    async getAllList(adminId: number){
-        const status = await this.statusRepository.find({
-            where: { admin: {id: adminId}},
-            relations: ['patient', 'admin'],
-        });
+    // 전체/선택한 피보호자 상태기록 전달 (관리자)
+    async getSelectList(adminId: number, patientId?: number){
         
-        return status;
-    }
+        const whereCondition: any = { admin: {id: adminId} }
 
-    // 선택한 피보호자 상태기록 전달 (관리자)
-    async getSelectList(adminId: number, patientId: number){
+        if(patientId){
+            whereCondition.patient = {id: patientId};
+        }
+
         const status = await this.statusRepository.find({
-            where: {
-                admin: {id: adminId},
-                patient: {id: patientId}
-            },
+            where: whereCondition,
             relations: ['patient']
         });
 

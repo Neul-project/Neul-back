@@ -27,17 +27,10 @@ export class StatusController {
         return this.statusService.updateSta(id, dto);
     }
 
-    // 전체 상태기록 전달
-    @Get('/allList')
-    @ApiResponse({type: ListStatusDto})
-    async allList(@Query('adminId') adminId: number){
-        return this.statusService.getAllList(adminId);
-    }
-
-    // 선택한 피보호자 상태기록 전달
+    // 전체/선택한 피보호자 상태기록 전달
     @Get('/selectList')
     @ApiResponse({type: ListStatusDto})
-    async selectList(@Query('adminId') adminId: number, @Query('patientId') patientId: number){
+    async selectList(@Query('adminId') adminId: number, @Query('patientId') patientId?: number){
         return this.statusService.getSelectList(adminId, patientId);
     }
 

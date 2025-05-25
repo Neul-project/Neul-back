@@ -25,4 +25,7 @@ export class ListStatusDto {
 
   @ApiProperty({ example: '조금 힘들어함', description: '특이사항' })
   note?: string;
+
+  @ApiProperty({ example: '2025-05-06T12:00:00Z', description: '작성 시간' })
+  recorded_at: Date;
 }

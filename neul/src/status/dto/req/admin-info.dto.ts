@@ -23,6 +23,6 @@ export class AdminInfoDto {
   @ApiProperty({ example: 'local', description: 'OAuth 제공자'})
   provider: string;
 
-  @ApiProperty({ example: 'user', enum: ['user', 'admin'], description: '사용자 역할'})
+  @ApiProperty({ example: 'user', enum: ['user', 'admin', 'manager'], description: '사용자 역할'})
   role: string;
 }
