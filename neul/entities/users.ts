@@ -25,7 +25,7 @@ export class Users {
   @Column('varchar', {comment:'제공자', nullable: true, default: 'local'})
   provider?: string;
 
-  @Column('enum', {enum: ['user', 'admin'], comment:'역할', default: 'user'})
+  @Column('enum', {enum: ['user', 'admin', 'manager'], comment:'역할', default: 'user'})
   role: string;
 
   @CreateDateColumn({ type: 'timestamp' })

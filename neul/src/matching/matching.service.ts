@@ -210,7 +210,16 @@ export class MatchingService {
         });
         await this.alertRepository.save(alert); // 알림 추가
 
-        return {ok: true};
+        return {
+            userName: user.name,
+            adminName: admin.name,
+            charge: {
+                price: charge.price,
+                orderId: charge.orderId,
+                created_at: charge.created_at
+            },
+            dates: apply.dates
+        };
     }
 
     // 사용자 매칭 끝1 (신청내역 전달)

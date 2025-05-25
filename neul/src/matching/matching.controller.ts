@@ -15,6 +15,7 @@ import { ScheduleDto } from './dto/res/schedule.dto';
 import { ApplyAllDto } from './dto/res/apply-all.dto';
 import { DeleteMatchDto } from './dto/req/delete-match.dto';
 import { SearchMatchDto } from './dto/res/search-match.dto';
+import { MatchPayOKResDto } from './dto/res/match-pay-ok-res.dto';
 
 @Controller('matching')
 export class MatchingController {
@@ -73,6 +74,7 @@ export class MatchingController {
     // 사용자 매칭 결제 완료 + 매칭테이블 추가 + 채팅방 생성 + 알림 추가
     @Post('/confirm')
     @UseGuards(JwtAuthGuard)
+    @ApiResponse({type: MatchPayOKResDto})
     async helperMatchOK(@Body() dto: MatchPayOKDto, @Req() req){
         const userId = req.user.id;
         return this.matchingService.helperMatchOK(userId, dto);

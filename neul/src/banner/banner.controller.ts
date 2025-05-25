@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { BannerService } from './banner.service';
 import { diskStorage } from 'multer';
 import { join } from 'path';
@@ -28,10 +28,16 @@ export class BannerController {
       return await this.bannerService.bannerRegi(dto, files);
     }
 
+    // 배너 삭제
+    @Delete('/delete')
+    async bannerDelete(){
+
+    }
+
     // 배너 전달
     @Get('/list')
     @ApiResponse({type: BannerListDto})
-    async BannerList(){
+    async bannerList(){
       return await this.bannerService.bannerList();
     }
 }
