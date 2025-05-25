@@ -131,7 +131,9 @@ export class HelperService {
 
         const queryBuilder = this.helperRepository
             .createQueryBuilder('helper')
-            .leftJoinAndSelect('helper.user', 'user');
+            .leftJoinAndSelect('helper.user', 'user')
+            .leftJoinAndSelect('user.applyRequests', 'apply')
+            .addSelect(['apply.dates']);
 
         if(statusCondition){ // 도우미 승인 상태 조건 
             queryBuilder.andWhere('helper.status = :status', { status: statusCondition });
@@ -145,7 +147,14 @@ export class HelperService {
         }
 
         const helpers = await queryBuilder.getMany();
-        return helpers;
+        return helpers.map(helper => {
+            return {
+                ...helper,
+                user: {
+                    dates: helper.user.applyRequests?.map(apply => apply.dates) || []
+                }
+            };
+        });
     }
 
     // 해당 도우미 데이터 전달

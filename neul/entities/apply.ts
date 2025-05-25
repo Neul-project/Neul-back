@@ -11,7 +11,7 @@ export class Apply {
   user: Users;
 
   // 도우미
-  @ManyToOne(() => Users, (user) => user.carePatients, {onDelete: 'CASCADE'})
+  @ManyToOne(() => Users, (user) => user.applyRequests, { onDelete: 'CASCADE' })
   admin: Users;
 
   @Column('text', { comment: '매칭신청 날짜들', nullable: true })

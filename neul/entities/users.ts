@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn } from 'typeorm';
 import { Patients } from './patients';
 import { ChatRoom } from './chat_room';
+import { Apply } from './apply';
 
 @Entity('users')
 export class Users {
@@ -46,4 +47,8 @@ export class Users {
   // 관리자가 참여한 채팅방들
   @OneToMany(() => ChatRoom, (room) => room.admin, { cascade: true, onDelete: "CASCADE" })
   chatRoomAdmin: ChatRoom[];
+
+  // 사용자들이 매칭신청한 관리자 (1명의 도우미가 여러 Apply 요청 받음)
+  @OneToMany(() => Apply, (apply) => apply.admin)
+  applyRequests: Apply[];
 }
