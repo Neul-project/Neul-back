@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn } from 'typeorm';
 import { Users } from './users';
+import { Apply } from './apply';
   
 @Entity('charge')
 export class Charge {
@@ -8,6 +9,9 @@ export class Charge {
 
   @ManyToOne(() => Users, (user) => user.id, { onDelete: "CASCADE" })
   user: Users;
+
+  @ManyToOne(() => Apply, { onDelete: 'CASCADE' })
+  apply: Apply;
 
   @Column('int', {comment:'결제 금액'})
   price: number;

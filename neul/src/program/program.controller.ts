@@ -16,9 +16,10 @@ import { ConfirmPayDto } from './dto/req/confirm-pay.dto';
 import { RefundListDto } from './dto/res/refund-list.dto';
 import { RefundOKDto } from './dto/req/refund-ok.dto';
 import { ProgramHistoryDto } from './dto/res/program-history.dto';
-import { PaymentListDto } from './dto/res/payment-list.dto';
 import { CartDeleteDto } from './dto/req/cart-delete.dto';
 import { ProgramInfoDto } from './dto/res/program-info.dto';
+import { ProgramPayListDto } from './dto/res/program-pay-list.dto';
+import { MatchPayListDto } from './dto/res/match-pay-list.dto';
 
 @Controller('program')
 export class ProgramController {
@@ -66,12 +67,12 @@ export class ProgramController {
         return this.programService.allPro();
     }
 
-    // 선택된 프로그램 전달
-    @Get('/detail')
-    @ApiResponse({type: ProgramInfoDto})
-    async detailProgram(@Query('detailid') detailid: number){
-        return this.programService.detailPro(detailid);
-    }
+    // // 선택된 프로그램 전달
+    // @Get('/detail')
+    // @ApiResponse({type: ProgramInfoDto})
+    // async detailProgram(@Query('detailid') detailid: number){
+    //     return this.programService.detailPro(detailid);
+    // }
 
     // 프로그램 신청
     @Post('/apply')
@@ -159,17 +160,18 @@ export class ProgramController {
         return this.programService.payList(detailid);
     }
 
-    // 프로그램 결제 리스트 전달 (관리자)
+    // 결제 리스트 전달
     @Get('/payment-list')
-    @ApiResponse({type: PaymentListDto})
-    async paymentList(){
-        return this.programService.paymentList();
+    @ApiResponse({type: ProgramPayListDto})
+    @ApiResponse({type: MatchPayListDto})
+    async paymentList(@Query('type') type?: string){
+        return this.programService.paymentList(type);
     }
 
-    // 프로그램 검색 (관리자)
-    @Get('/search')
-    @ApiResponse({type: ProgramInfoDto})
-    async searchProgram(@Query('data') data: string){
-        return this.programService.searchPro(data);
-    }
+    // // 프로그램 검색 (관리자)
+    // @Get('/search')
+    // @ApiResponse({type: ProgramInfoDto})
+    // async searchProgram(@Query('data') data: string){
+    //     return this.programService.searchPro(data);
+    // }
 }

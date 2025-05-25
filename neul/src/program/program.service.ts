@@ -15,6 +15,7 @@ import { Match } from 'entities/match';
 import { PayProgramDto } from './dto/req/pay-program.dto';
 import { ConfirmPayDto } from './dto/req/confirm-pay.dto';
 import { CartDeleteDto } from './dto/req/cart-delete.dto';
+import { Charge } from 'entities/charge';
 
 @Injectable()
 export class ProgramService {
@@ -34,7 +35,9 @@ export class ProgramService {
         @InjectRepository(PayPrograms)
         private payProgramRepository: Repository<PayPrograms>,
         @InjectRepository(Match)
-        private matchRepository: Repository<Match>
+        private matchRepository: Repository<Match>,
+        @InjectRepository(Charge)
+        private chargeRepository: Repository<Charge>
     ) {}
 
     // 프로그램 등록
@@ -332,13 +335,29 @@ export class ProgramService {
         return count;
     }
 
-    // 프로그램 결제 리스트 전달
-    async paymentList(){
-        const payment = await this.payRepository.find({
+    // 결제 리스트 전달
+    async paymentList(type?: string){
+        if(type === 'user'){ // 매칭 결제 리스트
+            const charges = await this.chargeRepository.find({
+                relations: ['user', 'apply', 'apply.admin'],
+            });
+
+            return charges.map((charge) => ({
+                id: charge.id,
+                orderId: charge.orderId,
+                price: charge.price,
+                created_at : charge.created_at,
+                userId: charge.user.id,
+                userName: charge.user.name,
+                adminName: charge.apply.admin.name
+            }));
+        }
+
+        const payment = await this.payRepository.find({ // 프로그램 결제 리스트
             relations: ['user', 'payPrograms', 'payPrograms.program'],
         });
 
-        const result = payment.flatMap((pay) =>
+        return payment.flatMap((pay) =>
             pay.payPrograms.map((pp) => ({
                 id: pay.id,
                 programId: pp.program.id,
@@ -350,8 +369,6 @@ export class ProgramService {
                 create_at: pay.created_at
             }))
         );
-
-        return result;
     }
 
     // 프로그램 검색 (관리자)

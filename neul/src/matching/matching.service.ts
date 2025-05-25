@@ -137,12 +137,17 @@ export class MatchingService {
     // 사용자 매칭 결제 요청
     async helperMatch(userId: number, dto: MatchPayDto){
         const user = await this.userRepository.findOne({where: {id: userId}});
-        if(!user){
-            throw new Error('해당 유저를 찾을 수 없습니다.');
+        const apply = await this.applyRepository.findOne({
+            where: {user: {id: userId}, admin: {id: dto.helperId}, status: '결제 대기'}
+        })
+
+        if(!user || !apply){
+            throw new Error('매칭 신청 내역를 찾을 수 없습니다.');
         }
 
         const charge = this.chargeRepository.create({
             user,
+            apply,
             price: dto.amount,
             orderId: dto.orderId
         })
