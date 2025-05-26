@@ -14,7 +14,7 @@ export class AlertService {
     async getAlarmAll(userId: number){
         const alarm = await this.alertRepository.find({
             where: {user: {id: userId}},
-            select: ['id', 'message', 'isChecked', 'created_at']
+            select: ['id', 'message', 'isChecked', 'created_at', 'reason']
         });
 
         return alarm;

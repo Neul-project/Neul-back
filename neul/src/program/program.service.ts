@@ -232,10 +232,6 @@ export class ProgramService {
     // 프로그램 결제 승인
     async payProOK(userId: number, dto: ConfirmPayDto){
         const user = await this.userRepository.findOne({ where: {id: userId} });
-        const match = await this.matchRepository.findOne({
-            where: {user: {id: userId}},
-            relations: ['admin']
-        });
         
         const pay = await this.payRepository.findOne({ // orderId를 기준으로 결제 정보(pay) 조회
             where: { orderId: dto.orderId},
@@ -259,7 +255,6 @@ export class ProgramService {
 
         const alert = this.alertRepository.create({ // 알림 추가
             user,
-            admin: match.admin,
             message: 'pay_program'
         });
         await this.alertRepository.save(alert);
@@ -311,14 +306,8 @@ export class ProgramService {
         refund.status = '환불 완료';
         await this.refundRepository.save(refund);
 
-        const match = await this.matchRepository.findOne({
-            where: {user: {id: refund.user.id}},
-            relations: ['admin']
-        });
-
         const alert = this.alertRepository.create({ // 알림 추가
             user: refund.user,
-            admin: match.admin,
             message: 'refund_program'
         });
         await this.alertRepository.save(alert);

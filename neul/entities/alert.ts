@@ -9,9 +9,6 @@ export class Alert {
   @ManyToOne(() => Users, (user) => user.id, {onDelete: 'CASCADE'})
   user: Users;
 
-  @ManyToOne(() => Users, (user) => user.id, {nullable: true, onDelete: 'CASCADE'})
-  admin?: Users;
-
   @Column('varchar', { comment: '알림 내용 또는 타입' })
   message: string;
 

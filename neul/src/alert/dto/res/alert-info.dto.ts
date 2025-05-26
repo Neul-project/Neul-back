@@ -12,4 +12,7 @@ export class AlertInfoDto {
 
   @ApiProperty({ example: '2025-05-20T15:00:00.000Z', description: '알림 생성 일시' })
   created_at: Date;
+
+  @ApiProperty({ example: '개인사정으로인해 반려합니다.', description: '반려 이유' })
+  reason: string;
 }

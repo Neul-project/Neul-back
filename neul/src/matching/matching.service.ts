@@ -89,7 +89,6 @@ export class MatchingService {
 
         const alert = this.alertRepository.create({
             user,
-            admin,
             message: 'match_apply'
         });
         await this.alertRepository.save(alert); // 알림 추가
@@ -112,7 +111,6 @@ export class MatchingService {
 
         const alert = this.alertRepository.create({
             user,
-            admin,
             message: 'match_ok'
         });
         return await this.alertRepository.save(alert); // 알림 추가
@@ -133,7 +131,6 @@ export class MatchingService {
 
         const alert = this.alertRepository.create({
             user,
-            admin,
             message: 'match_cancel',
             reason
         });
@@ -205,7 +202,6 @@ export class MatchingService {
 
         const alert = this.alertRepository.create({
             user,
-            admin,
             message: 'pay_match',
         });
         await this.alertRepository.save(alert); // 알림 추가
@@ -251,7 +247,6 @@ export class MatchingService {
 
         const alert = this.alertRepository.create({
             user: user,
-            admin: admin,
             message: 'match_end'
         });
         await this.alertRepository.save(alert); // 알림 추가
