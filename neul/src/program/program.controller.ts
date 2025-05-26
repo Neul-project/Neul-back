@@ -60,19 +60,12 @@ export class ProgramController {
         return await this.programService.updatePro(programId, dto, files);
     }
 
-    // 프로그램 전체 전달
+    // 프로그램 전달
     @Get('/list')
     @ApiResponse({type: ProgramInfoDto})
-    async allProgram(){
-        return this.programService.allPro();
+    async programList(@Query('detailid') detailid?: number, @Query('search') search?: string){
+        return this.programService.programList(detailid, search);
     }
-
-    // // 선택된 프로그램 전달
-    // @Get('/detail')
-    // @ApiResponse({type: ProgramInfoDto})
-    // async detailProgram(@Query('detailid') detailid: number){
-    //     return this.programService.detailPro(detailid);
-    // }
 
     // 프로그램 신청
     @Post('/apply')
@@ -167,11 +160,4 @@ export class ProgramController {
     async paymentList(@Query('type') type?: string){
         return this.programService.paymentList(type);
     }
-
-    // // 프로그램 검색 (관리자)
-    // @Get('/search')
-    // @ApiResponse({type: ProgramInfoDto})
-    // async searchProgram(@Query('data') data: string){
-    //     return this.programService.searchPro(data);
-    // }
 }

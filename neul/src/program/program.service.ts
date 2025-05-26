@@ -86,14 +86,17 @@ export class ProgramService {
         return await this.programRepository.save(program);
     }
 
-    // 프로그램 전체 전달
-    async allPro(){
-        return await this.programRepository.find();
-    }
+    // 프로그램 전달
+    async programList(detailid?: number, search?: string){
+        if(detailid){ // 해당 데이터 프로그램만
+            return await this.programRepository.findOne({where: {id: detailid}});
+        }
 
-    // 선택된 프로그램 전달
-    async detailPro(detailid: number){
-        return await this.programRepository.findOne({where: {id: detailid}});
+        if(search){ // 프로그램명 키워드 검색 결과
+            return await this.programRepository.find({where: { name: Like(`%${search}%`) }});
+        }
+
+        return await this.programRepository.find(); // 전체
     }
 
     // 프로그램 신청
@@ -369,14 +372,5 @@ export class ProgramService {
                 create_at: pay.created_at
             }))
         );
-    }
-
-    // 프로그램 검색 (관리자)
-    async searchPro(data: string){
-        const programs = await this.programRepository.find({
-            where: { name: Like(`%${data}%`) }
-        });
-
-        return programs;
     }
 }
