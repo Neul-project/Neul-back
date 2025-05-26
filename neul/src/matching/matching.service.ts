@@ -180,15 +180,28 @@ export class MatchingService {
         apply.status = '결제 완료';
         await this.applyRepository.save(apply); // 결제 완료 상태 변경
 
-        const match = this.matchRepository.create({user, admin});
-        await this.matchRepository.save(match) // 보호자와 관리자 매칭 (매칭테이블 추가)
+        let match = await this.matchRepository.findOne({
+            where: {user: {id: userId}, admin: {id: dto.helperId}}
+        });
+
+        if(!match){
+            match = this.matchRepository.create({user, admin});
+            await this.matchRepository.save(match) // 보호자와 관리자 매칭 (매칭테이블 추가)
+        }
 
         const patient = await this.patientRepository.findOne({where: {user: {id: userId}}});
         patient.admin = admin;
         await this.patientRepository.save(patient); // 피보호자와 관리자 매칭 (피보호자 테이블 업데이트)
 
-        const room = this.chatRoomRepository.create({user, admin});
-        await this.chatRoomRepository.save(room); // 채팅방 생성
+
+        let room = await this.chatRoomRepository.findOne({
+            where: {user: {id: userId}, admin: {id: dto.helperId}}
+        });
+
+        if(!room){
+            room = this.chatRoomRepository.create({user, admin});
+            await this.chatRoomRepository.save(room); // 채팅방 생성
+        }
 
         const alert = this.alertRepository.create({
             user,
