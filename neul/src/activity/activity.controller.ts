@@ -56,7 +56,6 @@ export class ActivityController {
     @Get('/selectlist')
     @ApiResponse({type: SelectActivityDto})
     async selectList(@Query() query: ActivityPatientQueryDto){
-        console.log(query, '받앗나')
         return this.activityService.selectList(query);
     }
 
@@ -72,7 +71,7 @@ export class ActivityController {
         return this.activityService.postFeed(dto);
     }
 
-    // 관리자 별 피드백 전달
+    // 피드백 전달
     @Get('/feedback/view')
     @ApiResponse({type: AllFeedbackDto})
     async selectFeedback(@Query() query: FeedbackQueryDto){

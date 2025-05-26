@@ -72,7 +72,7 @@ export class ActivityService {
         return await this.activityRepository.save(activity);
     }
 
-    // 선택한 피보호자 전달 (관리자)
+    // 피보호자 활동기록 전달
     async selectList(query: ActivityPatientQueryDto){
         const {adminId, patientId, userId, activityId} = query;
         const whereCondition: any = {};
@@ -135,7 +135,7 @@ export class ActivityService {
         return await this.feedbackRepository.save(feedback);
     }
 
-    // 관리자 별 피드백 전달
+    // 피드백 전달
     async selectFeed(query: FeedbackQueryDto){
         const {adminId, search} = query;
 

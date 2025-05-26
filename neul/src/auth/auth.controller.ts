@@ -12,7 +12,7 @@ import { LocalLoginDto } from './dto/req/local-login.dto';
 import { SendTokenDto } from './dto/res/send-token.dto';
 import { LoginMeDto } from './dto/res/login-me.dto';
 import { SnsTokenDto } from './dto/res/sns-token.dto';
-import { FindEmailDto } from './dto/req/find-email.dto';
+import { FindInfoDto } from './dto/req/find-info.dto';
 import { SendEmailDto } from './dto/res/send-email.dto';
 
 @Controller('auth')
@@ -98,16 +98,20 @@ export class AuthController {
 
     // 비밀번호 변경
     @Patch('/password')
-    @UseGuards(JwtAuthGuard)
-    async updatePW(@Body() dto: UpdatePWDto, @Req() req){
-        const userId = req.user.id;
-        return this.authService.updatePW(userId, dto.newPassword);
+    async updatePW(@Body() dto: UpdatePWDto){
+        return this.authService.updatePW(dto.email, dto.newPassword);
     }
 
     // 아이디/비밀번호 찾기
     @Post('/find')
-    // @ApiResponse({type: SendEmailDto})
-    async findEmail(@Body() dto: FindEmailDto){
-        return this.authService.findEmail(dto);
+    @ApiResponse({type: SendEmailDto})
+    async findEmail(@Body() dto: FindInfoDto){
+        if(dto.type === 'email'){
+            return this.authService.findEmail(dto);
+        }
+
+        if(dto.type === 'pw'){
+            return this.authService.findPaasword(dto);
+        }
     }
 }

@@ -3,11 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Users } from 'entities/users';
-import { Patients } from 'entities/patients';
 import { SingupUserDto } from 'src/auth/dto/req/signup-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { UserCheck } from 'entities/user_check';
-import { FindEmailDto } from './dto/req/find-email.dto';
+import { FindInfoDto } from './dto/req/find-info.dto';
 
 @Injectable()
 export class AuthService {
@@ -15,8 +14,6 @@ export class AuthService {
         private jwtService : JwtService,
         @InjectRepository(Users)
         private userRepository: Repository<Users>,
-        @InjectRepository(Patients)
-        private patientRepository: Repository<Patients>,
         @InjectRepository(UserCheck)
         private userCheckRepository: Repository<UserCheck>
     ) {}
@@ -145,9 +142,29 @@ export class AuthService {
         return { ok: true };
     }
 
+    // 아이디 찾기
+    async findEmail(dto: FindInfoDto){
+        const user = await this.userRepository.findOne({ 
+            where: {name: dto.name, phone: dto.phone}}
+        );
+
+        if(!user) return {ok: false};
+
+        return {email: user.email};
+    }
+
+    // 비밀번호 찾기
+    async findPaasword(dto: FindInfoDto){
+        const user = await this.userRepository.findOne({
+            where: {email: dto.email, phone: dto.phone}
+        });
+
+        return {ok: true};
+    }
+
     // 비밀번호 변경
-    async updatePW(userId:number, newPassword: string){
-        const user = await this.userRepository.findOne({ where: {id: userId}});
+    async updatePW(email: string, newPassword: string){
+        const user = await this.userRepository.findOne({ where: {email: email}});
         if(!user){
             throw new UnauthorizedException('등록되지 않은 사용자입니다.')
         }
@@ -157,20 +174,5 @@ export class AuthService {
         await this.userRepository.save(user);
 
         return { ok: true };
-    }
-
-    // 아이디 찾기
-    async findEmail(dto: FindEmailDto){
-        const user = await this.userRepository.findOne({ 
-            where: {
-                name: dto.name,
-                phone: dto.phone
-            }}
-        );
-        if(!user){
-            return {ok: false};
-        }
-
-        return {email: user.email};
     }
 }

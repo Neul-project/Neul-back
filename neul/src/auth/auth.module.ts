@@ -3,7 +3,6 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Users } from 'entities/users';
-import { Patients } from 'entities/patients';
 import { JwtModule } from '@nestjs/jwt';
 import { LocalStrategy } from './strategy/local';
 import { ConfigModule } from '@nestjs/config';
@@ -21,7 +20,7 @@ import { UserCheck } from 'entities/user_check';
       secret: process.env.JWT_SECRET,
       signOptions: {expiresIn: '1d'},
     }),
-    TypeOrmModule.forFeature([Users, Patients, UserCheck])
+    TypeOrmModule.forFeature([Users, UserCheck])
   ],
   providers: [AuthService, LocalStrategy, KakaoStrategy, NaverStrategy, JwtStrategy],
   controllers: [AuthController],

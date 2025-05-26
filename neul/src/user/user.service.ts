@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from 'entities/users';
 import { Repository } from 'typeorm';
 import { Match } from 'entities/match';
-import { FindEmailDto } from 'src/auth/dto/req/find-email.dto';
+import { PlusInfoDto } from './dto/req/plus-info.dto';
 
 @Injectable()
 export class UserService {
@@ -15,7 +15,7 @@ export class UserService {
     ) {}
 
     // 소셜로그인 사용자 추가정보 입력
-    async addUser(userId: number, dto: FindEmailDto){
+    async addUser(userId: number, dto: PlusInfoDto){
         const user = await this.userRepository.findOne({ where: {id: userId}})
         if(!user){
             throw new Error('해당 유저를 찾을 수 없습니다.');

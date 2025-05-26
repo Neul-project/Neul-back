@@ -5,8 +5,8 @@ import { ApiResponse } from '@nestjs/swagger';
 import { AdminListDto } from './dto/res/admin-list.dto';
 import { CreateAddressDto } from './dto/req/create-address.dto';
 import { UserInfoDto } from './dto/res/user-info.dto';
-import { FindEmailDto } from 'src/auth/dto/req/find-email.dto';
 import { UserIdDto } from 'src/auth/dto/res/user-id.dto';
+import { PlusInfoDto } from './dto/req/plus-info.dto';
 
 @Controller('user')
 export class UserController {
@@ -15,7 +15,7 @@ export class UserController {
     // 소셜로그인 사용자 추가정보 입력
     @Post('/info')
     @UseGuards(JwtAuthGuard)
-    async addUser(@Body() dto: FindEmailDto, @Req() req){
+    async addUser(@Body() dto: PlusInfoDto, @Req() req){
         const userId = req.user.id;
         return await this.userService.addUser(userId, dto);
     }

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class FindEmailDto {
+export class PlusInfoDto {
   @ApiProperty({ example: '홍길동', description: '사용자 이름' })
   name: string;
 
