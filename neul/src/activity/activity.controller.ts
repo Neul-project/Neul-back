@@ -52,13 +52,6 @@ export class ActivityController {
         return await this.activityService.updateAct(activityId, dto, files);
     }
 
-    // 담당 피보호자 목록
-    // @Get('/targetlist')
-    // @ApiResponse({type: ContectPatientDto})
-    // async targetPatient(@Query('adminId') adminId: number){
-    //     return this.activityService.targetPat(adminId);
-    // }
-
     // 피보호자 활동기록 전달
     @Get('/selectlist')
     @ApiResponse({type: SelectActivityDto})

@@ -72,16 +72,6 @@ export class ActivityService {
         return await this.activityRepository.save(activity);
     }
 
-    // // 담당 피보호자 전달 (관리자)
-    // async targetPat(adminId: number){
-    //     const patients = await this.patientRepository.find({
-    //         where: {admin: {id: adminId}},
-    //         relations: ['admin']
-    //     });
-
-    //     return patients;
-    // }
-
     // 선택한 피보호자 전달 (관리자)
     async selectList(query: ActivityPatientQueryDto){
         const {adminId, patientId, userId, activityId} = query;
@@ -174,7 +164,14 @@ export class ActivityService {
             });
         }
 
-        return await this.feedbackRepository.find({ // 검색어가 없을 경우 전체 피드백 전달
+        if(adminId && adminId != 0){ // 검색 없이 해당 관리자의 피드백 전달
+            return this.feedbackRepository.find({
+                where: {admin: {id: adminId}},
+                relations: ['activity', 'admin']
+            })
+        }
+
+        return await this.feedbackRepository.find({ // 전체 피드백 전달
             relations: ['activity', 'admin'],
         });
     }

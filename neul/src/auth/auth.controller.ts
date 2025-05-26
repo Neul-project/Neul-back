@@ -104,9 +104,9 @@ export class AuthController {
         return this.authService.updatePW(userId, dto.newPassword);
     }
 
-    // 아이디 찾기
-    @Post('/find-email')
-    @ApiResponse({type: SendEmailDto})
+    // 아이디/비밀번호 찾기
+    @Post('/find')
+    // @ApiResponse({type: SendEmailDto})
     async findEmail(@Body() dto: FindEmailDto){
         return this.authService.findEmail(dto);
     }
