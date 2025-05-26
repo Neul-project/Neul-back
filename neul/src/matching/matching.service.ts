@@ -65,6 +65,7 @@ export class MatchingService {
             return {
                 ...helper,
                 apply_list: matchedOK.map(apply => ({
+                    id: apply.id,
                     status: apply.status,
                     dates: apply.dates
                 }))
