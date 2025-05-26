@@ -7,6 +7,9 @@ export class MatchPayDto {
   @ApiProperty({ example: 3, description: '도우미 id' })
   helperId: number;
 
+  @ApiProperty({ example: 15, description: '신청 ID' })
+  applyId: number;
+
   @ApiProperty({ example: 35000, description: '결제 금액' })
   amount: number;
 }

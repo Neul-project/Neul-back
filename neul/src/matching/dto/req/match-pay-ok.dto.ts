@@ -7,6 +7,9 @@ export class MatchPayOKDto {
   @ApiProperty({ example: 3, description: '도우미 id' })
   helperId: number;
 
+  @ApiProperty({ example: 15, description: '신청 ID' })
+  applyId: number;
+  
   @ApiProperty({ example: 'pay_abcdef123456', description: 'Toss 결제 키' })
   paymentKey: string;
 }

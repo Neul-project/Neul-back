@@ -142,7 +142,7 @@ export class MatchingService {
     async helperMatch(userId: number, dto: MatchPayDto){
         const user = await this.userRepository.findOne({where: {id: userId}});
         const apply = await this.applyRepository.findOne({
-            where: {user: {id: userId}, admin: {id: dto.helperId}, status: '결제 대기'}
+            where: {id: dto.applyId, status: '결제 대기'}
         })
 
         if(!user || !apply){
@@ -172,9 +172,7 @@ export class MatchingService {
         charge.paymentKey = dto.paymentKey;
         await this.chargeRepository.save(charge); // paymentKey 저장
 
-        const apply = await this.applyRepository.findOne({
-            where: {admin: {id: dto.helperId}, user: {id: userId}}
-        });
+        const apply = await this.applyRepository.findOne({where: {id: dto.applyId}});
         apply.status = '결제 완료';
         await this.applyRepository.save(apply); // 결제 완료 상태 변경
 
