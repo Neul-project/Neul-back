@@ -149,29 +149,33 @@ export class ActivityService {
     async selectFeed(query: FeedbackQueryDto){
         const {adminId, search} = query;
 
-        if(search){ // 활동기록 title 기준 검색
+        // 활동기록 title 기준 검색 함수
+        const getSearchTitle = async (search: string) => {
             const activities = await this.activityRepository.find({
                 where: { title: Like(`%${search}%`) },
             });
 
-            const activityIds = activities.map((act) => act.id);
+            return activities.map((act)=> act.id);
+        }
+
+        if(search){ // 검색어가 있을 경우
+            const activityIds = await getSearchTitle(search);
             if (activityIds.length === 0) return [];
 
-            return this.feedbackRepository.find({
-                where: { activity: In(activityIds) },
+            const whereCondition: any = { activity: In(activityIds) };
+
+            if(adminId && adminId != 0){ // 해당 관리자의 피드백에서 검색결과 전달
+                whereCondition.admin = {id: adminId};
+            }
+
+            return this.feedbackRepository.find({ // 전체 피드백에서 검색결과 전달
+                where: whereCondition,
                 relations: ['activity', 'admin']
             });
         }
 
-        if(adminId && adminId != 0){ // 해당 adminId 전달
-            return this.feedbackRepository.find({
-                where: {admin: {id: adminId}},
-                relations: ['activity', 'admin']
-            });
-        }
-
-        return await this.feedbackRepository.find({ // 전체 전달
-            relations: ['activity'],
+        return await this.feedbackRepository.find({ // 검색어가 없을 경우 전체 피드백 전달
+            relations: ['activity', 'admin'],
         });
     }
 }
