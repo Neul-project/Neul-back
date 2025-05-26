@@ -2,6 +2,9 @@ import { ApiProperty } from '@nestjs/swagger';
 import { UserInfoAllDto } from 'src/helper/dto/res/user-info-all.dto';
 
 export class ApplyInfoDto {
+    @ApiProperty({ example: 15, description: '신청 ID' })
+    id: number;
+
     @ApiProperty({ example: '승인 대기', enum: ['승인 대기', '결제 대기', '승인 반려', '결제 완료'] })
     status: string;
 

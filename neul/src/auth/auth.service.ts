@@ -159,6 +159,8 @@ export class AuthService {
             where: {email: dto.email, phone: dto.phone}
         });
 
+        if(!user) return {ok: false};
+        
         return {ok: true};
     }
 
