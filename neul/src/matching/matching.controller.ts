@@ -15,6 +15,7 @@ import { ApplyAllDto } from './dto/res/apply-all.dto';
 import { DeleteMatchDto } from './dto/req/delete-match.dto';
 import { SearchMatchDto } from './dto/res/search-match.dto';
 import { MatchPayOKResDto } from './dto/res/match-pay-ok-res.dto';
+import { MyHelperListDto } from './dto/res/my-helper-list.dto';
 
 @Controller('matching')
 export class MatchingController {
@@ -30,6 +31,7 @@ export class MatchingController {
     // 신청한 도우미 리스트 전달
     @Get('/myapplication-list')
     @UseGuards(JwtAuthGuard)
+    @ApiResponse({type: MyHelperListDto})
     async myHelperList(@Req() req){
         const userId = req.user.id;
         return this.matchingService.myHelperList(userId);

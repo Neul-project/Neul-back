@@ -56,14 +56,20 @@ export class MatchingService {
         })
 
         return helpers.map(helper => {
-            const matchedOK = applys.find(
+            const matchedOK = applys.filter(
                 apply => apply.admin.id === helper.user.id // 유저가 선택한 도우미일 경우만
             );
 
-            if(!matchedOK) return;
+            if(matchedOK.length === 0) return;
 
-            return {...helper, apply_status: matchedOK.status, apply_dates: matchedOK.dates};
-        })
+            return {
+                ...helper,
+                apply_list: matchedOK.map(apply => ({
+                    status: apply.status,
+                    dates: apply.dates
+                }))
+            };
+        });
     }
 
     // 사용자 매칭 신청 + 알림 추가
