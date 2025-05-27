@@ -7,7 +7,14 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: ['http://3.38.125.252', 'http://3.37.80.103', 'http://3.34.237.140', 'http://localhost:3000', 'http://localhost:4000', 'http://localhost:4001'], // 프론트엔드 URL 허용
+    origin: (origin, callback) => { // 접근가능 주소
+      const allowedOrigins = ['http://3.38.125.252', 'http://3.37.80.103', 'http://3.34.237.140', 'http://localhost:3000', 'http://localhost:4000', 'http://localhost:4001'];
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, origin);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true, // 쿠키 전송 허용
   });
 
