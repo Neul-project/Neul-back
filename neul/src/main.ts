@@ -6,19 +6,19 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   
-  // app.enableCors({
-  //   origin: (origin, callback) => { // 접근가능 주소
-  //     const allowedOrigins = ['http://3.38.125.252', 'http://3.37.80.103', 'http://3.34.237.140', 'http://localhost:3000', 'http://localhost:4000', 'http://localhost:4001'];
-  //     if (!origin || allowedOrigins.includes(origin)) {
-  //       callback(null, origin);
-  //     } else {
-  //       callback(new Error('Not allowed by CORS'));
-  //     }
-  //   },
-  //   credentials: true, // 쿠키 전송 허용
-  //   methods: 'GET,POST,OPTIONS,PUT,PATCH,DELETE,preflight', // 리소스 접근을 허용하는 HTTP 메서드를 지정해 주는 헤더
-  //   allowedHeaders: 'Origin,Content-Type,Accept,Authorization', // 요청을 허용하는 헤더
-  // });
+  app.enableCors({
+    origin: (origin, callback) => { // 접근가능 주소
+      const allowedOrigins = ['http://3.38.125.252', 'http://3.37.80.103', 'http://3.34.237.140', 'http://localhost:3000', 'http://localhost:4000', 'http://localhost:4001'];
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, origin);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true, // 쿠키 전송 허용
+    methods: 'GET, POST, OPTIONS, PUT, PATCH, DELETE', // 리소스 접근을 허용하는 HTTP 메서드를 지정해 주는 헤더
+    allowedHeaders: 'Origin, Content-Type, Accept, Authorization', // 요청을 허용하는 헤더
+  });
 
   // Swagger 설정
   const options = new DocumentBuilder()
