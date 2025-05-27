@@ -2,8 +2,22 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as path from 'path';
+import * as fs from 'fs';
 
 async function bootstrap() {
+  const uploadPaths = [
+    path.join(process.cwd(), 'uploads'),
+    path.join(process.cwd(), 'uploads/image'),
+    path.join(process.cwd(), 'uploads/file'),
+  ];
+
+  uploadPaths.forEach((dir) => {
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+  });
+
   const app = await NestFactory.create(AppModule);
   
   // app.enableCors({
