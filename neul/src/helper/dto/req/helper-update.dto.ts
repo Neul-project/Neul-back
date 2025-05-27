@@ -18,4 +18,7 @@ export class HelperUpdateDto {
 
   @ApiProperty({ example: '자격증 3', description: '자격증 이름 3', required: false })
   certificateName_03?: string;
+  
+  @ApiProperty({ description: '도우미 상태 필터', example: 'reject' })
+  type?: string;
 }

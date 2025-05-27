@@ -53,8 +53,11 @@ export class HelperService {
         if(!helper){
             throw new Error('도우미 정보를 찾을 수 없습니다.')
         }
+
+        if(dto.type === 'reject'){ // 도우미 반려되었을 경우에만
+            helper.status = '승인 대기'
+        }
         
-        helper.status = '승인 대기'
         helper.desiredPay = Number(dto.desiredPay);
         helper.experience = dto.experience;
         helper.certificateName = dto.certificateName_01;
@@ -64,7 +67,6 @@ export class HelperService {
         if (files.profileImage?.[0]) {
             helper.profileImage = files.profileImage[0].filename;
         }
-        
         if (files.certificate?.[0]) {
             helper.certificate = files.certificate[0].filename;
         }

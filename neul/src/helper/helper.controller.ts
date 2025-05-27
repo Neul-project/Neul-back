@@ -73,7 +73,6 @@ export class HelperController {
         )
     )
     async helperUpdate(@Body() dto: HelperUpdateDto, @UploadedFiles() files: {profileImage: Express.Multer.File[]; certificate: Express.Multer.File[]}){
-        console.log(dto, '텍스트', files, '파일들')
         return this.helperService.helperUpdate(dto, files);
     }
 
