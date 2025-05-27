@@ -44,6 +44,7 @@ export class HelperController {
         )
     )
     async helperSignup(@Body() dto: HelperSignupDto, @UploadedFiles() files: {profileImage: Express.Multer.File[]; certificate: Express.Multer.File[]}){
+        console.log(dto, '받은텍스트!!!', files, '파일이름!!!!!!!')
         return this.helperService.helperSign(dto, files);
     }
 

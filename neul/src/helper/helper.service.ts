@@ -43,7 +43,7 @@ export class HelperService {
             certificate: files.certificate?.[0].filename ?? '',
         });
         await this.helperRepository.save(helper);
-
+        console.log('회원가입도우미정보', helper);
         return {ok: true};
     }
 
