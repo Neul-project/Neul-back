@@ -44,6 +44,7 @@ export class AuthService {
     async localLogin(email: string, password: string){
         const user = await this.userRepository.findOne({where: { email }});
         if(!user){
+            console.log('유저업서요')
             throw new UnauthorizedException('등록되지 않은 사용자입니다.')
         }
 

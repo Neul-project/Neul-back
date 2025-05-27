@@ -38,11 +38,6 @@ export class MatchingService {
         private chargeRepository: Repository<Charge>
     ) {}
 
-    // 선택 유저 삭제
-    async userDel(ids: number[]){
-        return await this.userRepository.delete(ids);
-    }
-
     // 선택한 도우미 리스트 전달
     async myHelperList(userId: number){
         const helpers = await this.helperRepository.find({ 

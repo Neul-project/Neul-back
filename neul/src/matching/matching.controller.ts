@@ -21,13 +21,6 @@ import { MyHelperListDto } from './dto/res/my-helper-list.dto';
 export class MatchingController {
     constructor (private readonly matchingService: MatchingService) {}
 
-    // 선택한 유저 탈퇴
-    @Delete('/userdelete')
-    @ApiBody({type: DeleteIdsDto})
-    async slectUserDelete(@Body() body: number[]){
-        return this.matchingService.userDel(body);
-    };
-
     // 신청한 도우미 리스트 전달
     @Get('/myapplication-list')
     @UseGuards(JwtAuthGuard)
