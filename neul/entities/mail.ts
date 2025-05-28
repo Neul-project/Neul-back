@@ -5,7 +5,7 @@ export class Mail {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column('string', {comment: '유저 이메일'})
+  @Column('varchar', {comment: '유저 이메일'})
   email: string;
 
   @Column('int', {comment: '인증코드'})
