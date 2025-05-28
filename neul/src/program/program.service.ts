@@ -343,7 +343,8 @@ export class ProgramService {
                 created_at : charge.created_at,
                 userId: charge.user.id,
                 userName: charge.user.name,
-                adminName: charge.apply.admin.name
+                adminName: charge.apply.admin.name,
+                paymentKey: charge.paymentKey || null,
             }));
         }
 
@@ -360,6 +361,7 @@ export class ProgramService {
                 payer: pay.user.name,
                 phone: pay.user.phone,
                 price: pay.price,
+                paymentKey: pay.paymentKey || null,
                 create_at: pay.created_at
             }))
         );
