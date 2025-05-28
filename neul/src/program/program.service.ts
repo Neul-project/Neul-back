@@ -330,13 +330,27 @@ export class ProgramService {
     }
 
     // 결제 리스트 전달
-    async paymentList(type?: string){
+    async paymentList(type?: string, adminId?: number){
         if(type === 'user'){ // 매칭 결제 리스트
             const charges = await this.chargeRepository.find({
                 relations: ['user', 'apply', 'apply.admin'],
             });
 
-            return charges.map((charge) => ({
+            if(adminId){ // 해당 도우미에게 매칭 결제된 리스트
+                const filtered = charges.filter(
+                    charge => charge.apply.admin.id === adminId
+                );
+
+                return filtered.map(charge => ({
+                    id: charge.id,
+                    userName: charge.user.name,
+                    orderId: charge.orderId,
+                    price: charge.price,
+                    created_at: charge.created_at,
+                }));
+            }
+
+            return charges.map((charge) => ({ // 전체 매칭 결제된 리스트
                 id: charge.id,
                 orderId: charge.orderId,
                 price: charge.price,

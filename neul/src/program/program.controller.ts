@@ -157,7 +157,7 @@ export class ProgramController {
     @Get('/payment-list')
     @ApiResponse({type: ProgramPayListDto})
     @ApiResponse({type: MatchPayListDto})
-    async paymentList(@Query('type') type?: string){
-        return this.programService.paymentList(type);
+    async paymentList(@Query('type') type?: string, @Query('adminId') adminId?: number){
+        return this.programService.paymentList(type, adminId);
     }
 }
