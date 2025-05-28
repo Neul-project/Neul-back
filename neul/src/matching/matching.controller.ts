@@ -1,7 +1,6 @@
 import { Body, Controller, Delete, Get, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { MatchingService } from './matching.service';
-import { ApiBody, ApiResponse } from '@nestjs/swagger';
-import { DeleteIdsDto } from 'src/status/dto/req/delete-ids.dto';
+import { ApiResponse } from '@nestjs/swagger';
 import { MatchOKDto } from './dto/req/match-ok.dto';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { SearchUserDto } from './dto/req/search-user.dto';

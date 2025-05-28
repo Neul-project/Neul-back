@@ -17,6 +17,7 @@ import { MatchingModule } from './matching/matching.module';
 import { BannerModule } from './banner/banner.module';
 import { AlertModule } from './alert/alert.module';
 import { HelperModule } from './helper/helper.module';
+import { MailModule } from './mail/mail.module';
 
 import { Users } from 'entities/users';
 import { Patients } from 'entities/patients';
@@ -73,6 +74,7 @@ import { Charge } from 'entities/charge';
     BannerModule,
     AlertModule,
     HelperModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService],
