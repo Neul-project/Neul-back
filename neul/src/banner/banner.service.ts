@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Banners } from 'entities/banners';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { BannerRegisterDto } from './dto/req/banner-register.dto';
 
 @Injectable()
@@ -25,13 +25,12 @@ export class BannerService {
     }
 
     // 배너 삭제
-    async bannerDel(bannerId: number){
-        const banner = await this.bannerRepository.findOne({ where: {id: bannerId}})
-        if(!banner){
-            throw new Error('해당 배너가 없습니다.');
+    async bannerDel(bannerIds: number[]){
+        if (!bannerIds || bannerIds.length === 0) {
+            throw new Error('삭제할 배너가 없습니다.');
         }
 
-        await this.bannerRepository.remove(banner);
+        return await this.bannerRepository.delete({id: In(bannerIds)});
     }
 
     // 배너 제공

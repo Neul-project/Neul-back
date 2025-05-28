@@ -6,6 +6,7 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiResponse } from '@nestjs/swagger';
 import { BannerListDto } from './dto/res/banner-list.dto';
 import { BannerRegisterDto } from './dto/req/banner-register.dto';
+import { DeleteIdsDto } from 'src/status/dto/req/delete-ids.dto';
 
 @Controller('banner')
 export class BannerController {
@@ -30,8 +31,8 @@ export class BannerController {
 
     // 배너 삭제
     @Delete('/delete')
-    async bannerDelete(@Body() dto){
-      return await this.bannerService.bannerDel(dto.id);
+    async bannerDelete(@Body() dto: DeleteIdsDto){
+      return await this.bannerService.bannerDel(dto.ids);
     }
 
     // 배너 전달
