@@ -52,15 +52,15 @@ export class UserService {
             throw new Error('사용자를 찾을 수 없습니다.');
         }
         
-        if(user.role === 'admin'){ // 도우미 + 매칭기간이 남아있을 경우 탈퇴 불가능
+        if(user.role === 'admin'){ // 매칭 존재시 도우미 탈퇴 불가능
             const matchCheck = await this.matchRepository.find({where: {admin: {id: userId}}});
 
-            if(matchCheck){
+            if(matchCheck.length > 0){
                 return {ok: false};
             }
         }
 
-        await this.userRepository.delete({ id: userId }); // 보호자 + 매칭기간 끝났을 경우 탈퇴 가능
+        await this.userRepository.delete({ id: userId }); // 보호자 or 매칭 없는 도우미 탈퇴 가능
         return {ok: true};
     }
 
