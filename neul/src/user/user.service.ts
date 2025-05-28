@@ -47,7 +47,21 @@ export class UserService {
 
     // 회원 탈퇴
     async userDel(userId: number) {
-        return await this.userRepository.delete({ id: userId });
+        const user = await this.userRepository.findOne({where: {id: userId}});
+        if(!user) {
+            throw new Error('사용자를 찾을 수 없습니다.');
+        }
+        
+        if(user.role === 'admin'){ // 도우미 + 매칭기간이 남아있을 경우 탈퇴 불가능
+            const matchCheck = await this.matchRepository.find({where: {admin: {id: userId}}});
+
+            if(matchCheck){
+                return {ok: false};
+            }
+        }
+
+        await this.userRepository.delete({ id: userId }); // 보호자 + 매칭기간 끝났을 경우 탈퇴 가능
+        return {ok: true};
     }
 
     // 주소 저장

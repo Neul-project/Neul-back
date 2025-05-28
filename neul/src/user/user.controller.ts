@@ -29,10 +29,8 @@ export class UserController {
 
     // 회원탈퇴
     @Delete('/withdraw')
-    @UseGuards(JwtAuthGuard)
-    async userDelete(@Req() req){
-        const userId = req.user.id;
-        return await this.userService.userDel(userId);
+    async userDelete(@Body() body){
+        return await this.userService.userDel(body.userId);
     }
 
     // 주소 저장
