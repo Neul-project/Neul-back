@@ -121,8 +121,7 @@ export class MatchingService {
             throw new Error('해당 정보를 찾을 수 없습니다.');
         }
 
-        apply.status = '승인 반려';
-        await this.applyRepository.save(apply); // 승인 반려 상태 변경
+        await this.applyRepository.remove(apply);
 
         const alert = this.alertRepository.create({
             user,

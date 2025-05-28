@@ -21,7 +21,6 @@ export class ChatGateway{
         @MessageBody() data: { roomId: number; message: string, sender: 'user' | 'admin' },
         @ConnectedSocket() client: Socket,
     ){
-        console.log('채팅어케됨', data);
         const saved = await this.chatService.saveChat(data); // db 저장
         this.server.emit('receive_message', saved); // 저장된 메시지 브로드캐스트
     }
