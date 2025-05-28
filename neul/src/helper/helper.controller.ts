@@ -125,9 +125,9 @@ export class HelperController {
         return this.helperService.helperNo(dto.id, dto.content);
     }
     
-    // 도우미 삭제
-    @Delete('/userdelete')
-    async helperDelete(@Body() dto: DeleteIdsDto){
-        return this.helperService.helperDel(dto.ids);
-    }
+    // // 도우미 삭제
+    // @Delete('/userdelete')
+    // async helperDelete(@Body() dto: DeleteIdsDto){
+    //     return this.helperService.helperDel(dto.ids);
+    // }
 }

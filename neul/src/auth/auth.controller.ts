@@ -114,4 +114,10 @@ export class AuthController {
             return this.authService.findPaasword(dto);
         }
     }
+
+    // 서버 점검중 예외처리
+    @Get('/health')
+    async severHealth(){
+        return {ok: true};
+    }
 }

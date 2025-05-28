@@ -227,12 +227,12 @@ export class HelperService {
         return await this.alertRepository.save(alert); // 알림 추가
     }
 
-    // 도우미 삭제
-    async helperDel(userIds: number[]){
-        if (!userIds || userIds.length === 0) {
-            throw new Error('삭제할 유저 ID가 없습니다.');
-        }
+    // // 도우미 삭제
+    // async helperDel(userIds: number[]){
+    //     if (!userIds || userIds.length === 0) {
+    //         throw new Error('삭제할 유저 ID가 없습니다.');
+    //     }
 
-        return await this.userRepository.delete({id: In(userIds)});
-    }
+    //     return await this.userRepository.delete({id: In(userIds)});
+    // }
 }
