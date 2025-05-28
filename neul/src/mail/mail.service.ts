@@ -32,10 +32,13 @@ export class MailService {
             throw new Error('사용자를 찾을 수 없습니다.');
         }
 
+        const exMail = await this.mailRepository.findOne({where: {email: checkEmail}});
+        if(exMail){
+            await this.mailRepository.delete({email: checkEmail});
+        }
+
         const code = Math.floor(100000 + Math.random() * 900000); // 인증번호 랜덤생성
         const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 인증 만료시간 계산
-
-        await this.mailRepository.delete({email: checkEmail});
 
         const mailVerification = this.mailRepository.create({ // 인증정보 저장
             email: checkEmail,
