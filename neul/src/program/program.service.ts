@@ -131,7 +131,9 @@ export class ProgramService {
                 'program.manager AS manager',
                 'cart.price AS price',
                 'program.img AS img',
-                'refund.status AS refund_status'
+                'refund.status AS refund_status',
+                'cart.created_at AS cart_at',
+                'program.recruitment AS recruitment'
             ])
             .getRawMany();
     }
