@@ -4,7 +4,7 @@ import { ChatService } from "./chat.service";
 
 @WebSocketGateway({ //게이트웨이 설정
     cors: {
-      origin: ['http://localhost:3000', 'http://localhost:4000'], // 허용할 프론트엔드 주소
+      origin: ['http://3.38.125.252', 'http://3.37.80.103'], // 허용할 프론트엔드 주소
       credentials: true,
     },
 })

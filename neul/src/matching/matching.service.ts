@@ -115,10 +115,9 @@ export class MatchingService {
     // 도우미 매칭 거절 + 알림 추가
     async helperCancel(applyId: number, adminId: number, userId: number, reason: string){
         const user = await this.userRepository.findOne({where: {id: userId}});
-        const admin = await this.userRepository.findOne({where: {id: adminId}});
         const apply = await this.applyRepository.findOne({where: {id: applyId}});
 
-        if(!admin || !user || !apply){
+        if(!user || !apply){
             throw new Error('해당 정보를 찾을 수 없습니다.');
         }
 
