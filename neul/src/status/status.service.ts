@@ -90,7 +90,8 @@ export class StatusService {
         }
 
         return await this.statusRepository.find({ // 전체 전달
-            relations: ['patient']
+            relations: ['patient'],
+            order: {recorded_at: 'DESC'},
         });
     }
 
