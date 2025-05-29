@@ -52,9 +52,9 @@ export class MailService {
             to: checkEmail,
             subject: '[NEUL 인증메일]',
             html: `
-                <table width="600" cellpadding="0" cellspacing="0" style="margin: 0 auto; background-color: #f9f9f9; overflow: hidden; font-family: Arial, sans-serif; boarder: 1px solid black;">
+                <table width="600" cellpadding="0" cellspacing="0" style="margin: 0 auto; background-color: #f9f9f9; overflow: hidden; font-family: Arial, sans-serif;">
                     <tr>
-                        <td style="padding: 30px; text-align: center;">
+                        <td style="padding: 30px; text-align: center; boarder: 1px solid black;">
                             <h2 style="color: #000000;">비밀번호 재설정 인증</h2>
                             <p style="font-size: 16px; color: #333333;">본인이 요청한 것이 맞나요?</p>
                             <p style="font-size: 14px; color: #333333; margin: 20px 0;">
@@ -70,7 +70,7 @@ export class MailService {
                         </td>
                     </tr>
                     <tr>
-                    <td style="background-color: #ffffff; text-align: center; padding: 20px;">
+                    <td style="background-color: #ffffff; text-align: center; padding: 20px; boarder: 1px solid black;">
                         <p style="font-size: 12px; color: #666666;">Neul Corp. | <a href="http://3.38.125.252" style="color: #999; text-decoration: none;">www.neul.com</a></p>
                     </td>
                     </tr>
