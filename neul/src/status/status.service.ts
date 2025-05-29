@@ -85,7 +85,8 @@ export class StatusService {
 
             return await this.statusRepository.find({
                 where: whereCondition,
-                relations: ['patient']
+                relations: ['patient'],
+                order: {recorded_at: 'DESC'},
             });
         }
 
