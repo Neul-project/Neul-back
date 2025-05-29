@@ -52,6 +52,7 @@ export class MailService {
             to: checkEmail,
             subject: '[NEUL 인증메일]',
             html: `
+            <div style="width: 65%; background-color: #fef6d4; padding: 30px 0;">
                 <table width="600" cellpadding="0" cellspacing="0" style="margin: 0 auto; background-color: #f9f9f9; overflow: hidden; font-family: Arial, sans-serif;">
                     <tr>
                         <td style="padding: 30px; text-align: center;">
@@ -75,6 +76,7 @@ export class MailService {
                     </td>
                     </tr>
                 </table>
+            </div>
             `,
         };
 
