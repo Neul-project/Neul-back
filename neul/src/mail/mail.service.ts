@@ -84,4 +84,30 @@ export class MailService {
         
         return {ok: true};
     }
+
+    // 비밀번호 인증코드 확인
+    async verifyEmail(email: string, inputCode: number){
+        const mail = await this.mailRepository.findOne({
+            where: {email},
+            order: {createdAt: 'DESC'}
+        });
+
+        if(!mail){
+            return {type: 1}; // 인증기록이 없습니다.
+        }
+        if(mail.isVerified){
+            return {type: 2}; // 이미 인증되었습니다.
+        }
+        if(mail.expiresAt < new Date()){
+            return {type: 3}; // 인증번호가 만료되었습니다.
+        }
+        if(mail.code !== inputCode){
+            return {type: 4} // 인증번호가 일치하지 않습니다.
+        }
+
+        mail.isVerified = true;
+        await this.mailRepository.save(mail);
+
+        return {ok: true};
+    }
 }

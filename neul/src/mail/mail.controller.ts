@@ -10,4 +10,10 @@ export class MailController {
     async sendEmail(@Body() body){
         return this.mailService.sendEmail(body.email);
     }
+
+    // 비밀번호 인증코드 확인
+    @Post('/verify-code')
+    async verifyEmail(@Body() body){
+        return this.mailService.verifyEmail(body.email, body.code);
+    }
 }
