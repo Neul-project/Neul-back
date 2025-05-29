@@ -341,8 +341,8 @@ export class ProgramService {
                     charge => charge.apply.admin.id === adminId
                 );
 
-                console.log('@@@@@@@어드민아이디:', adminId);
-                console.log(charges.map(c => ({
+                console.log('@@@@@@@필터확인:', adminId);
+                console.log(filtered.map(c => ({
                     apply: c.apply,
                     admin: c.apply?.admin
                 })));
