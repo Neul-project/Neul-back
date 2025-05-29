@@ -343,6 +343,7 @@ export class ProgramService {
                 });
 
                 console.log('@@@@@@@필터확인:', selectCharge.map(charge => ({
+                    adminName: charge.apply.admin.name,
                     id: charge.id,
                     userName: charge.user.name,
                     orderId: charge.orderId,
