@@ -338,7 +338,8 @@ export class ProgramService {
 
             if(adminId){ // 해당 도우미에게 매칭 결제된 리스트
                 const selectCharge = await this.chargeRepository.find({
-                    where: {apply: {admin: {id: adminId}}}
+                    where: {apply: {admin: {id: adminId}}},
+                    relations: ['user', 'apply', 'apply.admin'],
                 });
 
                 console.log('@@@@@@@필터확인:', selectCharge.map(charge => ({
