@@ -87,7 +87,7 @@ export class AuthController {
     async naverCallback(@Req() req, @Res() res){
         const user = req.user;
         const {snsAccess, snsRefresh} = await this.authService.naverUser(user);
-        return res.redirect(`http://3.38.125.252?snsAccess=${snsAccess}&snsRefresh=${snsRefresh}`);
+        return res.redirect(`http://localhost:3000?snsAccess=${snsAccess}&snsRefresh=${snsRefresh}`);
     }
 
     // 이용약관 동의
