@@ -342,15 +342,6 @@ export class ProgramService {
                     relations: ['user', 'apply', 'apply.admin'],
                 });
 
-                console.log('@@@@@@@필터확인:', selectCharge.map(charge => ({
-                    adminName: charge.apply.admin.name,
-                    id: charge.id,
-                    userName: charge.user.name,
-                    orderId: charge.orderId,
-                    price: charge.price,
-                    created_at: charge.created_at,
-                })));
-
                 return selectCharge.map(charge => ({
                     id: charge.id,
                     userName: charge.user.name,

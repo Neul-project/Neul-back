@@ -14,7 +14,6 @@ export class MailController {
     // 비밀번호 인증코드 확인
     @Post('/verify-code')
     async verifyEmail(@Body() body){
-        console.log(body, '콘솔확인');
         return this.mailService.verifyEmail(body.email, body.code);
     }
 }

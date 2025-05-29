@@ -158,7 +158,6 @@ export class ProgramController {
     @ApiResponse({type: ProgramPayListDto})
     @ApiResponse({type: MatchPayListDto})
     async paymentList(@Query('type') type?: string, @Query('adminId') adminId?: number){
-        console.log(adminId, '컨트롤러어드민아이디확인이용~!#@!')
         return this.programService.paymentList(type, adminId);
     }
 }
