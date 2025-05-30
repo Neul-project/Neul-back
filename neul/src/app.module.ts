@@ -57,6 +57,7 @@ import { Mail } from 'entities/mail';
       entities: [Users, Patients, UserCheck, Activities, Feedback, Programs, Pay, Refund, Status, Chats, Match, Banners, ChatRoom, Cart, Alert, PayPrograms, Helper, Apply, Shift, Charge, Mail],
       charset: 'utf8mb4',
       synchronize: true,
+      timezone: '+09:00', // 서버시간 변경
     }),
 
     ServeStaticModule.forRoot({
