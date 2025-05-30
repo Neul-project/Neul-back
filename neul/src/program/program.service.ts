@@ -340,6 +340,7 @@ export class ProgramService {
                 const selectCharge = await this.chargeRepository.find({
                     where: {apply: {admin: {id: adminId}}},
                     relations: ['user', 'apply', 'apply.admin'],
+                    order: {created_at: 'DESC'}
                 });
 
                 return selectCharge.map(charge => ({
