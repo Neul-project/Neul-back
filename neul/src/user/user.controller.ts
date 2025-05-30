@@ -30,6 +30,7 @@ export class UserController {
     // 회원탈퇴
     @Delete('/withdraw')
     async userDelete(@Body() body){
+        console.log(body, '삭제할애');
         return await this.userService.userDel(body.userId);
     }
 
