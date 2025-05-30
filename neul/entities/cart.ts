@@ -14,7 +14,7 @@ export class Cart {
   @ManyToOne(() => Programs, (program) => program.id, { onDelete: 'CASCADE' })
   program: Programs;
 
-  @ManyToOne(() => Pay, (pay) => pay.id, { nullable: true })
+  @ManyToOne(() => Pay, (pay) => pay.id, { nullable: true, onDelete: 'CASCADE' })
   pay?: Pay;
 
   @Column('int', {nullable: true, comment:'결제 금액'})
