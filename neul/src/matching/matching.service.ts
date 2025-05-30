@@ -142,13 +142,22 @@ export class MatchingService {
             throw new Error('매칭 신청 내역를 찾을 수 없습니다.');
         }
 
-        const charge = this.chargeRepository.create({
-            user,
-            apply,
-            price: dto.amount,
-            orderId: dto.orderId
-        })
-        return await this.chargeRepository.save(charge); // 매칭 결제 테이블 저장
+        const existingCharge = await this.chargeRepository.findOne({
+            where: {user: { id: user.id }, apply: { id: apply.id }},
+            relations: ['user', 'apply'],
+        });
+
+        if(!existingCharge){
+            const charge = this.chargeRepository.create({
+                user,
+                apply,
+                price: dto.amount,
+                orderId: dto.orderId
+            })
+            return await this.chargeRepository.save(charge); // 매칭 결제 테이블 저장
+        }
+
+        return {ok: true};
     }
     
     // 사용자 매칭 결제 완료 + 매칭테이블 추가 + 채팅방 생성 + 알림 추가

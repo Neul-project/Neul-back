@@ -334,6 +334,7 @@ export class ProgramService {
         if(type === 'user'){ // 매칭 결제 리스트
             const charges = await this.chargeRepository.find({
                 relations: ['user', 'apply', 'apply.admin'],
+                order: {created_at: 'DESC'}
             });
 
             if(adminId){ // 해당 도우미에게 매칭 결제된 리스트
