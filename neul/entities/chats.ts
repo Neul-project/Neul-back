@@ -27,7 +27,7 @@ export class Chats {
     @ManyToOne(() => ChatRoom, (room) => room.chats, {onDelete: 'CASCADE'})
     room: ChatRoom;
   
-    @CreateDateColumn({ type: 'timestamp' })
+    @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date;
 
     @Column({ comment: '사용자 삭제', default: false })
