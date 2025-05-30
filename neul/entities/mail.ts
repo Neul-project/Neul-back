@@ -17,6 +17,6 @@ export class Mail {
   @CreateDateColumn()
   createdAt: Date;
 
-  @Column('varchar', {comment: '인증 유효기간'})
+  @Column('timestamp', {comment: '인증 유효기간'})
   expiresAt: Date;
 }
