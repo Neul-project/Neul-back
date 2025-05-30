@@ -78,6 +78,7 @@ export class ChatService {
             .createQueryBuilder('sub')
             .select('sub.id', 'id')
             .where('sub.adminId = :adminId', { adminId })
+            .orderBy('sub.created_at', 'DESC')
             .skip((page - 1) * limit)
             .take(limit);
 
